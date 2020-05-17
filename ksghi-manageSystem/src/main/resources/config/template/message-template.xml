@@ -1,0 +1,1622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<template>
+	<inviteCode>
+		<sms>
+			<content>邀请码:${inviteCode}，用于您注册成为微金客融资平台用户，请进入f.ksghi.com查看详情，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>注册邀请码</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					邀请码为：${verifyCode}，用于您注册成为微金客融资平台用户，请进入f.ksghi.com查看详情。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期1小时</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>注册邀请码</title>
+			<content>注册邀请:注册邀请码为：${inviteCode}，用于您注册成为微金客融资平台用户,请进入f.ksghi.com查看详情,感谢您的使用。</content>
+		</website>
+	</inviteCode>
+
+	<register>
+		<sms>
+			<content>验证码${verifyCode}，用于您注册成为微金客用户，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>用户注册验证码</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码为：${verifyCode}，用于您注册成为微金客用户，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期1小时</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>				
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>用户注册验证码</title>
+			<content>用户注册: 验证码为：${verifyCode},用于您注册成为微金客用户,感谢您的使用。</content>
+		</website>
+	</register>
+	
+	<loginRet>
+		<sms>
+			<content>验证码${verifyCode}，用于您找回登录密码，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>找回密码验证码</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码为：${verifyCode}，用于您找回登录密码，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期1小时</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>找回密码验证码</title>
+			<content>找回登录密码: 验证码为：${verifyCode},用于您找回登录用户密码,感谢您的使用。</content>
+		</website>
+	</loginRet>	
+	
+	<mobileBind>
+		<sms>
+			<content>验证码${verifyCode}，用于您绑定手机，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>绑定手机验证码</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码为：${verifyCode}，用于您绑定手机，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期1小时</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>绑定手机验证码</title>
+			<content>验证码为：${verifyCode},用于您绑定手机,感谢您的使用。</content>
+		</website>
+	</mobileBind>	
+	
+	<mobileEdit>
+		<sms>
+			<content>验证码${verifyCode}，用于您修改绑定手机，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>修改绑定手机验证码</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码为：${verifyCode}，用于您修改绑定手机，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期1小时</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>修改绑定手机验证码</title>
+			<content>验证码为：${verifyCode},用于您修改绑定手机,感谢您的使用。</content>
+		</website>
+	</mobileEdit>	
+	
+	<emailBind>
+		<sms>
+			<content>验证码${verifyCode}，用于您绑定邮箱，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>绑定邮箱验证码</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码为：${verifyCode}，用于您绑定邮箱，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期1小时</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>绑定邮箱验证码</title>
+			<content>绑定邮箱: 验证码为：${verifyCode},用于您绑定邮箱,感谢您的使用。</content>
+		</website>
+	</emailBind>	
+	
+	<emailEdit>
+		<sms>
+			<content>验证码${verifyCode}，用于您修改绑定邮箱，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>修改绑定邮箱验证码</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码为：${verifyCode}，用于您修改绑定邮箱，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期1小时</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>修改绑定邮箱验证码</title>
+			<content>验证码为：${verifyCode},用于您修改绑定邮箱,感谢您的使用。</content>
+		</website>
+	</emailEdit>
+	
+	<drawingCash>
+		<sms>
+			<content>充值提醒：您于${date}充值${amount}元，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>充值提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}充值${amount}元，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>充值提醒</title>
+			<content>您于${date}充值${amount}元，感谢您的使用.</content>
+		</website>
+	</drawingCash>		
+	
+	<withdrawingCash>
+		<sms>
+			<content>提现提醒：您于${date}申请提现${amount}元，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>提现提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}申请提现${amount}元，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>提现提醒</title>
+			<content>尊敬的用户,您于${date}申请提现${amount}元，感谢您的使用。</content>
+		</website>
+	</withdrawingCash>	
+	
+	<integralAward>
+		<sms>
+			<content>积分奖励：您于${date}因${couse}获得${changeNum}积分奖励，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>积分奖励</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}因${couse}获得${changeNum}积分奖励，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分奖励</title>
+			<content>您于${date}因${couse}获得${changeNum}积分奖励，感谢您的使用。</content>
+		</website>
+	</integralAward>
+	
+	<integralConvert>
+		<sms>
+			<content>积分兑换：您于${date}使用${changeNum}积分兑换${relation}礼品，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>积分兑换</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}使用${changeNum}积分兑换${relation}礼品，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分兑换</title>
+			<content>您于${date}使用${changeNum}积分兑换${relation}礼品，感谢您的使用。</content>
+		</website>
+	</integralConvert>	
+	
+	<productPublish>
+		<sms>
+			<content>产品发布通知：${name}，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，项目抢手，先到先得！立即投资</content>
+		</sms>
+		<email>
+			<title>产品发布通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，项目抢手，先到先得！立即投资
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>产品发布通知</title>
+			<content>${name}，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，项目抢手，先到先得！立即投资</content>
+		</website>		
+	</productPublish>
+	
+	<productTender>
+		<sms>
+			<content>产品开标提醒：${name}1小时后即将开标，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，感谢您的关注。</content>
+		</sms>
+		<email>
+			<title>产品开标提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}1小时后即将开标，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，感谢您的关注。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>产品开标提醒</title>
+			<content>${name}1小时后即将开标，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，感谢您的关注。</content>
+		</website>		
+	</productTender>
+	<autoAttentionProduct>
+		<sms>
+			<content>关注投顾新产品发布提醒：${name}1小时后即将开标，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，感谢您的关注。</content>
+		</sms>
+		<email>
+			<title>关注投顾新产品发布提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}1小时后即将开标，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，点击链接,进行出借<a href="${url}">${url}</a>，感谢您的关注。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>关注投顾新产品发布提醒</title>
+			<content>${name}1小时后即将开标，${timeLimit}年化利率${annualRate}%/年，募集规模${amount}万元，感谢您的关注。</content>
+		</website>		
+	</autoAttentionProduct>
+	<investment>
+		<sms>
+			<content>投标成功提醒：您于${date}成功支付${amount}元用于投标，资金已冻结，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>投标成功提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}成功支付${amount}元用于投标，资金已冻结，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>投标成功提醒</title>
+			<content>您于${date}成功支付${amount}元用于投标，资金已冻结，感谢您的使用。</content>
+		</website>
+	</investment>
+	
+	<unfreezeFund>
+		<sms>
+			<content>交易资金解冻提醒：您于${date}用于投标的${amount}元因出借金额大于产品剩余可投金额，系统已自动撤标，资金已解冻，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>交易资金解冻提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}用于投标的${amount}元因出借金额大于产品剩余可投金额，系统已自动撤标，资金已解冻，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>交易资金解冻提醒</title>
+			<content>您于${date}用于投标的${amount}元因出借金额大于产品剩余可投金额，系统已自动撤标，资金已解冻，感谢您的使用。</content>
+		</website>
+	</unfreezeFund>
+	
+	<paymentSuccess>
+		<sms>
+			<content>放款成功：尊敬的用户，您出借的${name}已满标,${amount}元已划款至借款人账户，电子合同已开通并正式生效，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>放款成功</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					尊敬的用户，您出借的${name}已满标,${amount}元已划款至借款人账户，电子合同已开通并正式生效，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>放款成功</title>
+			<content>尊敬的用户，您出借的${name}已满标,${amount}元已划款至借款人账户，电子合同已开通并正式生效，感谢您的使用。</content>
+		</website>	
+	</paymentSuccess>
+	
+	<callLoan>
+		<sms>
+			<content>放款通知：您申请的借款${amount}万元今日已放款，电子合同已正式生效，可登录微金客进行提现，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>放款通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您申请的借款${amount}万元今日已放款今日已放款，电子合同已正式生效，可登录微金客进行提现，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>放款通知</title>
+			<content>您申请的借款${amount}万元今日已放款，电子合同已正式生效，可登录微金客进行提现，感谢您的使用。</content>
+		</website>		
+	</callLoan>
+	
+	<repaymentWarn>
+		<sms>
+			<content>还款提醒：按照协议您应于${date}偿还本息${amount}元，敬请留意，登录f.ksghi.com查看详情。</content>
+		</sms>
+		<email>
+			<title>还款提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					按照协议您应于${date}偿还本息${amount}元，敬请留意，登录f.ksghi.com查看详情。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>还款提醒</title>
+			<content>按照协议您应于${date}偿还本息${amount}元，敬请留意，登录f.ksghi.com查看详情。</content>
+		</website>		
+	</repaymentWarn>
+	
+	<prompt>
+		<sms>
+			<content>催款提醒：按照协议您有${num}位客户应于${date}偿还本息合计${amount}元，敬请留意。</content>
+		</sms>
+		<email>
+			<title>催款提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					按照协议您有${num}位客户应于${date}偿还本息合计${amount}元，敬请留意。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>催款提醒</title>
+			<content>按照协议您有${num}位客户应于${date}偿还本息合计${amount}元，敬请留意。</content>
+		</website>		
+	</prompt>
+	
+	<repaymentFreeze>
+		<sms>
+			<content>还款冻结提醒：按照协议您应于${date}偿还本息${amount}元，还款资金冻结成功，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>还款冻结提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					按照协议您应于${date}偿还本息${amount}元，还款资金冻结成功，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>还款冻结提醒</title>
+			<content>按照协议您应于${date}偿还本息${amount}元，还款资金冻结成功，感谢您的使用。</content>
+		</website>		
+	</repaymentFreeze>	
+	
+	<borrowerDebtService>
+		<sms>
+			<content>还款成功通知：按照协议您已于${date}偿还本息${amount}元，还款成功，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>还款成功通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					按照协议您已于${date}偿还本息${amount}元，还款成功，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>还款成功通知</title>
+			<content>按照协议您已于${date}偿还本息${amount}元，还款成功，感谢您的使用。</content>
+		</website>
+	</borrowerDebtService>
+	
+	<investmentDebtServiceNormal>
+		<sms>
+			<content>回款到账：您出借的“${productName}”产品本期还款${amount}元（已还${payedNum}期/共${payTotalNum}期）已于今日到账，详情请登录微金客。</content>
+		</sms>
+		<email>
+			<title>回款到账</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您出借的“${productName}”产品本期还款${amount}元（已还${payedNum}期/共${payTotalNum}期）已于今日到账，详情请登录微金客。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>回款到账</title>
+			<content>您出借的“${productName}”产品本期还款${amount}元（已还${payedNum}期/共${payTotalNum}期）已于今日到账，详情请登录微金客。</content>
+		</website>
+	</investmentDebtServiceNormal>
+	
+	<investmentDebtService>
+		<sms>
+			<content>回款到账：您出借的"${productName}"产品${msg}已于今日到账，详情请登录微金客。</content>
+		</sms>
+		<email>
+			<title>回款到账</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您出借的"${productName}"产品${msg}已于今日到账，详情请登录微金客。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>回款到账</title>
+			<content>您出借的"${productName}"产品${msg}已于今日到账，详情请登录微金客。</content>
+		</website>
+	</investmentDebtService>
+	
+	<replaceRepaymentGuarantee>
+		<sms>
+			<content>代偿还款提醒：您有${num}位客户未按照协议于${date}偿还贷款，已按协议从担保账户划转代偿资金合计${amount}元，敬请留意。</content>
+		</sms>
+		<email>
+			<title>代偿还款提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您有${num}位客户未按照协议于${date}日偿还贷款，已按协议从担保账户划转代偿资金合计${amount}元，敬请留意。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>代偿还款提醒</title>
+			<content>您有${num}位客户未按照协议于${date}日偿还贷款，已按协议从担保账户划转代偿资金合计${amount}元，敬请留意。</content>
+		</website>		
+	</replaceRepaymentGuarantee>
+	
+	<replaceRepaymentBorrower>
+		<sms>
+			<content>代偿还款提醒：因您未能按照协议于${date}偿还本息${amount}元，已从担保账户划转代偿资金，敬请留意。</content>
+		</sms>
+		<email>
+			<title>代偿还款提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					因您未能按照协议于${date}偿还本息${amount}元，已从担保账户划转代偿资金，敬请留意。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>代偿还款提醒</title>
+			<content>因您未能按照协议于${date}偿还本息${amount}元，已从担保账户划转代偿资金，敬请留意。</content>
+		</website>		
+	</replaceRepaymentBorrower>
+	
+	<productWaitAudit>
+		<sms>
+			<content>产品待审核通知：${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年产品待审核，开始募集时间${tenderStartTime}，特此提醒。</content>
+		</sms>
+		<email>
+			<title>产品待审核通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年产品待审核，开始募集时间${tenderStartTime}，特此提醒。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>产品待审核通知</title>
+			<content>${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年产品待审核，开始募集时间${tenderStartTime}，特此提醒。</content>
+		</website>	
+	</productWaitAudit>
+	
+	<warmRemind>
+		<sms>
+			<content>温馨提醒：尊敬的用户，您有一个新的产品待审核，开始募集时间为${nian}年${yue}月${ri}日${shi}时${fen}分，特此提醒。咨询热线400-057-8855。</content>
+		</sms>
+		<email>
+			<title>产品审核通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${guarantyCorpName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					温馨提醒：尊敬的用户，您有一个新的产品待审核，开始募集时间为${nian}年${yue}月${ri}日${shi}时${fen}分，特此提醒。咨询热线400-057-8855。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>温馨提醒</title>
+			<content>尊敬的用户，您有一个新的产品待审核，开始募集时间为${nian}年${yue}月${ri}日${shi}时${fen}分，特此提醒。咨询热线400-057-8855。</content>
+		</website>	
+	</warmRemind>
+	
+	<noTenderAudit>
+		<sms>
+			<content>未满标复核通知：${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年募集期满未满标，请您及时完成投标资金解冻复核，特此提醒。</content>
+		</sms>
+		<email>
+			<title>未满标复核通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年募集期满未满标，请您及时完成投标资金解冻复核，特此提醒。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>未满标复核通知</title>
+			<content>${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年募集期满未满标，请您及时完成投标资金解冻复核，特此提醒。</content>
+		</website>			
+	</noTenderAudit>
+	
+	<failTender>
+		<sms>
+			<content>项目流标通知：${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年募集期满未满标，投标资金于${date}已解冻，特此提醒。</content>
+		</sms>
+		<email>
+			<title>项目流标通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年募集期满未满标，投标资金于${date}已解冻，特此提醒。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>项目流标通知</title>
+			<content>${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年募集期满未满标，投标资金于${date}已解冻，特此提醒。</content>
+		</website>			
+	</failTender>
+	
+	<fullTenderAuditPayer>
+		<sms>
+			<content>满标复核通知：${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年已满标，请您及时完成放款复核。</content>
+		</sms>
+		<email>
+			<title>满标复核通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年已满标，请您及时完成放款复核。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>满标复核通知</title>
+			<content>${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年已满标，请您及时完成放款复核。</content>
+		</website>			
+	</fullTenderAuditPayer>
+
+	<complementTenderAuditPayer>
+		<sms>
+			<content>补标通知：${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年，距离满标还差${complement}元，请您及时补标。</content>
+		</sms>
+		<email>
+			<title>补标通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年，距离满标还差${complement}元，请您及时补标。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>补标通知</title>
+			<content>${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年，距离满标还差${complement}元，请您及时补标。</content>
+		</website>
+	</complementTenderAuditPayer>
+
+	<fullTenderAuditAdmin>
+		<sms>
+			<content>项目放款通知：${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年已放款，借款人${borrowerName}，特此提醒。</content>
+		</sms>
+		<email>
+			<title>项目放款通知</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年已放款，借款人${borrowerName}，特此提醒。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>项目放款通知</title>
+			<content>${name}产品${amount}万元${timeLimit}年化利率${annualRate}%/年已放款，借款人${borrowerName}，特此提醒。</content>
+		</website>			
+	</fullTenderAuditAdmin>	
+	
+	<birthday>
+		<sms>
+			<content>生日祝福：尊敬的${nickName}，${date}是您的生日，微金客祝您生日快乐，身体健康，财源广进！</content>
+		</sms>
+		<email>
+			<title>生日祝福</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					${date}是您的生日，微金客祝您生日快乐，身体健康，财源广进。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>生日祝福</title>
+			<content>${date}是您的生日，微金客祝您生日快乐，身体健康，财源广进！</content>
+		</website>
+	</birthday>	
+	
+	<holiday>
+		<sms>
+			<content>节日祝福：值此${holiday}来临之际，微金客祝您节日快乐！</content>
+		</sms>
+		<email>
+			<title>节日祝福</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					值此${holiday}来临之际，微金客祝您节日快乐！
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>节日祝福	</title>
+			<content>值此${holiday}来临之际，微金客祝您节日快乐！</content>
+		</website>
+	</holiday>
+	
+	<integraForRecommendation>
+		<sms>
+			<content>好友推荐成功: 尊敬的用户,您于${date}好友推见成功,同时您获得${integra}微积分,感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>好友推荐成功</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}好友推见成功,同时您获得${integra}微积分,感谢您的使用
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>好友推荐成功</title>
+			<content>好友推荐成功: 尊敬的用户,您于${date}好友推荐成功,同时您获得${integra}微积分,感谢您的使用。</content>
+		</website>
+	</integraForRecommendation>
+	
+	<integraForOpenAccount>
+		<sms>
+			<content>开户成功: 尊敬的用户,您于${date}开户成功,同时您获得${integra}微积分,感谢您的使用</content>
+		</sms>
+		<email>
+			<title>开户成功</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}开户成功,同时您获得${integra}微积分,感谢您的使用
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>开户成功</title>
+			<content>开户成功: 尊敬的用户,您于${date}开户成功,同时您获得${integra}微积分,感谢您的使用。</content>
+		</website>
+	</integraForOpenAccount>	
+	
+	<recommendFriends>
+		<sms>
+			<content>好友推荐提醒：您的朋友${userName}向您推荐: ${content},感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>好友推荐提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					<font>尊敬的${nickName}：</font>
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您的朋友${userName}向您推荐: ${content},感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>好友推荐提醒</title>
+			<content>您的朋友${userName}向您推荐: ${content},感谢您的使用。</content>
+		</website>
+	</recommendFriends>
+	
+	<withdrawingCashApply>
+		<sms>
+			<content>验证码：${verifyCode},用于您提现申请操作,感谢您的使用</content>
+		</sms>
+		<email>
+			<title>提现申请验证码</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码为：${verifyCode},用于您提现申请操作,感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期1小时</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>提现申请验证码</title>
+			<content>提现申请: 验证码为：${verifyCode},用于您提现申请操作,感谢您的使用。</content>
+		</website>
+	</withdrawingCashApply>
+								
+	<confirmProAndContracts>
+		<sms>
+			<content>确认项目和合同： 验证码：${verifyCode}，用于您确认项目和合同，感谢您的使用</content>
+		</sms>
+		<email>
+			<title>确认项目和合同</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码：${verifyCode}，用于您确认项目和合同，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>确认项目和合同</title>
+			<content>项目和合同：验证码为：${verifyCode}，用于您确认项目和合同，感谢您的使用。</content>
+		</website>
+	</confirmProAndContracts>
+	
+	<integralCashReceiving>
+		<sms>
+			<content>积分红包到账：您于${date}激活的${amount}元积分红包已现金到账，请登录查阅，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>积分红包到账</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}激活的${amount}元积分红包已现金到账，请登录查阅，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分红包到账</title>
+			<content>您于${date}激活的${amount}元积分红包已现金到账，请登录查阅，感谢您的使用。</content>
+		</website>
+	</integralCashReceiving>
+	
+	<sellCredit>
+		<sms>
+			<content>债权售出：您发布的债权于${date}出让成功，成交金额为${amount}元，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>债权售出</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您发布的债权于${date}出让成功，成交金额为${amount}元，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>债权售出</title>
+			<content>您发布的债权于${date}出让成功，成交金额为${amount}元，感谢您的使用。</content>
+		</website>
+	</sellCredit>
+	
+	<buyCredit>
+		<sms>
+			<content>债权购买：您于${date}购买债权成功，成交金额为${amount}元，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>债权购买</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}购买债权成功，成交金额为${amount}元，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>债权购买</title>
+			<content>您于${date}购买债权成功，成交金额为${amount}元，感谢您的使用。</content>
+		</website>
+	</buyCredit>
+	
+	<creditCancelForPrepayment>
+		<sms>
+			<content>债权下架：您于${date}发布出让的债权，由于借款人提前还款已下架，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>债权下架</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}发布出让的债权，由于借款人提前还款已下架，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>债权下架</title>
+			<content>您于${date}发布出让的债权，由于借款人提前还款已下架，感谢您的使用。</content>
+		</website>
+	</creditCancelForPrepayment>
+	
+	<creditCancelForExpiration>
+		<sms>
+			<content>债权下架：您于${date}发布出让的债权，由于到期未能成功出让已下架，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>债权下架</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}发布出让的债权，由于到期未能成功出让已下架，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>债权下架</title>
+			<content>您于${date}发布出让的债权，由于到期未能成功出让已下架，感谢您的使用。</content>
+		</website>
+	</creditCancelForExpiration>
+	
+	<creditassignment>
+		<sms>
+			<content>验证码：${verifyCode}，用于您确认债权出售，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>确认出售债权</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					验证码：${verifyCode}，用于您确认债权出售，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>确认出售债权</title>
+			<content>债权转让：验证码为：${verifyCode}，用于您确认债权出售，感谢您的使用。</content>
+		</website>
+	</creditassignment>
+	
+	<!-- cA:creditAssignment -->
+	<cANotificationForBorrower>
+		<sms>
+			<content>债权转让：您的借款项目${productName}原债权人${sellerNickName}于${date}转让${amount}元给受让人${buyerNickName}，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>债权转让</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您的借款项目${productName}原债权人${sellerNickName}于${date}转让${amount}元给受让人${buyerNickName}，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>债权转让</title>
+			<content>您的借款项目${productName}原债权人${sellerNickName}于${date}转让${amount}元给受让人${buyerNickName}，感谢您的使用。</content>
+		</website>
+	</cANotificationForBorrower>
+	
+	<cANotificationForThirdCorp>
+		<sms>
+			<content>债权转让：您担保的项目${productName}原债权人${sellerNickName}于${date}转让${amount}元给受让人${buyerNickName}，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>债权转让</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您担保的项目${productName}原债权人${sellerNickName}于${date}转让${amount}元给受让人${buyerNickName}，感谢您的使用。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>债权转让</title>
+			<content>您担保的项目${productName}原债权人${sellerNickName}于${date}转让${amount}元给受让人${buyerNickName}，感谢您的使用。</content>
+		</website>
+	</cANotificationForThirdCorp>
+	
+	<microLetterReproduced>
+		<sms>
+			<content>积分奖励：您于${date}因参与微信活动获得${integra}积分奖励，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>积分奖励</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}因参与微信活动获得${integra}积分奖励，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分奖励</title>
+			<content>您于${date}因参与微信活动获得${integra}积分奖励，感谢您的使用。</content>
+		</website>
+	</microLetterReproduced>
+	
+	<microLetterRanking>
+		<sms>
+			<content>积分奖励：您于${date}因参与微信活动进入排行榜获得${integra}积分奖励，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>积分奖励</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}因参与微信活动进入排行榜获得${integra}积分奖励，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分奖励</title>
+			<content>您于${date}因参与微信活动进入排行榜获得${integra}积分奖励，感谢您的使用。</content>
+		</website>
+	</microLetterRanking>
+	
+	<microLetterDraw>
+		<sms>
+			<content>积分奖励：您于${date}因参与微信活动获得${integra}积分奖励，感谢您的使用。</content>
+		</sms>
+		<email>
+			<title>积分奖励</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					您于${date}因参与微信活动获得${integra}积分奖励，感谢您的使用。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分奖励</title>
+			<content>您于${date}因参与微信活动获得${integra}积分奖励，感谢您的使用。</content>
+		</website>
+	</microLetterDraw>	
+	<contribution>
+		<sms>
+			<content>尊敬的客户您好，您的活动观后感我们已经收到，现赠送您${integra}积分，请您关注，感谢您一直以来对微金客的支持！ </content>
+		</sms>
+		<email>
+			<title>积分奖励</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					尊敬的客户您好，您的活动观后感我们已经收到，现赠送您${integra}积分奖励，请您关注，感谢您一直以来对微金客的支持！ 
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分奖励</title>
+			<content>尊敬的客户您好，您的活动观后感我们已经收到，现赠送您${integra}积分奖励，请您关注，感谢您一直以来对微金客的支持！</content>
+		</website>
+	</contribution>	
+	<questionnaire>
+		<sms>
+			<content>尊敬的客户您好，感谢您参与微金客的问卷调查活动，现赠送您${integra}积分，请关注您的账户积分变动，感谢您一直以来对微金客的支持！ </content>
+		</sms>
+		<email>
+			<title>积分奖励</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					尊敬的客户您好，感谢您参与微金客的问卷调查活动，现赠送您${integra}积分，请关注您的账户积分变动，感谢您一直以来对微金客的支持！ 
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分奖励</title>
+			<content>尊敬的客户您好，感谢您参与微金客的问卷调查活动，现赠送您${integra}积分，请关注您的账户积分变动，感谢您一直以来对微金客的支持！ </content>
+		</website>
+	</questionnaire>	
+	<withdrawAudit>
+		<sms>
+			<content>尊敬的用户，您于${date}申请的提现操作未审核通过，特此提醒。咨询热线400-057-8855。 </content>
+		</sms>
+		<email>
+			<title>提现申请</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					尊敬的用户，您于${date}申请的提现操作未审核通过，特此提醒。咨询热线400-057-8855。 
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>提现申请</title>
+			<content>尊敬的用户，您于${date}申请的提现操作未审核通过，特此提醒。咨询热线400-057-8855。 </content>
+		</website>
+	</withdrawAudit>	
+		<gainLetterword>
+		<sms>
+			<content>获得奖券：您获得一张${integra}（价值）的${name}券，已发至您的个人账户，详情请登录微金客【我的账户】进行查看</content>
+		</sms>
+		<email>
+			<title>获得奖券</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						您获得一张{integra}（价值）的${name}券，已发至您的个人账户，详情请登录微金客【我的账户】进行查看。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>奖券奖励</title>
+			<content>您获得一张${integra}（价值）的${name}券，已发至您的个人账户，详情请登录微金客【我的账户】进行查看</content>
+		</website>
+	</gainLetterword>
+	<uselottery>
+		<sms>
+			<content>使用奖券：您使用了一张${integra}（价值）的${name}券，详情请登录微金客【我的账户】进行查看。</content>
+		</sms>
+		<email>
+			<title>使用奖券</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						您使用了一张${integra}（价值）的${name}券，详情请登录微金客【我的账户】进行查看
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>使用奖券</title>
+			<content>使用奖券：您使用了一张${integra}（价值）的${name}券，详情请登录微金客【我的账户】进行查看。</content>
+		</website>
+	</uselottery>
+	<integralExchangeGift>
+		<sms>
+			<content>亲爱的微金客用户，您已成功的进行了${integraPrice}积分的兑换，积分已扣减，请等待后续礼品的发放。</content>
+		</sms>
+		<email>
+			<title>积分换礼</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						积分礼品派发：您兑换的${giftName}，已派发到您充值手机号${mobile}中，请查收！
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>积分换礼</title>
+			<content>积分礼品派发：您兑换的${giftName}，已派发到您充值手机号${mobile}中，请查收！</content>
+		</website>
+	</integralExchangeGift>
+		<autoInsuranceBookings>
+		<sms>
+			<content>预约保险记录</content>
+		</sms>
+		<email>
+			<title>预约保险记录</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						预约保险记录：产品名称：${productName},用户昵称：${nickName},真实姓名：${name},手机号码：${mobile},预约状态：${status},点击处理：<a href="${url}">${url}</a>
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>预约保险记录</title>
+			<content>预约保险记录：产品名称：${productName},用户昵称：${nickName},真实姓名：${name},手机号码：${mobile},预约状态：${status},点击处理：<a href="${url}">${url}</a>预约保险记录已发送您的邮箱，请查收！</content>
+		</website>
+	</autoInsuranceBookings>
+	<autoRemindLotteryExpired>
+		<sms>
+			<content>尊敬的用户：您的${lotteryValue}元${lotteryName}券将在三天后，即${expiredTime}日过期，机会难得快来使用吧！详情可在【我的账户】- 【我的奖券】中查看。</content>
+		</sms>
+		<email>
+			<title>奖券过期提醒</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					尊敬的用户：您的${lotteryValue}元${lotteryName}券将在三天后，即${expiredTime}日过期，机会难得快来使用吧！详情可在【我的账户】- 【我的奖券】中查看。
+					<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#7c7c7c;">说明：为保障信息安全，此验证码有效期10分钟</font><br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>奖券到期通知</title>
+			<content>尊敬的用户：您的${lotteryValue}元${lotteryName}券将在三天后，即${expiredTime}日过期，机会难得快来使用吧！详情可在【我的账户】- 【我的奖券】中查看。</content>
+		</website>
+	</autoRemindLotteryExpired>
+	
+	<exchangeGiftSend>
+	    <sms>
+			<content>尊敬的用户：您在积分换好礼活动中兑换的${giftName}奖品已派发，物流公司：${logisticsCompany}，快递单号：${expressNumber}，如有疑问请致电客服热线400-057-8855。</content>
+		</sms>
+		<email>
+			<title>实物奖品派发</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					<div><a href="${indexUrl}"><img src="${logoPath}" /></a></div>
+					<hr width="100%" color="#00b6e8" size="3" /><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					尊敬的用户：尊敬的用户：您在积分换好礼活动中兑换的${giftName}奖品已派发，物流公司：${logisticsCompany}，快递单号：${expressNumber}，如有疑问请致电客服热线400-057-8855。
+					<br/><br/>
+					<p style="background:#f3f3f3;text-align: center;height: 40px;line-height: 40px;font-size: 14px;"><span>微金客运营团队</span>&nbsp;|&nbsp;<span>400-057-8855</span>&nbsp;|&nbsp;<span>cs@ksghi.com</span></p>
+				</div>
+				]]>
+			</content>
+		</email>
+		<website>
+			<title>实物奖品派发</title>
+			<content>尊敬的用户：您在积分换好礼活动中兑换的${giftName}奖品已派发，物流公司：${logisticsCompany}，快递单号：${expressNumber}，如有疑问请致电客服热线400-057-8855。</content>
+		</website>
+	</exchangeGiftSend>
+	<gainLottery>
+		<website>
+			<title>恭喜您获得奖券</title>
+			<content>尊敬的用户：*******活动，微金客送福利啦，**张奖券已发放到您的账户中，赶快使用吧！</content>
+		</website>
+	</gainLottery>
+	<!-- 菁英计划 -->
+	<applyLimitSuccess>
+		<sms>
+			<content>您的菁英计划额度申请已通过审核，授信额度${cooperationLimit}元，赶快试试吧！</content>
+		</sms>
+	</applyLimitSuccess>
+	<applyLimitFail>
+		<sms>
+			<content>您的菁英计划额度申请因“${message}”未通过审核，如有疑问请致电客服热线400-057-8855。</content>
+		</sms>
+	</applyLimitFail>
+	<!-- 每月自动发送上个月的信息披露数据邮件 -->	
+	<autoSaveDisclosureFile>
+		<email>
+			<title>互金统计报表和企业数据报表</title>
+			<content>
+				<![CDATA[
+				<div style="padding-left: 30px;padding-right30px;width: 50%;">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<b>尊敬的各位领导好：<br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					这是${statsDate}月份的互金统计报表和企业数据报表，请注意查收！</b>
+					<br/><br/>
+				</div>
+				]]>
+			</content>
+		</email>
+	</autoSaveDisclosureFile>
+</template>

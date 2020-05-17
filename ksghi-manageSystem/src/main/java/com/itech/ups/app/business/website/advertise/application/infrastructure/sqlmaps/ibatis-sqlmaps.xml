@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="website">
+
+    <typeAlias alias="advertise" type="com.itech.ups.app.advertise.application.domain.Advertise"/>
+
+    <resultMap id="advertiseResultMap" class="advertise">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="CODE" property="code" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="CHANNEL" property="channel" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="TARGET_URL" property="targetUrl" jdbcType="VARCHAR"/>
+        <result column="ADVERTISE_PICTURE" property="advertisePicture" jdbcType="VARCHAR"/>
+        <result column="ADVERTISE_TEXT" property="advertiseText" jdbcType="VARCHAR"/>
+        <result column="CLICKS" property="clicks" jdbcType="NUMBER"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="EDITOR_ID" property="editorId" jdbcType="VARCHAR"/>
+        <result column="EDITOR_NAME" property="editorName" jdbcType="VARCHAR"/>
+        <result column="EDIT_TIME" property="editTime" jdbcType="CHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="SEQUNUM" property="sequnum" jdbcType="NUMBER"/>
+        <result column="ADVERTISE_VIDEO_URL" property="advertiseVideoUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectAdvertise" resultMap="advertiseResultMap" parameterClass="string">
+    select ID, CODE, NAME, CHANNEL, TYPE, DESCRIPTION, TARGET_URL, ADVERTISE_PICTURE,
+      ADVERTISE_TEXT, CLICKS, DATA_STATUS, CREATOR_ID, CREATOR_NAME, CREATE_TIME, EDITOR_ID,
+      EDITOR_NAME, EDIT_TIME,STATUS,SEQUNUM,ADVERTISE_VIDEO_URL
+    from WEBSITE_ADVERTISE
+    where ID = #id:VARCHAR#
+  </select>
+
+    <select id="selectAdvertiseByCode" resultMap="advertiseResultMap" parameterClass="string">
+    select ID, CODE, NAME, CHANNEL, TYPE, DESCRIPTION, TARGET_URL, ADVERTISE_PICTURE,
+      ADVERTISE_TEXT, CLICKS, DATA_STATUS, CREATOR_ID, CREATOR_NAME, CREATE_TIME, EDITOR_ID,
+      EDITOR_NAME, EDIT_TIME,STATUS,SEQUNUM,ADVERTISE_VIDEO_URL
+    from WEBSITE_ADVERTISE
+    where CODE = #code:VARCHAR# and DATA_STATUS = 'valid' and ROWNUM = 1
+  </select>
+
+    <sql id="selctAdvertise_fragment">
+        select ID, CODE, NAME, CHANNEL, TYPE, DESCRIPTION, TARGET_URL, ADVERTISE_PICTURE,
+        ADVERTISE_TEXT, CLICKS, DATA_STATUS, CREATOR_ID, CREATOR_NAME, CREATE_TIME, EDITOR_ID,
+        EDITOR_NAME, EDIT_TIME,STATUS,SEQUNUM,ADVERTISE_VIDEO_URL
+        from WEBSITE_ADVERTISE
+        where DATA_STATUS = 'valid'
+        <isNotNull prepend="AND" property="name">
+            NAME LIKE '%'||#name:VARCHAR#||'%'
+        </isNotNull>
+        <isNotEmpty prepend="AND" property="channel">
+            CHANNEL LIKE '%'||#channel:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="type">
+            TYPE = #type:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="status">
+            STATUS = #status:VARCHAR#
+        </isNotEmpty>
+    </sql>
+    <select id="selectAdvertises" resultMap="advertiseResultMap" parameterClass="map">
+        select * from (select rowtemp.*,rownum rownumtemp from (
+        <include refid="selctAdvertise_fragment"/>
+        order by SEQUNUM,CREATE_TIME desc
+
+        ) rowtemp )
+        where rownumtemp  <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+    <select id="selectAdvertisesTotalCount" resultClass="long" parameterClass="map">
+        select count (*) as total from (
+        <include refid="selctAdvertise_fragment"/>
+        )
+    </select>
+
+    <insert id="insertAdvertise" parameterClass="advertise">
+        insert into WEBSITE_ADVERTISE
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                CODE
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME
+            </isNotNull>
+            <isNotNull prepend="," property="channel">
+                CHANNEL
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                TYPE
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                DESCRIPTION
+            </isNotNull>
+            <isNotNull prepend="," property="targetUrl">
+                TARGET_URL
+            </isNotNull>
+            <isNotNull prepend="," property="advertisePicture">
+                ADVERTISE_PICTURE
+            </isNotNull>
+            <isNotNull prepend="," property="advertiseText">
+                ADVERTISE_TEXT
+            </isNotNull>
+            <isNotNull prepend="," property="clicks">
+                CLICKS
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="sequnum">
+                SEQUNUM
+            </isNotNull>
+            <isNotNull prepend="," property="advertiseVideoUrl">
+                ADVERTISE_VIDEO_URL
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="channel">
+                #channel:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                #type:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                #description:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="targetUrl">
+                #targetUrl:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="advertisePicture">
+                #advertisePicture:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="advertiseText">
+                #advertiseText:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="clicks">
+                #clicks:NUMBER#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                #editorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sequnum">
+                #sequnum:NUMBER#
+            </isNotNull>
+            <isNotNull prepend="," property="advertiseVideoUrl">
+                #advertiseVideoUrl:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+
+    <update id="updateAdvertise" parameterClass="advertise">
+        update WEBSITE_ADVERTISE
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="code">
+                CODE = #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME = #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="channel">
+                CHANNEL = #channel:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                TYPE = #type:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                DESCRIPTION = #description:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="targetUrl">
+                TARGET_URL = #targetUrl:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="advertisePicture">
+                ADVERTISE_PICTURE = #advertisePicture:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="advertiseText">
+                ADVERTISE_TEXT = #advertiseText:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="clicks">
+                CLICKS = #clicks:NUMBER#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS = #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID = #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME = #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID = #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME = #editorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME = #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS = #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sequnum">
+                SEQUNUM = #sequnum:NUMBER#
+            </isNotNull>
+            <isNotNull prepend="," property="advertiseVideoUrl">
+                ADVERTISE_VIDEO_URL = #advertiseVideoUrl:VARCHAR#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+</sqlMap>

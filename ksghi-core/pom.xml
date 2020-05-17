@@ -1,0 +1,130 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.ksghi</groupId>
+		<artifactId>ksghi</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../ksghi/pom.xml</relativePath>
+	</parent>
+	
+	<groupId>com.ksghi</groupId>
+	<artifactId>ksghi-core</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>ksghi-core</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+	</properties>
+
+	<dependencies>
+	</dependencies>
+	<!-- 申明不同环境调用不同数据库连接参数 -->
+	<profiles>
+		<!-- 开发/测试环境，默认激活 -->
+		<profile>
+			<id>local</id>
+			<properties>
+				<!-- 融宝托付攀商银行相关参数start -->
+				<!-- 接口请求地址域名 -->
+				<reapalBaseUrl>http://118.31.228.185:12010</reapalBaseUrl>
+				<!-- MD5加密key-->
+				<reapalMD5Key>7181b7625cc71b6d416969cad20e6bcga96bgc378c6a799eg492c09738703gd6</reapalMD5Key>
+				<!-- 接口版本号-->
+				<reapalVersion>1.0</reapalVersion>
+				<!-- 合作伙伴在融宝的ID-->
+				<reapalPartner>102200000000726</reapalPartner>
+				<!-- 加密方式 MD5：0，RSA：1-->
+				<reapalSignType>0</reapalSignType>
+				<!-- 融宝托付攀商银行相关参数start -->
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<!-- 测试环境 -->
+		<profile>
+			<id>preproduction</id>
+			<properties>
+				<!-- 融宝托付攀商银行相关参数start -->
+				<!-- 接口请求地址域名 -->
+				<reapalBaseUrl>http://119.6.53.62:12010</reapalBaseUrl>
+				<!-- MD5加密key-->
+				<reapalMD5Key>dd4d7aa49dgb172bc68e745d2c69311agf6g6b453g2d2c125982421f9643f4c8</reapalMD5Key>
+				<!-- 接口版本号-->
+				<reapalVersion>1.0</reapalVersion>
+				<!-- 合作伙伴在融宝的ID-->
+				<reapalPartner>102200000002241</reapalPartner>
+				<!-- 加密方式 MD5：0，RSA：1-->
+				<reapalSignType>0</reapalSignType>
+				<!-- 融宝托付攀商银行相关参数start -->
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+		</profile>
+		<!-- 生产环境 -->
+		<profile>
+			<id>production</id>
+			<properties>
+				<!-- 融宝托付攀商银行相关参数start -->
+				<!-- 接口请求地址域名 -->
+				<reapalBaseUrl>https://ebank.pzhccb.com:12010</reapalBaseUrl>
+				<!-- MD5加密key-->
+				<reapalMD5Key>agac0e14fab826gbeeae75fa3aa3fa9966b14505cf5812b3df88edcf9cb7f096</reapalMD5Key>
+				<!-- 接口版本号-->
+				<reapalVersion>1.0</reapalVersion>
+				<!-- 合作伙伴在融宝的ID-->
+				<reapalPartner>102200000062407</reapalPartner>
+				<!-- 加密方式 MD5：0，RSA：1-->
+				<reapalSignType>0</reapalSignType>
+				<!-- 融宝托付攀商银行相关参数start -->
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+	<build>
+		<resources>
+			<!-- 指定编译目录 -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<excludes>
+					<exclude>**/message-template.xml</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources/config/template</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+				<targetPath>config/template</targetPath>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+					<compilerArguments>
+						<verbose />
+						<bootclasspath>${java.home}\jre\lib\rt.jar;${java.home}\jre\lib\jce.jar</bootclasspath>
+					</compilerArguments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

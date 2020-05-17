@@ -1,0 +1,73 @@
+html, body {height: 100%;background-color: #ffffff;font-family: "Open Sans",Arial,"Hiragino Sans GB","Microsoft YaHei",STHeiti,"WenQuanYi Micro Hei",SimSun,sans-serif;font-size: 12px;line-height: 1.6;color: #404040;}
+input, button, select, textarea {font-family:"Microsoft Yahei","Tahoma","SimSun";}
+label, input, button, select, textarea {font-size: 12px;font-weight: normal;line-height: 16px;}
+a,a:hover,a:visited {cursor: pointer;}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-family: "Open Sans",Arial,"Hiragino Sans GB","Microsoft YaHei",STHeiti,"WenQuanYi Micro Hei",SimSun,sans-serif;font-weight: bold;}
+label {font-weight: normal;}
+legend{padding-bottom:5px;font-size:15px;font-weight: bold;}
+ul {list-style: none; }
+.fl{float:left;}
+.fr{float:right;}
+.form-inline .form-group {
+padding-right: 20px;
+padding-top: 8px;
+padding-bottom: 8px;
+}
+
+.clear:after{
+  display:block; 
+  content:"clear"; 
+  height:0; 
+  clear:both; 
+  overflow:hidden; 
+  visibility:hidden;
+}
+
+.col-md-2,.col-md-3{padding-left:0px;}
+
+.date_img{position:relative;}
+.date_img b{position:absolute;top:7px;right:20px;}
+.area_in .col-md-2{width:50%;}
+.info_bg{background:#eee;}
+
+.cooperate_num .coo_p{background:none;border:none;}
+.cooperate_num .coo_one{border-bottom-right-radius:4px !important;border-top-right-radius:4px !important;}
+
+/* 合作机构第三方样式 */
+.third_info input{width:200px;height:35px;background:#ddd;outline:none;border:none;margin-right:10px;}
+
+
+
+/*模态框部分*/
+/* .address_info{}
+.address_info li{overflow:hidden;margin-bottom:10px;}
+.add_type{float:left;padding-top:7px;}
+.add_type i{color:red;}
+.add_name{ width:300px;float:left;}
+.add_num{width:50px;height:34px;background:#ccc;}
+ */
+ 
+.btn_box .btn{background:#07b;color:#fff;}
+.row{margin:0;}
+.info{margin-bottom:20px;}
+.info label{width:25%;text-align:right;padding-left:0;padding-right:10px;font-weight:normal;float:left;padding-top:10px;}
+.info label i{color:red;}
+.aa{width:50%;padding-left:0;padding-right:0;float:left;}
+.textbox,.add_text{border-radius:4px !important;}
+.preserve_btn{margin:0 auto;background:#07b;color:#fff; margin-left:172px;}
+.preserve_btn:hover,.preserve_btn:focus{color:#fff;}
+.info span.error{padding-left:160px;}
+.add_gg .info span.error{padding-left:134px;}
+
+
+.abc:last-child{/* padding-left:158px !important; */}
+
+.tip_text{text-align:center;margin-top:12px;}
+.tipModal{width:400px;height:140px;}
+.tipModal .preserve_btn{margin-left:152px;margin-top:30px;}
+
+
+
+
+
+

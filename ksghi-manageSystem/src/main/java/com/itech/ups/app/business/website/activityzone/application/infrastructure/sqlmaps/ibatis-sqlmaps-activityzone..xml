@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="activityzone">
+
+    <typeAlias alias="activityzone" type="com.itech.ups.app.activityzone.application.domain.ActivityZone"/>
+
+    <resultMap id="activityzoneResultMap" class="activityzone">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="CODE" property="code" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="START_DATE" property="startDate" jdbcType="CHAR"/>
+        <result column="END_DATE" property="endDate" jdbcType="CHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="ACTIVITY_URL" property="activityUrl" jdbcType="VARCHAR"/>
+        <result column="CLICKS" property="clicks" jdbcType="DECIMAL"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="EDITOR_ID" property="editorId" jdbcType="VARCHAR"/>
+        <result column="EDITOR_NAME" property="editorName" jdbcType="VARCHAR"/>
+        <result column="EDIT_TIME" property="editTime" jdbcType="CHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="SEQUNUM" property="sequnum" jdbcType="DECIMAL"/>
+        <result column="IS_PLACED_TOP" property="isPlacedTop" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="IS_TIME_LIMIT" property="isTimeLimit" jdbcType="VARCHAR"/>
+        <result column="ACTIVITY_PICTURE" property="activityPicture" jdbcType="VARCHAR"/>
+        <result column="WORK_STATUS" property="workStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectByPrimaryKey" resultMap="activityzoneResultMap" parameterClass="string">
+    select ID, CODE, NAME, START_DATE, END_DATE, DESCRIPTION, ACTIVITY_URL, CLICKS, DATA_STATUS,
+      CREATOR_ID, CREATOR_NAME, CREATE_TIME, EDITOR_ID, EDITOR_NAME, EDIT_TIME, STATUS, SEQUNUM,
+      IS_PLACED_TOP, REMARK, IS_TIME_LIMIT, ACTIVITY_PICTURE, WORK_STATUS
+    from ACTIVITY_ZONE
+    where ID = #id:VARCHAR#
+  </select>
+    <delete id="deleteByPrimaryKey" parameterClass="activityzone">
+    delete from ACTIVITY_ZONE
+         where ID = #id:VARCHAR#
+  </delete>
+
+    <insert id="insertSelective" parameterClass="activityzone">
+        insert into ACTIVITY_ZONE
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                CODE
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME
+            </isNotNull>
+            <isNotNull prepend="," property="startDate">
+                START_DATE
+            </isNotNull>
+            <isNotNull prepend="," property="endDate">
+                END_DATE
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                DESCRIPTION
+            </isNotNull>
+            <isNotNull prepend="," property="activityUrl">
+                ACTIVITY_URL
+            </isNotNull>
+            <isNotNull prepend="," property="clicks">
+                CLICKS
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="sequnum">
+                SEQUNUM
+            </isNotNull>
+            <isNotNull prepend="," property="isPlacedTop">
+                IS_PLACED_TOP
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK
+            </isNotNull>
+            <isNotNull prepend="," property="isTimeLimit">
+                IS_TIME_LIMIT
+            </isNotNull>
+            <isNotNull prepend="," property="activityPicture">
+                ACTIVITY_PICTURE
+            </isNotNull>
+            <isNotNull prepend="," property="workStatus">
+                WORK_STATUS
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="startDate">
+                #startDate:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="endDate">
+                #endDate:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                #description:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="activityUrl">
+                #activityUrl:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="clicks">
+                #clicks:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                #editorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sequnum">
+                #sequnum:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="isPlacedTop">
+                #isPlacedTop:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="isTimeLimit">
+                #isTimeLimit:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="activityPicture">
+                #activityPicture:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="workStatus">
+                #workStatus:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterClass="activityzone">
+        update ACTIVITY_ZONE
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="code">
+                CODE = #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME = #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="startDate">
+                START_DATE = #startDate:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="endDate">
+                END_DATE = #endDate:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                DESCRIPTION = #description:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="activityUrl">
+                ACTIVITY_URL = #activityUrl:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="clicks">
+                CLICKS = #clicks:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS = #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID = #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME = #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID = #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME = #editorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME = #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS = #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sequnum">
+                SEQUNUM = #sequnum:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="isPlacedTop">
+                IS_PLACED_TOP = #isPlacedTop:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK = #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="isTimeLimit">
+                IS_TIME_LIMIT = #isTimeLimit:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="activityPicture">
+                ACTIVITY_PICTURE = #activityPicture:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="workStatus">
+                WORK_STATUS = #workStatus:VARCHAR#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+
+    <sql id="selectActivity_fragment">
+        select ID, CODE, NAME, START_DATE, END_DATE, DESCRIPTION, ACTIVITY_URL, CLICKS, DATA_STATUS,
+        CREATOR_ID, CREATOR_NAME, CREATE_TIME, EDITOR_ID, EDITOR_NAME, EDIT_TIME, STATUS, SEQUNUM,
+        IS_PLACED_TOP, REMARK, IS_TIME_LIMIT, ACTIVITY_PICTURE, WORK_STATUS
+        from ACTIVITY_ZONE
+        where DATA_STATUS = 'valid'
+        <isNotNull prepend="AND" property="name">
+            NAME LIKE '%'||#name:VARCHAR#||'%'
+        </isNotNull>
+        <isNotNull prepend="and" property="startDate">
+            START_DATE <![CDATA[>=]]>
+            #startDate:CHAR#
+        </isNotNull>
+        <isNotNull prepend="and" property="endDate">
+            END_DATE<![CDATA[<=]]>
+            #endDate:CHAR#
+        </isNotNull>
+        <isNotNull prepend="and" property="activitystatus">
+            STATUS=#activitystatus:CHAR#
+        </isNotNull>
+        <isNotNull prepend="and" property="workStatus">
+            WORK_STATUS=#workStatus:VARCHAR#
+        </isNotNull>
+
+    </sql>
+    <select id="selectActivityList" resultMap="activityzoneResultMap" parameterClass="map">
+        select * from (select rowtemp.*,rownum rownumtemp from (
+        <include refid="selectActivity_fragment"/>
+        order by SEQUNUM,CREATE_TIME desc
+
+        ) rowtemp )
+        where rownumtemp  <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+    <select id="selectActivityTotalCount" resultClass="long" parameterClass="map">
+        select count (*) as total from (
+        <include refid="selectActivity_fragment"/>
+        )
+    </select>
+
+</sqlMap>

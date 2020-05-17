@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="KSGHI_FJX_INFO">
+    <typeAlias alias="KSGHI_FJX_INFO" type="com.itech.ups.app.fjxinfo.application.domain.FjxInfo"/>
+    <resultMap id="KSGHI_FJX_INFO_BaseResultMap" class="KSGHI_FJX_INFO">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="XQY_ID" property="xqyId" jdbcType="VARCHAR"/>
+        <result column="BXGS" property="bxgs" jdbcType="VARCHAR"/>
+        <result column="XZMC" property="xzmc" jdbcType="VARCHAR"/>
+        <result column="XZDM" property="xzdm" jdbcType="VARCHAR"/>
+        <result column="BXQJ" property="bxqj" jdbcType="VARCHAR"/>
+        <result column="JFFS" property="jffs" jdbcType="VARCHAR"/>
+        <result column="JFNQ" property="jfnq" jdbcType="VARCHAR"/>
+        <result column="TBDH" property="tbdh" jdbcType="VARCHAR"/>
+        <result column="BXJE" property="bxje" jdbcType="VARCHAR"/>
+        <result column="SJBF" property="sjbf" jdbcType="DECIMAL"/>
+        <result column="ZFX" property="zfx" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="SJXJ" property="sjxj" jdbcType="DECIMAL" />
+    </resultMap>
+    <select id="findFjxInfosByXqyId" resultMap="KSGHI_FJX_INFO_BaseResultMap" parameterClass="string">
+    select ID, XQY_ID, BXGS, XZMC, XZDM, BXQJ, JFFS, JFNQ, TBDH, BXJE, SJBF, ZFX, CREATE_TIME,
+      REMARK, DATA_STATUS, SJXJ
+    from FJX_INFO
+    where DATA_STATUS = 'valid' AND XQY_ID = #xqyId:VARCHAR#
+  </select>
+    <select id="selectByPrimaryKey" resultMap="KSGHI_FJX_INFO_BaseResultMap" parameterClass="string">
+    select ID, XQY_ID, BXGS, XZMC, XZDM, BXQJ, JFFS, JFNQ, TBDH, BXJE, SJBF, ZFX, CREATE_TIME,
+      REMARK, DATA_STATUS, SJXJ
+    from FJX_INFO
+    where DATA_STATUS = 'valid' AND ID = #id:VARCHAR#
+  </select>
+    <sql id="selectFjxInfo_fragment">
+        select ID, XQY_ID, BXGS, XZMC, XZDM, BXQJ, JFFS, JFNQ, TBDH, BXJE, SJBF, ZFX, CREATE_TIME,
+        REMARK, DATA_STATUS, SJXJ
+        from FJX_INFO
+        where DATA_STATUS = 'valid'
+        <isNotEmpty prepend="and" property="xzmc">
+            XZMC like '%'||#xzmc:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="xzdm">
+            XZDM like '%'||#xzdm:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="tbdh">
+            TBDH like '%'||#tbdh:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="xqyId">
+            XQY_ID = #xqyId:VARCHAR#
+        </isNotEmpty>
+        order by CREATE_TIME desc
+    </sql>
+    <select id="selectFjxInfo" resultMap="KSGHI_FJX_INFO_BaseResultMap" parameterClass="map">
+        select * from (select rowtemp.*,rownum rownumtemp from (
+        <include refid="selectFjxInfo_fragment"/>
+
+        ) rowtemp )
+        where rownumtemp  <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+    <select id="selectFjxInfoTotalCount" resultClass="int" parameterClass="map">
+        select count (*) as total from (
+        <include refid="selectFjxInfo_fragment"/>
+        )
+    </select>
+    <delete id="deleteByPrimaryKey" parameterClass="KSGHI_FJX_INFO">
+    delete from FJX_INFO
+    where ID = #id:VARCHAR#
+  </delete>
+    <insert id="insert" parameterClass="KSGHI_FJX_INFO">
+    insert into FJX_INFO (ID, XQY_ID, BXGS, XZMC, XZDM, BXQJ, JFFS, JFNQ, TBDH, BXJE, SJBF,
+      ZFX, CREATE_TIME, REMARK, DATA_STATUS, SJXJ)
+    values (#id:VARCHAR#, #xqyId:VARCHAR#, #bxgs:VARCHAR#, #xzmc:VARCHAR#, #xzdm:VARCHAR#,
+      #bxqj:VARCHAR#, #jffs:VARCHAR#, #jfnq:VARCHAR#, #tbdh:VARCHAR#, #bxje:VARCHAR#,
+      #sjbf:DECIMAL#, #zfx:VARCHAR#, #createTime:VARCHAR#, #remark:VARCHAR#, #dataStatus:VARCHAR#,
+      #sjxj:DECIMAL#)
+  </insert>
+    <insert id="insertSelective" parameterClass="KSGHI_FJX_INFO">
+        insert into FJX_INFO
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="xqyId">
+                XQY_ID
+            </isNotNull>
+            <isNotNull prepend="," property="bxgs">
+                BXGS
+            </isNotNull>
+            <isNotNull prepend="," property="xzmc">
+                XZMC
+            </isNotNull>
+            <isNotNull prepend="," property="xzdm">
+                XZDM
+            </isNotNull>
+            <isNotNull prepend="," property="bxqj">
+                BXQJ
+            </isNotNull>
+            <isNotNull prepend="," property="jffs">
+                JFFS
+            </isNotNull>
+            <isNotNull prepend="," property="jfnq">
+                JFNQ
+            </isNotNull>
+            <isNotNull prepend="," property="tbdh">
+                TBDH
+            </isNotNull>
+            <isNotNull prepend="," property="bxje">
+                BXJE
+            </isNotNull>
+            <isNotNull prepend="," property="sjbf">
+                SJBF
+            </isNotNull>
+            <isNotNull prepend="," property="zfx">
+                ZFX
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="sjxj" >
+                SJXJ
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xqyId">
+                #xqyId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="bxgs">
+                #bxgs:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xzmc">
+                #xzmc:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xzdm">
+                #xzdm:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="bxqj">
+                #bxqj:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="jffs">
+                #jffs:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="jfnq">
+                #jfnq:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="tbdh">
+                #tbdh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="bxje">
+                #bxje:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sjbf">
+                #sjbf:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="zfx">
+                #zfx:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sjxj" >
+                #sjxj:DECIMAL#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterClass="KSGHI_FJX_INFO">
+        update FJX_INFO
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="xqyId">
+                XQY_ID = #xqyId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="bxgs">
+                BXGS = #bxgs:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xzmc">
+                XZMC = #xzmc:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xzdm">
+                XZDM = #xzdm:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="bxqj">
+                BXQJ = #bxqj:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="jffs">
+                JFFS = #jffs:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="jfnq">
+                JFNQ = #jfnq:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="tbdh">
+                TBDH = #tbdh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="bxje">
+                BXJE = #bxje:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sjbf">
+                SJBF = #sjbf:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="zfx">
+                ZFX = #zfx:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK = #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS = #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sjxj" >
+                SJXJ = #sjxj:DECIMAL#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+    <update id="updateByPrimaryKey" parameterClass="KSGHI_FJX_INFO">
+    update FJX_INFO
+    set XQY_ID = #xqyId:VARCHAR#,
+      BXGS = #bxgs:VARCHAR#,
+      XZMC = #xzmc:VARCHAR#,
+      XZDM = #xzdm:VARCHAR#,
+      BXQJ = #bxqj:VARCHAR#,
+      JFFS = #jffs:VARCHAR#,
+      JFNQ = #jfnq:VARCHAR#,
+      TBDH = #tbdh:VARCHAR#,
+      BXJE = #bxje:VARCHAR#,
+      SJBF = #sjbf:DECIMAL#,
+      ZFX = #zfx:VARCHAR#,
+      CREATE_TIME = #createTime:VARCHAR#,
+      REMARK = #remark:VARCHAR#,
+      DATA_STATUS = #dataStatus:VARCHAR#,
+      SJXJ = #sjxj:DECIMAL#
+    where ID = #id:VARCHAR#
+  </update>
+</sqlMap>

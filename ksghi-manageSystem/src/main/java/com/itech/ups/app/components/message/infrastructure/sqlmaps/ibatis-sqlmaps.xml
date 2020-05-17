@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="message">
+    <typeAlias alias="userMessage" type="com.itech.ups.app.user.application.domain.UserMessage"/>
+    <typeAlias alias="userMessageSet" type="com.itech.ups.app.user.application.domain.UserMessageSet"/>
+    <typeAlias alias="user" type="com.itech.ups.app.user.application.domain.User"/>
+
+    <resultMap id="userMessageResultMap" class="userMessage">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="USER_INFO_ID" property="userInfoId" jdbcType="VARCHAR"/>
+        <result column="TOPIC" property="topic" jdbcType="VARCHAR"/>
+        <result column="CONTENT" property="content" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="RECEIVE_ADDRESS" property="receiveAddress" jdbcType="VARCHAR"/>
+        <result column="BUSI_PRIV" property="busiPriv" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="userMessageSetResultMap" class="userMessageSet">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="USER_INFO_ID" property="userInfoId" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR"/>
+        <result column="SMS_STATUS" property="smsStatus" jdbcType="VARCHAR"/>
+        <result column="EMAIL_STATUS" property="emailStatus" jdbcType="VARCHAR"/>
+        <result column="WEBSITE_STATUS" property="websiteStatus" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="WECHAT_STATUS" property="wechatStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="userResultMap" class="user">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="ID_NO" property="idNo" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+        <result column="PHOTO" property="photo" jdbcType="VARCHAR"/>
+        <result column="BANK_CARD_STATUS" property="bankCardStatus" jdbcType="VARCHAR"/>
+        <result column="ID_NO_STATUS" property="idNoStatus" jdbcType="VARCHAR"/>
+        <result column="MOBILE_STATUS" property="mobileStatus" jdbcType="VARCHAR"/>
+        <result column="EMAIL_STATUS" property="emailStatus" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="NICK_NAME" property="nickName" jdbcType="VARCHAR"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="CHAR"/>
+        <result column="INTEGRA_AMOUNT" property="integraAmount" jdbcType="DECIMAL"/>
+        <result column="SMALL_PHOTO" property="smallPhoto" jdbcType="VARCHAR"/>
+        <result column="OPEN_ACCOUNT_STATUS" property="openAccountStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertUserMessage" parameterClass="userMessage">
+        insert into USER_MESSAGE
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="userInfoId">
+                USER_INFO_ID
+            </isNotNull>
+            <isNotNull prepend="," property="topic">
+                TOPIC
+            </isNotNull>
+            <isNotNull prepend="," property="content">
+                CONTENT
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                TYPE
+            </isNotNull>
+            <isNotNull prepend="," property="busiType">
+                BUSI_TYPE
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="receiveAddress">
+                RECEIVE_ADDRESS
+            </isNotNull>
+            <isNotNull prepend="," property="busiPriv">
+                BUSI_PRIV
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="userInfoId">
+                #userInfoId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="topic">
+                #topic:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="content">
+                #content:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                #type:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="busiType">
+                #busiType:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="receiveAddress">
+                #receiveAddress:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="busiPriv">
+                #busiPriv:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+
+    <select id="selectUserMessageSetByUserInfoId" resultMap="userMessageSetResultMap" parameterClass="map">
+    select ID, USER_INFO_ID, BUSI_TYPE, SMS_STATUS, EMAIL_STATUS, WEBSITE_STATUS, CREATE_TIME,
+      DATA_STATUS,DESCRIPTION,REMARK, WECHAT_STATUS
+    from USER_MESSAGE_SET
+    where USER_INFO_ID = #userInfoId:VARCHAR#
+    and BUSI_TYPE = #busiType:VARCHAR#
+    and DATA_STATUS = 'valid'
+  </select>
+
+    <select id="selectUserById" resultMap="userResultMap" parameterClass="string">
+    select ID, PASSWORD, NAME, ID_NO, EMAIL, MOBILE, PHOTO, BANK_CARD_STATUS, ID_NO_STATUS,
+      MOBILE_STATUS, EMAIL_STATUS, CREATE_TIME, DATA_STATUS, REMARK, NICK_NAME, UPDATE_TIME,
+      INTEGRA_AMOUNT, SMALL_PHOTO, OPEN_ACCOUNT_STATUS
+    from USER_INFO
+    where ID = #id:VARCHAR#
+    and DATA_STATUS = 'valid'
+  </select>
+</sqlMap>

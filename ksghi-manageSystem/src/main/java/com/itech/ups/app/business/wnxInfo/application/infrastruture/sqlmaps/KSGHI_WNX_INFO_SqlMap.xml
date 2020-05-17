@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="KSGHI_WNX_INFO" >
+  <typeAlias alias="KSGHI_WNX_INFO" type="com.itech.ups.app.wnxinfo.application.domain.WnxInfo" />
+  <resultMap id="KSGHI_WNX_INFO_BaseResultMap" class="KSGHI_WNX_INFO" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="DLGS" property="dlgs" jdbcType="VARCHAR" />
+    <result column="TBRQ" property="tbrq" jdbcType="VARCHAR" />
+    <result column="TBR" property="tbr" jdbcType="VARCHAR" />
+    <result column="TBRZJ" property="tbrzj" jdbcType="VARCHAR" />
+    <result column="TBRLXDH" property="tbrlxdh" jdbcType="VARCHAR" />
+    <result column="TBRZJHM" property="tbrzjhm" jdbcType="VARCHAR" />
+    <result column="TBRZZYH" property="tbrzzyh" jdbcType="VARCHAR" />
+    <result column="TBRYHZH" property="tbryhzh" jdbcType="VARCHAR" />
+    <result column="TBRTXDZ" property="tbrtxdz" jdbcType="VARCHAR" />
+    <result column="BBR" property="bbr" jdbcType="VARCHAR" />
+    <result column="BBRZJ" property="bbrzj" jdbcType="VARCHAR" />
+    <result column="BBRLXDH" property="bbrlxdh" jdbcType="VARCHAR" />
+    <result column="BBRZJHM" property="bbrzjhm" jdbcType="VARCHAR" />
+    <result column="BBRZZYH" property="bbrzzyh" jdbcType="VARCHAR" />
+    <result column="BBRYHZH" property="bbryhzh" jdbcType="VARCHAR" />
+    <result column="BBRTXDZ" property="bbrtxdz" jdbcType="VARCHAR" />
+    <result column="TBRGX" property="tbrgx" jdbcType="VARCHAR" />
+    <result column="SYR" property="syr" jdbcType="VARCHAR" />
+    <result column="SYRXM" property="syrxm" jdbcType="VARCHAR" />
+    <result column="SYRZJ" property="syrzj" jdbcType="VARCHAR" />
+    <result column="SYRLXDH" property="syrlxdh" jdbcType="VARCHAR" />
+    <result column="SYRZJHM" property="syrzjhm" jdbcType="VARCHAR" />
+    <result column="SYBL" property="sybl" jdbcType="DECIMAL" />
+    <result column="SYSX" property="sysx" jdbcType="VARCHAR" />
+    <result column="BBRGX" property="bbrgx" jdbcType="VARCHAR" />
+    <result column="BXGS" property="bxgs" jdbcType="VARCHAR" />
+    <result column="XZMC" property="xzmc" jdbcType="VARCHAR" />
+    <result column="XZDM" property="xzdm" jdbcType="VARCHAR" />
+    <result column="BXQJ" property="bxqj" jdbcType="VARCHAR" />
+    <result column="JFFS" property="jffs" jdbcType="VARCHAR" />
+    <result column="JFNQ" property="jfnq" jdbcType="VARCHAR" />
+    <result column="TBDH" property="tbdh" jdbcType="VARCHAR" />
+    <result column="BXJE" property="bxje" jdbcType="DECIMAL" />
+    <result column="SJBF" property="sjbf" jdbcType="DECIMAL" />
+    <result column="SJXJ" property="sjxj" jdbcType="DECIMAL" />
+    <result column="YWY" property="ywy" jdbcType="VARCHAR" />
+    <result column="YWYBH" property="ywybh" jdbcType="VARCHAR" />
+    <result column="ZJSJ" property="zjsj" jdbcType="VARCHAR" />
+    <result column="ZJBF" property="zjbf" jdbcType="DECIMAL" />
+    <result column="ZJBFH" property="zjbfh" jdbcType="DECIMAL" />
+    <result column="BFHJ" property="bfhj" jdbcType="DECIMAL" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="KSGHI_WNX_INFO_BaseResultMap" parameterClass="string" >
+    select ID, DLGS, TBRQ, TBR, TBRZJ, TBRLXDH, TBRZJHM, TBRZZYH, TBRYHZH, TBRTXDZ, BBR, BBRZJ,
+      BBRLXDH, BBRZJHM, BBRZZYH, BBRYHZH, BBRTXDZ, TBRGX, SYR, SYRXM, SYRZJ, SYRLXDH, SYRZJHM, SYBL,
+      SYSX, BBRGX, BXGS, XZMC, XZDM, BXQJ, JFFS, JFNQ, TBDH, BXJE, SJBF, SJXJ, YWY, YWYBH, ZJSJ,
+      ZJBF, ZJBFH, BFHJ, CREATE_TIME, REMARK, DATA_STATUS
+    from WNX_INFO
+    where ID = #id:VARCHAR#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="KSGHI_WNX_INFO" >
+    delete from WNX_INFO
+    where ID = #id:VARCHAR#
+  </delete>
+  <insert id="insert" parameterClass="KSGHI_WNX_INFO" >
+    insert into WNX_INFO (ID, DLGS, TBRQ, TBR, TBRZJ, TBRLXDH, TBRZJHM, TBRZZYH, TBRYHZH,
+      TBRTXDZ, BBR, BBRZJ, BBRLXDH, BBRZJHM, BBRZZYH, BBRYHZH, BBRTXDZ, TBRGX, SYR, SYRXM, SYRZJ,
+      SYRLXDH, SYRZJHM, SYBL, SYSX, BBRGX, BXGS, XZMC, XZDM, BXQJ, JFFS, JFNQ, TBDH, BXJE, SJBF,
+      SJXJ, YWY, YWYBH, ZJSJ, ZJBF, ZJBFH, BFHJ, CREATE_TIME, REMARK, DATA_STATUS)
+    values (#id:VARCHAR#, #dlgs:VARCHAR#, #tbrq:VARCHAR#, #tbr:VARCHAR#, #tbrzj:VARCHAR#,
+      #tbrlxdh:VARCHAR#, #tbrzjhm:VARCHAR#, #tbrzzyh:VARCHAR#, #tbryhzh:VARCHAR#, #tbrtxdz:VARCHAR#,
+      #bbr:VARCHAR#, #bbrzj:VARCHAR#, #bbrlxdh:VARCHAR#, #bbrzjhm:VARCHAR#, #bbrzzyh:VARCHAR#,
+      #bbryhzh:VARCHAR#, #bbrtxdz:VARCHAR#, #tbrgx:VARCHAR#, #syr:VARCHAR#, #syrxm:VARCHAR#,
+      #syrzj:VARCHAR#, #syrlxdh:VARCHAR#, #syrzjhm:VARCHAR#, #sybl:DECIMAL#, #sysx:VARCHAR#,
+      #bbrgx:VARCHAR#, #bxgs:VARCHAR#, #xzmc:VARCHAR#, #xzdm:VARCHAR#, #bxqj:VARCHAR#,
+      #jffs:VARCHAR#, #jfnq:VARCHAR#, #tbdh:VARCHAR#, #bxje:DECIMAL#, #sjbf:DECIMAL#,
+      #sjxj:DECIMAL#, #ywy:VARCHAR#, #ywybh:VARCHAR#, #zjsj:VARCHAR#, #zjbf:DECIMAL#,
+      #zjbfh:DECIMAL#, #bfhj:DECIMAL#, #createTime:VARCHAR#, #remark:VARCHAR#, #dataStatus:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="KSGHI_WNX_INFO" >
+    insert into WNX_INFO
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="dlgs" >
+        DLGS
+      </isNotNull>
+      <isNotNull prepend="," property="tbrq" >
+        TBRQ
+      </isNotNull>
+      <isNotNull prepend="," property="tbr" >
+        TBR
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzj" >
+        TBRZJ
+      </isNotNull>
+      <isNotNull prepend="," property="tbrlxdh" >
+        TBRLXDH
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzjhm" >
+        TBRZJHM
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzzyh" >
+        TBRZZYH
+      </isNotNull>
+      <isNotNull prepend="," property="tbryhzh" >
+        TBRYHZH
+      </isNotNull>
+      <isNotNull prepend="," property="tbrtxdz" >
+        TBRTXDZ
+      </isNotNull>
+      <isNotNull prepend="," property="bbr" >
+        BBR
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzj" >
+        BBRZJ
+      </isNotNull>
+      <isNotNull prepend="," property="bbrlxdh" >
+        BBRLXDH
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzjhm" >
+        BBRZJHM
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzzyh" >
+        BBRZZYH
+      </isNotNull>
+      <isNotNull prepend="," property="bbryhzh" >
+        BBRYHZH
+      </isNotNull>
+      <isNotNull prepend="," property="bbrtxdz" >
+        BBRTXDZ
+      </isNotNull>
+      <isNotNull prepend="," property="tbrgx" >
+        TBRGX
+      </isNotNull>
+      <isNotNull prepend="," property="syr" >
+        SYR
+      </isNotNull>
+      <isNotNull prepend="," property="syrxm" >
+        SYRXM
+      </isNotNull>
+      <isNotNull prepend="," property="syrzj" >
+        SYRZJ
+      </isNotNull>
+      <isNotNull prepend="," property="syrlxdh" >
+        SYRLXDH
+      </isNotNull>
+      <isNotNull prepend="," property="syrzjhm" >
+        SYRZJHM
+      </isNotNull>
+      <isNotNull prepend="," property="sybl" >
+        SYBL
+      </isNotNull>
+      <isNotNull prepend="," property="sysx" >
+        SYSX
+      </isNotNull>
+      <isNotNull prepend="," property="bbrgx" >
+        BBRGX
+      </isNotNull>
+      <isNotNull prepend="," property="bxgs" >
+        BXGS
+      </isNotNull>
+      <isNotNull prepend="," property="xzmc" >
+        XZMC
+      </isNotNull>
+      <isNotNull prepend="," property="xzdm" >
+        XZDM
+      </isNotNull>
+      <isNotNull prepend="," property="bxqj" >
+        BXQJ
+      </isNotNull>
+      <isNotNull prepend="," property="jffs" >
+        JFFS
+      </isNotNull>
+      <isNotNull prepend="," property="jfnq" >
+        JFNQ
+      </isNotNull>
+      <isNotNull prepend="," property="tbdh" >
+        TBDH
+      </isNotNull>
+      <isNotNull prepend="," property="bxje" >
+        BXJE
+      </isNotNull>
+      <isNotNull prepend="," property="sjbf" >
+        SJBF
+      </isNotNull>
+      <isNotNull prepend="," property="sjxj" >
+        SJXJ
+      </isNotNull>
+      <isNotNull prepend="," property="ywy" >
+        YWY
+      </isNotNull>
+      <isNotNull prepend="," property="ywybh" >
+        YWYBH
+      </isNotNull>
+      <isNotNull prepend="," property="zjsj" >
+        ZJSJ
+      </isNotNull>
+      <isNotNull prepend="," property="zjbf" >
+        ZJBF
+      </isNotNull>
+      <isNotNull prepend="," property="zjbfh" >
+        ZJBFH
+      </isNotNull>
+      <isNotNull prepend="," property="bfhj" >
+        BFHJ
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK
+      </isNotNull>
+      <isNotNull prepend="," property="dataStatus" >
+        DATA_STATUS
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dlgs" >
+        #dlgs:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrq" >
+        #tbrq:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbr" >
+        #tbr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzj" >
+        #tbrzj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrlxdh" >
+        #tbrlxdh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzjhm" >
+        #tbrzjhm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzzyh" >
+        #tbrzzyh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbryhzh" >
+        #tbryhzh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrtxdz" >
+        #tbrtxdz:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbr" >
+        #bbr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzj" >
+        #bbrzj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrlxdh" >
+        #bbrlxdh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzjhm" >
+        #bbrzjhm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzzyh" >
+        #bbrzzyh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbryhzh" >
+        #bbryhzh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrtxdz" >
+        #bbrtxdz:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrgx" >
+        #tbrgx:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syr" >
+        #syr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syrxm" >
+        #syrxm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syrzj" >
+        #syrzj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syrlxdh" >
+        #syrlxdh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syrzjhm" >
+        #syrzjhm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sybl" >
+        #sybl:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sysx" >
+        #sysx:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrgx" >
+        #bbrgx:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bxgs" >
+        #bxgs:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="xzmc" >
+        #xzmc:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="xzdm" >
+        #xzdm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bxqj" >
+        #bxqj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="jffs" >
+        #jffs:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="jfnq" >
+        #jfnq:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbdh" >
+        #tbdh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bxje" >
+        #bxje:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sjbf" >
+        #sjbf:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sjxj" >
+        #sjxj:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="ywy" >
+        #ywy:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="ywybh" >
+        #ywybh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="zjsj" >
+        #zjsj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="zjbf" >
+        #zjbf:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="zjbfh" >
+        #zjbfh:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="bfhj" >
+        #bfhj:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        #createTime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        #remark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dataStatus" >
+        #dataStatus:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="KSGHI_WNX_INFO" >
+    update WNX_INFO
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="dlgs" >
+        DLGS = #dlgs:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrq" >
+        TBRQ = #tbrq:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbr" >
+        TBR = #tbr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzj" >
+        TBRZJ = #tbrzj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrlxdh" >
+        TBRLXDH = #tbrlxdh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzjhm" >
+        TBRZJHM = #tbrzjhm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrzzyh" >
+        TBRZZYH = #tbrzzyh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbryhzh" >
+        TBRYHZH = #tbryhzh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrtxdz" >
+        TBRTXDZ = #tbrtxdz:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbr" >
+        BBR = #bbr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzj" >
+        BBRZJ = #bbrzj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrlxdh" >
+        BBRLXDH = #bbrlxdh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzjhm" >
+        BBRZJHM = #bbrzjhm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrzzyh" >
+        BBRZZYH = #bbrzzyh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbryhzh" >
+        BBRYHZH = #bbryhzh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrtxdz" >
+        BBRTXDZ = #bbrtxdz:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbrgx" >
+        TBRGX = #tbrgx:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syr" >
+        SYR = #syr:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syrxm" >
+        SYRXM = #syrxm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syrzj" >
+        SYRZJ = #syrzj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syrlxdh" >
+        SYRLXDH = #syrlxdh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="syrzjhm" >
+        SYRZJHM = #syrzjhm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sybl" >
+        SYBL = #sybl:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sysx" >
+        SYSX = #sysx:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bbrgx" >
+        BBRGX = #bbrgx:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bxgs" >
+        BXGS = #bxgs:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="xzmc" >
+        XZMC = #xzmc:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="xzdm" >
+        XZDM = #xzdm:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bxqj" >
+        BXQJ = #bxqj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="jffs" >
+        JFFS = #jffs:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="jfnq" >
+        JFNQ = #jfnq:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tbdh" >
+        TBDH = #tbdh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bxje" >
+        BXJE = #bxje:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sjbf" >
+        SJBF = #sjbf:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sjxj" >
+        SJXJ = #sjxj:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="ywy" >
+        YWY = #ywy:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="ywybh" >
+        YWYBH = #ywybh:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="zjsj" >
+        ZJSJ = #zjsj:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="zjbf" >
+        ZJBF = #zjbf:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="zjbfh" >
+        ZJBFH = #zjbfh:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="bfhj" >
+        BFHJ = #bfhj:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="createTime" >
+        CREATE_TIME = #createTime:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK = #remark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dataStatus" >
+        DATA_STATUS = #dataStatus:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:VARCHAR#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="KSGHI_WNX_INFO" >
+    update WNX_INFO
+    set DLGS = #dlgs:VARCHAR#,
+      TBRQ = #tbrq:VARCHAR#,
+      TBR = #tbr:VARCHAR#,
+      TBRZJ = #tbrzj:VARCHAR#,
+      TBRLXDH = #tbrlxdh:VARCHAR#,
+      TBRZJHM = #tbrzjhm:VARCHAR#,
+      TBRZZYH = #tbrzzyh:VARCHAR#,
+      TBRYHZH = #tbryhzh:VARCHAR#,
+      TBRTXDZ = #tbrtxdz:VARCHAR#,
+      BBR = #bbr:VARCHAR#,
+      BBRZJ = #bbrzj:VARCHAR#,
+      BBRLXDH = #bbrlxdh:VARCHAR#,
+      BBRZJHM = #bbrzjhm:VARCHAR#,
+      BBRZZYH = #bbrzzyh:VARCHAR#,
+      BBRYHZH = #bbryhzh:VARCHAR#,
+      BBRTXDZ = #bbrtxdz:VARCHAR#,
+      TBRGX = #tbrgx:VARCHAR#,
+      SYR = #syr:VARCHAR#,
+      SYRXM = #syrxm:VARCHAR#,
+      SYRZJ = #syrzj:VARCHAR#,
+      SYRLXDH = #syrlxdh:VARCHAR#,
+      SYRZJHM = #syrzjhm:VARCHAR#,
+      SYBL = #sybl:DECIMAL#,
+      SYSX = #sysx:VARCHAR#,
+      BBRGX = #bbrgx:VARCHAR#,
+      BXGS = #bxgs:VARCHAR#,
+      XZMC = #xzmc:VARCHAR#,
+      XZDM = #xzdm:VARCHAR#,
+      BXQJ = #bxqj:VARCHAR#,
+      JFFS = #jffs:VARCHAR#,
+      JFNQ = #jfnq:VARCHAR#,
+      TBDH = #tbdh:VARCHAR#,
+      BXJE = #bxje:DECIMAL#,
+      SJBF = #sjbf:DECIMAL#,
+      SJXJ = #sjxj:DECIMAL#,
+      YWY = #ywy:VARCHAR#,
+      YWYBH = #ywybh:VARCHAR#,
+      ZJSJ = #zjsj:VARCHAR#,
+      ZJBF = #zjbf:DECIMAL#,
+      ZJBFH = #zjbfh:DECIMAL#,
+      BFHJ = #bfhj:DECIMAL#,
+      CREATE_TIME = #createTime:VARCHAR#,
+      REMARK = #remark:VARCHAR#,
+      DATA_STATUS = #dataStatus:VARCHAR#
+    where ID = #id:VARCHAR#
+  </update>
+</sqlMap>

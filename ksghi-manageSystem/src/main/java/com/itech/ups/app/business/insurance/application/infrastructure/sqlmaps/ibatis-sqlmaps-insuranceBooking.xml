@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="insurancebooking">
+    <typeAlias alias="insuranceBooking" type="com.itech.ups.app.insurance.application.domain.InsuranceBooking"/>
+    <resultMap class="insuranceBooking" id="INSURANCE_BOOKING_BaseResultMap">
+        <result column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="CODE" jdbcType="VARCHAR" property="code"/>
+        <result column="PRODUCT_ID" jdbcType="VARCHAR" property="productId"/>
+        <result column="PRODUCT_NAME" jdbcType="VARCHAR" property="productName"/>
+        <result column="NIKE_NAME" jdbcType="VARCHAR" property="nikeName"/>
+        <result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName"/>
+        <result column="CUSTOMER_PHONE" jdbcType="VARCHAR" property="customerPhone"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="STATUS_REMARK" jdbcType="VARCHAR" property="statusRemark"/>
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="USER_PHONE" jdbcType="VARCHAR" property="userPhone"/>
+        <result column="CREATE_TIME" jdbcType="CHAR" property="createTime"/>
+        <result column="CREATOR_ID" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="CREATOR_NAME" jdbcType="VARCHAR" property="creatorName"/>
+        <result column="EDIT_TIME" jdbcType="CHAR" property="editTime"/>
+        <result column="EDITOR_ID" jdbcType="VARCHAR" property="editorId"/>
+        <result column="EDITOR_NAME" jdbcType="VARCHAR" property="editorName"/>
+        <result column="DATA_STATUS" jdbcType="VARCHAR" property="dataStatus"/>
+        <result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName"/>
+        <result column="CATEGORY" jdbcType="VARCHAR" property="category"/>
+        <result column="INSURANCE_COVERAGE" jdbcType="VARCHAR" property="insuranceCoverage"/>
+        <result column="TIME_LIMIT" jdbcType="VARCHAR" property="timeLimit"/>
+        <result column="PAY_TYPE" jdbcType="VARCHAR" property="payType"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="USER_INFO_ID" jdbcType="VARCHAR" property="userInfoId"/>
+    </resultMap>
+
+    <sql id="selectInsuranceBookings_fragment">
+        select
+        ib.ID,
+        ib.CODE,
+        ib.PRODUCT_ID,
+        ib.PRODUCT_NAME,
+        ib.NIKE_NAME,
+        ib.CUSTOMER_NAME,
+        ib.CUSTOMER_PHONE as mobile,
+        ib.STATUS,
+        ib.STATUS_REMARK,
+        ib.USER_NAME,
+        ib.USER_PHONE,
+        ib.CREATE_TIME,
+        ib.CREATOR_ID,
+        ib.CREATOR_NAME,
+        ib.EDIT_TIME,
+        ib.EDITOR_ID,
+        ib.EDITOR_NAME,
+        ib.DATA_STATUS,
+        ib.COMPANY_NAME,
+        ib.CATEGORY,
+        ib.INSURANCE_COVERAGE,
+        ib.TIME_LIMIT,
+        ib.PAY_TYPE,
+        ib.REMARK,
+        ib.USER_INFO_ID,
+        ui.ID_NO,
+        pi.CURRENCY_TYPE
+        from INSURANCE_BOOKING ib, USER_INFO ui, PRODUCT_INSURANCE pi
+        where ib.DATA_STATUS = 'valid'
+        and ui.DATA_STATUS = 'valid'
+        and pi.DATA_STATUS = 'valid'
+        and ib.DATA_STATUS = 'valid'
+        and pi.ID = ib.PRODUCT_ID
+        and ui.ID = ib.USER_INFO_ID
+        <isNotNull prepend="AND" property="companyName">
+            ib.COMPANY_NAME=#companyName:VARCHAR#
+        </isNotNull>
+        <isNotNull prepend="AND" property="status">
+            ib.STATUS=#status:VARCHAR#
+        </isNotNull>
+        <isNotNull prepend="AND" property="insuranceName">
+            ib.PRODUCT_NAME like '%'||#insuranceName:VARCHAR#||'%'
+        </isNotNull>
+        <isNotNull prepend="AND" property="upperAndLowerFrame">
+            pi.UPPER_AND_LOWER_FRAME=#upperAndLowerFrame:VARCHAR#
+        </isNotNull>
+        <isNotNull prepend="AND" property="customerName">
+            ib.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+        </isNotNull>
+        <isNotNull prepend="AND" property="customerPhone">
+            ib.CUSTOMER_PHONE like '%'||#customerPhone:VARCHAR#||'%'
+        </isNotNull>
+        <isNotNull prepend="and" property="startDate">
+            ib.CREATE_TIME <![CDATA[>=]]>#startDate:CHAR#
+        </isNotNull>
+        <isNotNull prepend="and" property="endDate">
+            SUBSTRB(ib.CREATE_TIME,0,10) <![CDATA[<=]]>#endDate:CHAR#
+        </isNotNull>
+    </sql>
+
+    <select id="selectInsuranceBookingsTotalCount" resultClass="int" parameterClass="map">
+        select count(ID) total from(
+        <include refid="selectInsuranceBookings_fragment"/>
+        )
+    </select>
+
+    <select id="selectInsuranceBookings" resultClass="hashmap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectInsuranceBookings_fragment"/>
+        order by ib.CREATE_TIME desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd# and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+
+    <select id="selectInsuranceBookingForIdNoById" parameterClass="string" resultClass="java.util.HashMap">
+    select ib.*, ui.ID_NO
+    from INSURANCE_BOOKING ib, USER_INFO ui
+    where ib.ID = #id:VARCHAR#
+    and ui.ID = ib.USER_INFO_ID
+    and ib.DATA_STATUS = 'valid' 
+    and ui.DATA_STATUS = 'valid' 
+  </select>
+
+    <select id="selectInsuranceBookingById" parameterClass="string" resultClass="insuranceBooking">
+    select *
+    from INSURANCE_BOOKING
+    where ID = #id:VARCHAR#
+    and DATA_STATUS = 'valid'
+  </select>
+
+    <update id="updateInsuranceBooking" parameterClass="insuranceBooking">
+        update INSURANCE_BOOKING
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="productId">
+                PRODUCT_ID = #productId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="productName">
+                PRODUCT_NAME = #productName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="nikeName">
+                NIKE_NAME = #nikeName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="customerName">
+                CUSTOMER_NAME = #customerName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="customerPhone">
+                CUSTOMER_PHONE = #customerPhone:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS = #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="statusRemark">
+                STATUS_REMARK = #statusRemark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="userName">
+                USER_NAME = #userName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="userPhone">
+                USER_PHONE = #userPhone:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID = #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME = #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME = #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID = #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME = #editorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS = #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="companyName">
+                COMPANY_NAME = #companyName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="category">
+                CATEGORY = #category:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="insuranceCoverage">
+                INSURANCE_COVERAGE = #insuranceCoverage:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="timeLimit">
+                TIME_LIMIT = #timeLimit:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="payType">
+                PAY_TYPE = #payType:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK = #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                CODE = #code:VARCHAR#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+
+    <select id="InsuranceBookingForBookingTotalCount" resultClass="java.util.HashMap" parameterClass="map">
+  	select today.bookIngNum as today, yesterday.bookIngNum as yesterday
+  	from (select count(ib.id) as bookIngNum
+          from INSURANCE_BOOKING ib
+         where ib.DATA_STATUS = 'valid'
+           and ib.CREATE_TIME <![CDATA[>=]]>#todayTime:CHAR#
+           and ib.CREATE_TIME <![CDATA[<=]]>#currentTime:CHAR#) today,
+       
+       (select count(ib.id) as bookIngNum
+          from INSURANCE_BOOKING ib
+         where ib.DATA_STATUS = 'valid'
+           and ib.CREATE_TIME <![CDATA[>=]]>#yesterdayTime:CHAR#
+           and ib.CREATE_TIME <![CDATA[<=]]>#todayTime:CHAR#) yesterday
+  </select>
+</sqlMap>

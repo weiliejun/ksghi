@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="insurancesalesdetail">
+    <typeAlias alias="insuranceSalesDetail" type="com.itech.ups.app.insurance.application.domain.InsuranceSalesDetail"/>
+    <resultMap class="insuranceSalesDetail" id="insuranceSalesDetailResultMap">
+        <result column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="INSURANCE_ID" jdbcType="VARCHAR" property="insuranceId"/>
+        <result column="CATEGORY" jdbcType="VARCHAR" property="category"/>
+        <result column="INSURANCE_NAME" jdbcType="VARCHAR" property="insuranceName"/>
+        <result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName"/>
+        <result column="INSURANCE_COVERAGE" jdbcType="VARCHAR" property="insuranceCoverage"/>
+        <result column="CONTRACT_CODE" jdbcType="VARCHAR" property="contractCode"/>
+        <result column="NIKE_NAME" jdbcType="VARCHAR" property="nikeName"/>
+        <result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName"/>
+        <result column="CUSTOMER_PHONE" jdbcType="VARCHAR" property="customerPhone"/>
+        <result column="PAY_WAY" jdbcType="VARCHAR" property="payWay"/>
+        <result column="PAID_PREMIUM" jdbcType="VARCHAR" property="paidPremium"/>
+        <result column="INSURANCE_DATE" jdbcType="DECIMAL" property="insuranceDate"/>
+        <result column="RECENT_PAYMENT_DATE" jdbcType="CHAR" property="recentPaymentDate"/>
+        <result column="RECENTLY_PAY_DATE" jdbcType="CHAR" property="recentlyPayDate"/>
+        <result column="CONTRACT_EFFECTIVE_DATE" jdbcType="CHAR" property="contractEffectiveDate"/>
+        <result column="INSURANCE_STATUS" jdbcType="VARCHAR" property="insuranceStatus"/>
+        <result column="INSURANCE_REMARK" jdbcType="VARCHAR" property="insuranceRemark"/>
+        <result column="CONTRACT_ATTACHMENTS" jdbcType="VARCHAR" property="contractAttachments"/>
+        <result column="DATA_STATUS" jdbcType="VARCHAR" property="dataStatus"/>
+        <result column="CREATE_TIME" jdbcType="CHAR" property="createTime"/>
+        <result column="CREATOR_ID" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="CREATOR_NAME" jdbcType="VARCHAR" property="creatorName"/>
+        <result column="EDIT_TIME" jdbcType="CHAR" property="editTime"/>
+        <result column="EDITOR_ID" jdbcType="VARCHAR" property="editorId"/>
+        <result column="EDITOR_NAME" jdbcType="VARCHAR" property="editorName"/>
+    </resultMap>
+
+    <sql id="selectInsuranceSalesDetails_fragment">
+        select isd.*
+        from INSURANCE_SALES_DETAIL isd, USER_INFO ui, PRODUCT_INSURANCE pi
+        where isd.DATA_STATUS = 'valid'
+        and ui.DATA_STATUS = 'valid'
+        and pi.DATA_STATUS = 'valid'
+        and pi.ID = isd.INSURANCE_ID
+        and isd.CUSTOMER_PHONE is not null
+        and ui.mobile = isd.CUSTOMER_PHONE
+        <isNotNull prepend="AND" property="companyName">
+            isd.COMPANY_NAME=#companyName:VARCHAR#
+        </isNotNull>
+        <isNotNull prepend="AND" property="insuranceName">
+            isd.INSURANCE_NAME like '%'||#insuranceName:VARCHAR#||'%'
+        </isNotNull>
+        <isNotNull prepend="AND" property="upperAndLowerFrame">
+            pi.UPPER_AND_LOWER_FRAME=#upperAndLowerFrame:VARCHAR#
+        </isNotNull>
+        <isNotNull prepend="AND" property="customerName">
+            isd.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+        </isNotNull>
+        <isNotNull prepend="AND" property="customerPhone">
+            isd.CUSTOMER_PHONE like '%'||#customerPhone:VARCHAR#||'%'
+        </isNotNull>
+        <isNotNull prepend="AND" property="insuranceStatus">
+            isd.INSURANCE_STATUS = #insuranceStatus:VARCHAR#
+        </isNotNull>
+        <isNotNull prepend="AND" property="productId">
+            isd.INSURANCE_ID = #productId:VARCHAR#
+        </isNotNull>
+    </sql>
+
+    <select id="selectInsuranceSalesDetailsTotalCount" resultClass="int" parameterClass="map">
+        select count(ID) total from(
+        <include refid="selectInsuranceSalesDetails_fragment"/>
+        )
+    </select>
+
+    <select id="selectInsuranceSalesDetails" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectInsuranceSalesDetails_fragment"/>
+        order by isd.CREATE_TIME desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd# and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+
+    <select id="selectInsuranceSalesDetailForCustomerAndInsuranceTotalCount" parameterClass="map"
+            resultClass="java.util.HashMap">
+        select ins.insuranceNum as insuranceNum, cus.customerNum as customerNum
+        from (select count(distinct(isd.insurance_id)) as insuranceNum
+        from (<include refid="selectInsuranceSalesDetails_fragment"/>) isd) ins,
+        (select count(distinct(isd.customer_phone)) as customerNum
+        from (<include refid="selectInsuranceSalesDetails_fragment"/>) isd) cus
+    </select>
+
+</sqlMap>

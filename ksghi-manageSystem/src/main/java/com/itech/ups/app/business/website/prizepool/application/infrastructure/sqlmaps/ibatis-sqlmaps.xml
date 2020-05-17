@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="prizePool">
+    <typeAlias alias="prizePool" type="com.itech.ups.app.operation.application.domain.PrizePool"/>
+    <resultMap id="prizePoolResultMap" class="prizePool">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="ACTIVITY" property="activity" jdbcType="VARCHAR"/>
+        <result column="CODE" property="code" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="STOCK" property="stock" jdbcType="DECIMAL"/>
+        <result column="PROPORTION" property="proportion" jdbcType="DECIMAL"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="EDIT_TIME" property="editTime" jdbcType="CHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectPrizePoolById" resultMap="prizePoolResultMap" parameterClass="prizePool">
+    select ID, ACTIVITY, CODE, TYPE, NAME, STOCK, PROPORTION, CREATE_TIME, EDIT_TIME, REMARK,
+      DATA_STATUS
+    from PRIZE_POOL
+    where ID = #id:VARCHAR#
+  </select>
+    <delete id="deleteById" parameterClass="prizePool">
+    delete from PRIZE_POOL
+    where ID = #id:VARCHAR#
+  </delete>
+    <insert id="insertPrizePool" parameterClass="prizePool">
+        insert into PRIZE_POOL
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="activity">
+                ACTIVITY
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                CODE
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                TYPE
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME
+            </isNotNull>
+            <isNotNull prepend="," property="stock">
+                STOCK
+            </isNotNull>
+            <isNotNull prepend="," property="proportion">
+                PROPORTION
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="activity">
+                #activity:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                #type:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="stock">
+                #stock:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="proportion">
+                #proportion:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+    <update id="updatePrizePoolById" parameterClass="prizePool">
+        update PRIZE_POOL
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="activity">
+                ACTIVITY = #activity:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                CODE = #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                TYPE = #type:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME = #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="stock">
+                STOCK = #stock:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="proportion">
+                PROPORTION = #proportion:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME = #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK = #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS = #dataStatus:VARCHAR#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+</sqlMap>

@@ -1,0 +1,18 @@
+/*消息中心--消息设置--2017.10.23*/
+.MessageSetCon{width:920px;margin-left:30px;}
+.MessTip{font-size:14px;color:#666;padding-left:10px;line-height:66px;}
+.MessageSetInfo{width:100%;}
+.MessType{width:52%;}
+.MessWithin,.MessMail,.MessSMS,.MessWeChat{width:12%;}
+.MessageSetInfo thead tr{height:60px;background:#f7f7f7;}
+.MessageSetInfo thead tr th{text-align:center;font-size:14px;color:#666;font-weight:normal;vertical-align:middle;}
+.MessageSetInfo thead p{height:25px;border-right:1px solid #ddd;line-height:25px;}
+.MessageSetInfo thead .MessWeChat p{border-right:none;}
+.MessageSetInfo tbody tr{border-bottom:1px solid #dddddd;height:92px;}
+.MessageSetInfo tbody td{vertical-align:middle;}
+.MessageSetInfo tbody .MessType{padding-left:15px;}
+.MessageSetInfo tbody .MessType a{display:block;color:#333;font-size:16px;cursor:default;}
+.MessageSetInfo tbody .MessType p{font-size:14px;color:#666;}
+.MessageSetInfo .MessageCheck{width:22px;height:22px;margin:0 auto;}
+.LogSucBtn .BlueBtn{width:120px;height:36px;margin:50px auto;line-height:36px;}
+.panel-footer{width:920px;margin-left:30px;background-color:#fff !important;padding-top:30px;}

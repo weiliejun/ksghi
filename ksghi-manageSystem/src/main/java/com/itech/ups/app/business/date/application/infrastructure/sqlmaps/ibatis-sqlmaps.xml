@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="dateInfo">
+    <typeAlias alias="dateInfo" type="com.itech.ups.app.user.application.domain.DateInfo"/>
+
+    <resultMap id="dateInfoResultMap" class="dateInfo">
+        <result column="TIME" property="time" jdbcType="CHAR"/>
+        <result column="DATE_TYPE" property="dateType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectDateInfoByDate" resultMap="dateInfoResultMap" parameterClass="string">
+    select TIME, DATE_TYPE
+    from DATE_INFO
+    where TIME = #time:CHAR#
+  </select>
+
+    <select id="selectDateInfoByYear" resultMap="dateInfoResultMap" parameterClass="string">
+    select TIME, DATE_TYPE
+    from DATE_INFO
+    where TIME like '%'||#year:VARCHAR#||'%' 
+  </select>
+
+    <select id="selectNextWorkday" resultMap="dateInfoResultMap" parameterClass="string">
+    select TIME, DATE_TYPE 
+      from DATE_INFO 
+     where to_date(TIME,'yyyy-mm-dd') > to_date(#time:VARCHAR#,'yyyy-mm-dd') 
+     order by TIME
+  </select>
+
+    <insert id="insertDateInfo" parameterClass="dateInfo">
+        insert into DATE_INFO
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="time">
+                TIME
+            </isNotNull>
+            <isNotNull prepend="," property="dateType">
+                DATE_TYPE
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="time">
+                #time:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dateType">
+                #dateType:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="insertMoreDateInfo" parameterClass="map">
+        insert all
+        <iterate conjunction="" property="dateInfoList">
+            into DATE_INFO (TIME, DATE_TYPE)
+            values (
+            #dateInfoList[].time#,#dateInfoList[].dateType#
+            )
+        </iterate>
+        select * from dual
+    </insert>
+
+    <delete id="deleteDateInfo" parameterClass="string">
+    delete from DATE_INFO
+    where TIME = #time:CHAR#
+  </delete>
+
+    <!-- 删除某一年的数据 -->
+    <delete id="deleteDateInfoByYear" parameterClass="string">
+    delete from DATE_INFO
+    where TIME like '%'||#year:CHAR#||'%' 
+  </delete>
+
+</sqlMap>

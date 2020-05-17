@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="authority">
+    <typeAlias alias="role" type="com.itech.ups.app.authority.application.domain.Role"/>
+    <typeAlias alias="roleFunction" type="com.itech.ups.app.authority.application.domain.RoleFunction"/>
+    <typeAlias alias="function" type="com.itech.ups.app.authority.application.domain.Function"/>
+    <typeAlias alias="manager" type="com.itech.ups.app.manager.application.domain.Manager"/>
+
+    <resultMap id="functionResultMap" class="function">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="CODE" property="code" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="PARENT_CODE" property="parentCode" jdbcType="VARCHAR"/>
+        <result column="SEQNUM" property="seqnum" jdbcType="DECIMAL"/>
+        <result column="URL" property="url" jdbcType="VARCHAR"/>
+        <result column="NODE_TYPE" property="nodeType" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="ICON" property="icon" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="roleResultMap" class="role">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR"/>
+        <result column="EDIT_TIME" property="editTime" jdbcType="CHAR"/>
+        <result column="EDITOR_ID" property="editorId" jdbcType="VARCHAR"/>
+        <result column="EDITOR_NAME" property="editorName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="roleFunctionResultMap" class="roleFunction">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR"/>
+        <result column="FUNCTION_CODE" property="functionCode" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 增加 PARENT_NAME  by yanminfeng 2017-8-22-->
+    <resultMap id="More_functionResultMap" class="function" extends="functionResultMap">
+        <result column="PARENT_NAME" property="parentName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertFunction" parameterClass="function">
+        insert into SYS_FUNCTION
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                CODE
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME
+            </isNotNull>
+            <isNotNull prepend="," property="parentCode">
+                PARENT_CODE
+            </isNotNull>
+            <isNotNull prepend="," property="seqnum">
+                SEQNUM
+            </isNotNull>
+            <isNotNull prepend="," property="url">
+                URL
+            </isNotNull>
+            <isNotNull prepend="," property="nodeType">
+                NODE_TYPE
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="icon">
+                ICON
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="parentCode">
+                #parentCode:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="seqnum">
+                #seqnum:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="url">
+                #url:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="nodeType">
+                #nodeType:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="icon">
+                #icon:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+
+    <insert id="insertRole" parameterClass="Role">
+        insert into SYS_ROLE
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                DESCRIPTION
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                #status:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                #description:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                #editorName:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+
+    <update id="updateRole" parameterClass="Role">
+        update SYS_ROLE
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="name">
+                NAME = #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS = #status:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS = #dataStatus:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                DESCRIPTION = #description:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID = #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME = #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME = #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID = #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME = #editorName:VARCHAR#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+
+    <update id="updateFunctionByCode" parameterClass="function">
+        update SYS_FUNCTION
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="code">
+                CODE = #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="parentCode">
+                PARENT_CODE = #parentCode:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME = #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="url">
+                URL = #url:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="nodeType">
+                NODE_TYPE = #nodeType:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="seqnum">
+                SEQNUM = #seqnum:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS = #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="icon">
+                ICON = #icon:VARCHAR#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+
+    <select id="selectAllFunctions" resultMap="functionResultMap">
+      select f.* from sys_function f 
+	  where f.status='valid'
+      order by f.parent_code,f.seqnum
+   </select>
+
+    <select id="selectAllRoles" resultClass="role">
+   	     select * from sys_role where data_status='valid'
+   </select>
+
+    <select id="selectRoleById" resultMap="roleResultMap" parameterClass="string">
+	    select ID, NAME,STATUS,DATA_STATUS, DESCRIPTION, CREATE_TIME, CREATOR_ID, CREATOR_NAME, EDIT_TIME, EDITOR_ID, EDITOR_NAME
+	    from SYS_ROLE
+	    where ID = #id:VARCHAR#
+   </select>
+    <select id="selectRoleByName" resultMap="roleResultMap" parameterClass="string">
+	    select ID, NAME,STATUS,DATA_STATUS, DESCRIPTION, CREATE_TIME, CREATOR_ID, CREATOR_NAME, EDIT_TIME, EDITOR_ID, EDITOR_NAME
+	    from SYS_ROLE
+	    where NAME = #name:VARCHAR# and rownum=1
+   </select>
+
+    <insert id="insertRoleFunction" parameterClass="roleFunction">
+	    insert into sys_role_function (ID, ROLE_ID, FUNCTION_CODE, CREATE_TIME, CREATOR_ID,CREATOR_NAME)
+	    values (#id:VARCHAR#, #roleId:VARCHAR#, #functionCode:VARCHAR#, #createTime:CHAR#,#creatorId:VARCHAR#, #creatorName:VARCHAR#)
+   </insert>
+
+    <select id="selectRoleFunctions" parameterClass="string" resultMap="functionResultMap">
+   	     select f.* from sys_function f,sys_role r,sys_role_function rf
+		 where  f.code=rf.function_code
+		 and f.status='valid'
+		 and r.id=rf.role_id
+		 and r.id =#roleId:VARCHAR#
+   </select>
+
+    <delete id="deleteRoleFunctions" parameterClass="string">
+	    delete from sys_role_function where ROLE_ID = #id:VARCHAR#
+   </delete>
+
+    <select id="selectRoleManagers" parameterClass="string" resultClass="manager">
+        select sm.* from sys_manager sm,sys_manager_role smr,sys_role sr
+        where sm.id=smr.manager_id
+        and sr.id=smr.role_id
+        and sm.data_status=2
+        and role_id=#roleId#
+   </select>
+
+    <select id="selectRoleByManagerId" resultMap="roleResultMap" parameterClass="string">
+		select *  from sys_role d
+		 where d.id in (select t.role_id
+		                 from sys_manager_role t
+		                where t.manager_id = #id:VARCHAR#)
+		   and d.data_status = 'valid'   
+   </select>
+
+    <sql id="selectRoles_fragment">
+        select * from sys_role where data_status='valid'
+        <isNotEmpty prepend="AND" property="name">
+            name like '%'||#name#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="description">
+            description like '%'||#description#||'%'
+        </isNotEmpty>
+    </sql>
+
+    <select id="selectRoles" resultMap="roleResultMap" parameterClass="java.util.HashMap">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectRoles_fragment"/>
+        order by create_time desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+
+    <select id="selectRolesTotalCount" resultClass="long" parameterClass="java.util.HashMap">
+        select count (*) as total from (
+        <include refid="selectRoles_fragment"/>
+        )
+    </select>
+
+    <!-- 根据节点code 查询SYS_FUNCTION 树结构数据    -->
+    <sql id="selectTreeFunction_fragment">
+   		select ID,
+               CODE,
+               NAME,
+               URL,
+               NODE_TYPE,
+               SEQNUM,
+               STATUS,
+               ICON,
+               PARENT_CODE,
+               prior NAME PARENT_NAME
+          from SYS_FUNCTION F
+         start with f.parent_code = 'root'
+        connect by f.parent_code = prior f.CODE
+   
+   	</sql>
+
+    <select id="selectTreeFunctionByCode" resultMap="More_functionResultMap" parameterClass="string">
+        select *
+        from (<include refid="selectTreeFunction_fragment"/>) tp
+        where CODE = #code:VARCHAR#
+        and STATUS = 'valid'
+    </select>
+
+    <!-- 将某个节点以及所有子节点设为invalid -->
+    <update id="updateTreeNodeInvalid" parameterClass="String">
+		update SYS_FUNCTION t
+	       set t.status = 'invalid'
+	     where t.code in (select sf1.code
+                     from SYS_FUNCTION sf1
+                    start with sf1.code = #code:VARCHAR#
+                   connect by prior sf1.code = sf1.parent_code)
+	</update>
+</sqlMap>

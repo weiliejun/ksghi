@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="sharedatas">
+    <sql id="selectSharedata_fragment">
+        select substr(CREATE_TIME,0,10) as CREATE_TIME,
+        sum(case when CHANNEL='QQ' then 1 else 0 end) as QQ,
+        sum(case when CHANNEL='sms' then 1 else 0 end) as sms,
+        sum(case when CHANNEL='link' then 1 else 0 end) as link,
+        sum(case when CHANNEL='Qzone' then 1 else 0 end) as Qzone,
+        sum(case when CHANNEL='regMobile' then 1 else 0 end) as regMobile,
+        sum(case when CHANNEL='sinablog' then 1 else 0 end) as sinablog,
+        sum(case when CHANNEL='tencentblog' then 1 else 0 end) as tencentblog,
+        sum(case when CHANNEL='weixin' then 1 else 0 end) as weixin,
+        sum(case when CHANNEL='regRecommend' then 1 else 0 end) as regRecommend,
+        sum(case when CHANNEL='email' then 1 else 0 end) as youjian
+        from
+        user_recommend_friends
+        where 1=1
+        <isNotEmpty prepend="and" property="startDate">
+            CREATE_TIME <![CDATA[>=]]>
+            #startDate:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            SUBSTRB(CREATE_TIME,0,10) <![CDATA[<=]]>
+            #endDate:CHAR#
+        </isNotEmpty>
+        group by substr(CREATE_TIME,0,10)
+    </sql>
+
+    <select id="selectfindSharedata" resultClass="java.util.HashMap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectSharedata_fragment"/>
+        order by substr(CREATE_TIME,0,10) desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectSharedataTotalCount" resultClass="long"
+            parameterClass="map">
+        select count (*) from (
+        <include refid="selectSharedata_fragment"/>
+        )
+    </select>
+
+</sqlMap>

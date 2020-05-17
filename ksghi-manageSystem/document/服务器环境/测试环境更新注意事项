@@ -1,0 +1,2 @@
+#测试环境web.xml最下面需加入一下代码
+<distributable/>

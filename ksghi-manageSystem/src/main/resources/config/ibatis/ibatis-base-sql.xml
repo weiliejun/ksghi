@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<sqlMap namespace="baseSql">
+
+    <!-- 用户树状层级查询： 显示级别，显示顶级用户   2017-1-11  -->
+	<sql id="recomendRelationTree_fragment">
+	(select  id userinfo_Id,
+       nick_name,
+       name,
+       terminal u_terminal,
+       id_no,
+       mobile,
+       email,
+       bank_card_status,
+       open_account_status,
+       source_code,
+       user_label,
+       create_time u_create_time,
+       person_code,
+       org_person_code,
+       recommend_level,
+       org_code,
+       CODE_PATH,
+       ROLE_TYPE,
+       INTEGRA_AMOUNT,
+       paraent_recommend_code recommendercode,
+       prior name recommendername,
+       prior mobile recommendermobile,
+       prior person_code personcode,
+       prior org_person_code orgpersoncode,
+       prior user_label recommender_user_label,
+       prior org_code recommender_org_code      
+  from (select  ui11.id,
+       ui11.nick_name,
+       ui11.name,
+       ui11.terminal,
+       ui11.id_no,
+       ui11.mobile,
+       ui11.email,
+       ui11.bank_card_status,
+       ui11.open_account_status,
+       ui11.source_code,
+       ui11.user_label,
+       ui11.create_time,
+       ui11.person_code,
+       ui11.org_person_code,
+       coalesce(ui11.org_person_code, urr.recommend_code) recommend_code,
+       ui11.org_code,
+       ui11.ROLE_TYPE,
+       ui11.INTEGRA_AMOUNT,
+       nvl(urr.recommend_level,'0') recommend_level,  <!-- 默认顶级的级别是空，此处设置为0；    融资端用户默认没有推荐关系  -->
+       urr.CODE_PATH,
+       urr.paraent_recommend_code
+          from user_info ui11 left join user_recommend_relation urr on urr.user_info_id = ui11.id
+         where ui11.data_status = 'valid') tp
+ start with  tp.recommend_level = '0'
+connect by prior tp.recommend_code = tp.paraent_recommend_code
+	)u
+
+    </sql>
+    <!-- V2.0（新版） 用户分类：复选框查询  作为公共sql片段使用    2017-1-11    -->
+    <sql id="selectUserClassificationTree_fragment">
+         <isEqual  prepend="and" property="userClassificationFlag" compareValue="true">
+     	( 1 = 2
+	      <isEqual  prepend="or" property="labelRecommendFlag" compareValue="true">
+		      (RECOMMENDER_USER_LABEL in    
+	          <iterate open="(" close=")" conjunction="," property="labelRecommend" >   
+	               #labelRecommend[]# 
+	          </iterate> )
+	      </isEqual>
+	      <isEqual  prepend="or" property="labelRegisterFlag" compareValue="true">
+		     ( user_label in    
+	          <iterate open="(" close=")" conjunction="," property="labelRegister" > 
+	               #labelRegister[]#   
+	          </iterate>    and recommend_level=0 )
+	      </isEqual>
+	      <isEqual  prepend="or" property="orgRecommendFlag" compareValue="true">
+		         
+	          <!--( <iterate open="(" close=")" conjunction=" OR " property="orgRecommend" >   
+	             ui.org_code LIKE #orgRecommend[]# ||'%'  
+	          </iterate> 
+	          and ui1.recommend_level <![CDATA[>]]>0 and ui1.recommend_level <![CDATA[<=]]> 2 )  -->
+	          (RECOMMENDER_ORG_CODE in    
+	          <iterate open="(" close=")" conjunction="," property="orgRecommend" >   
+	               #orgRecommend[]#   
+	          </iterate> 
+	          and orgPersonCode is not null and recommend_level <![CDATA[<=]]> 2)
+	          
+	      </isEqual>
+	      <isEqual  prepend="or" property="orgRegisterFlag" compareValue="true">
+		      (org_code in    
+	          <iterate open="(" close=")" conjunction="," property="orgRegister" >   
+	               #orgRegister[]#   
+	          </iterate> 
+	          and org_person_code is not null <!-- and ui1.recommend_level =0 --> )
+	      </isEqual>
+     	)
+     </isEqual>
+    </sql>
+    
+    
+    <!-- V2.0 查询sql 只显示推荐信息，不包含顶级(0)数据  -->
+   <!--  
+   <sql id="recomendTempTable_fragment">
+    left join
+	 (select ui11.PERSON_CODE ,
+   ui11.ORG_PERSON_CODE ,
+   ui11.USER_LABEL ,
+   ui11.ORG_CODE ,
+   ui11.MOBILE ,ui11.NAME ,
+      urr.USER_INFO_ID,urr.recommend_level,urr.PARAENT_RECOMMEND_CODE,urr.CODE_PATH from USER_RECOMMEND_RELATION urr, USER_INFO ui11 
+        where  urr.DATA_STATUS= 'valid' and ui11.DATA_STATUS= 'valid' 
+       and  (urr.PARAENT_RECOMMEND_CODE = ui11.PERSON_CODE or urr.PARAENT_RECOMMEND_CODE = ui11.ORG_PERSON_CODE
+              or ui11.PERSON_CODE = urr.code_path 
+               )) ui1  
+               
+      on ui.ID = ui1.USER_INFO_ID
+    
+    </sql> -->
+    
+	<!-- 用户分类：复选框查询  作为公共sql片段使用  2016.12.30  xsp -->
+<!-- 	
+	 <sql id="selectUserClassification_fragment">
+		<isEqual  prepend="and" property="userClassificationFlag" compareValue="true">
+		   		( 1 = 2
+		     <isEqual  prepend="or" property="labelRecommendFlag" compareValue="true">
+		      (ui1.user_label in    
+		         <iterate open="(" close=")" conjunction="," property="labelRecommend" >   labelRecommend 普通会员推荐 
+		              #labelRecommend[]#   
+		         </iterate>)
+		     </isEqual>
+		     <isEqual  prepend="or" property="labelRegisterFlag" compareValue="true">
+		     ( u.user_label in    
+		         <iterate open="(" close=")" conjunction="," property="labelRegister" >    labelRegister 普通会员 
+		              #labelRegister[]#   
+		         </iterate>  and ui1.recommend_level=0 )
+		     </isEqual>
+		     <isEqual  prepend="or" property="orgRecommendFlag" compareValue="true">
+		      (ui1.org_code in    
+		         <iterate open="(" close=")" conjunction="," property="orgRecommend" >    orgRecommend 机构用户推荐（父级推荐码不能为空） 
+		              #orgRecommend[]#   
+		         </iterate> and ui1.org_person_code is not null)
+		     </isEqual>
+		     <isEqual  prepend="or" property="orgRegisterFlag" compareValue="true">       orgRecommend 机构用户 
+		      (u.org_code in    
+		         <iterate open="(" close=")" conjunction="," property="orgRegister" >   
+		              #orgRegister[]#   
+		         </iterate>and ui1.recommend_level <![CDATA[<=]]> 2 and u.org_person_code is not null)
+		     </isEqual>
+		   	)
+		</isEqual>
+	</sql> 
+ -->
+</sqlMap>

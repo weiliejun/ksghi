@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ksghi/ksghi.iml" filepath="$PROJECT_DIR$/ksghi/ksghi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ksghi-core/ksghi-core.iml" filepath="$PROJECT_DIR$/ksghi-core/ksghi-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ksghi-manageSystem/ksghi-manageSystem.iml" filepath="$PROJECT_DIR$/ksghi-manageSystem/ksghi-manageSystem.iml" />
+    </modules>
+  </component>
+</project>

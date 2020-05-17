@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:p="http://www.springframework.org/schema/p"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="
+  		http://www.springframework.org/schema/beans
+  		http://www.springframework.org/schema/beans/spring-beans.xsd
+  		http://www.springframework.org/schema/context
+  		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx  
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd"
+	    default-autowire="byName">
+	    
+	         
+    <!-- JNDI DataSource for J2EE environments -->
+    <!-- 
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName"><value>${datasource.jndiname}</value></property>
+	</bean>
+    -->
+    
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass"><value>${jdbc.driverClassName}</value></property>
+		<property name="jdbcUrl"><value>${jdbc.url}</value></property>
+		<property name="user"><value>${jdbc.username}</value></property>
+		<property name="password"><value>${jdbc.password}</value></property>
+		<property name="acquireIncrement"><value>5</value></property>
+        <property name="idleConnectionTestPeriod"><value>60</value></property>
+        <property name="checkoutTimeout"><value>3000</value></property>
+        <property name="maxPoolSize"><value>40</value></property>
+        <property name="minPoolSize"><value>5</value></property>
+        <property name="maxStatements"><value>0</value></property>
+        <property name="initialPoolSize"><value>10</value></property>
+        <property name="maxIdleTime"><value>60</value></property>
+	</bean>
+	
+	
+<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"> -->
+<!-- 	    <property name="driverClass"><value>${jdbc.driverClassName}</value></property> -->
+<!-- 		<property name="url"><value>${jdbc.url}</value></property> -->
+<!-- 		<property name="username"><value>${jdbc.username}</value></property> -->
+<!-- 		<property name="password"><value>${jdbc.password}</value></property> -->
+		
+<!-- 	</bean> -->
+	
+	
+	<!-- 配置iBatis的sqlMapClient -->
+    <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="dataSource"><ref bean="dataSource"/></property>
+        <property name="configLocation" value="classpath:config/ibatis/ibatis-config.xml"></property>
+    </bean>
+
+    <!-- 根据sqlMapClien获取一个SqlMapClient模版 -->
+    <bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+        <property name="sqlMapClient" ref="sqlMapClient"/>
+    </bean> 
+   
+    <!-- 配置JDBC的jdbcTemplate -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean> 
+	
+	<!-- Transaction manager for a single JDBC DataSource -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	 <!-- enable the configuration of transactional behavior based on annotations -->
+	 <tx:annotation-driven transaction-manager="transactionManager"/>
+<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+	 <!-- 控制一个pool可分配多少个jedis实例 --> 
+		<property name="maxTotal" value="${redisMaxActive}" />
+		<!-- 控制一个pool最多有多少个状态为idle(空闲)的jedis实例 -->  
+		<property name="maxIdle" value="${redisMaxIdle}"/>
+		<property name="minIdle" value="${redisMinIdle}"></property>
+		<!-- 表示当borrow一个jedis实例时，最大的等待时间，如果超过等待时间，则直接抛出JedisConnectionException -->  
+		<property name="maxWaitMillis" value="${redisMaxWait}" />
+		<!-- 在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的 -->  
+		<property name="testOnBorrow" value="${redisTestOnBorrow}" />
+		<property name="testOnReturn" value="${redisTestOnReturn}" />
+	</bean>	
+	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1">
+            <list>  
+	           	<bean class="redis.clients.jedis.JedisShardInfo">  
+	               <constructor-arg  
+	                   index="0"  
+	                  value="${redisHost}" type="java.lang.String"/>  
+	               <constructor-arg  
+	                   index="1"  
+	                    value="${redisPort}"  
+	                    type="int" />  
+	            </bean>  
+			</list>
+        </constructor-arg>
+    </bean>
+    
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="destroy">
+	        <constructor-arg ref="jedisPoolConfig" />  
+	        <constructor-arg value="${redisHost}:${redisPort}" type="java.lang.String"/>
+	        <constructor-arg type="int" value="${redisMaxWait}" />  
+	</bean>
+	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+    p:host-name="${redisHost}" p:port="${redisPort}"  />
+</beans>

@@ -1,0 +1,122 @@
+1.测试应用服务器信息（linux）：
+       地址：192.168.1.89
+      (主机名：wjkdbdg)
+       用户名：appwjk 
+       密码：appwjk
+       
+   root用户密码：junde    
+       
+  tomcat路径： /wjk/tomcat6.0
+  
+       
+       
+2.测试数据库服务器（linux）
+       地址：192.168.1.88
+      主机名：wjkdb
+      
+      root/junde
+      
+      sys/oracle
+      
+一：Linux下tomcat服务的启动、关闭与错误跟踪，使用PuTTy远程连接到服务器以后，通常通过以下几种方式启动关闭tomcat服务： 
+切换到tomcat主目录下的bin目录（cd usr/local/tomcat/bin） 
+1，启动tomcat服务 
+方式一：直接启动 ./startup.sh 
+方式二：作为服务启动 nohup ./startup.sh & 
+方式三：控制台动态输出方式启动 ./catalina.sh run 
+解释： 
+通过方式一、方式三启动的tomcat有个弊端，当客户端连接断开的时候，tomcat服务也会立即停止，通过方式二可以作为linux服务一直运行 
+通过方式一、方式二方式启动的tomcat，其日志会写到相应的日志文件中，而不能动态地查看tomcat控制台的输出信息与错误情况，通过方式三可以以控制台模式启动tomcat服务， 
+直接看到程序运行时后台的控制台输出信息，不必每次都要很麻烦的打开catalina.out日志文件进行查看，这样便于跟踪查阅后台输出信息。tomcat控制台信息包括log4j和System.out.println()等输出的信息。 
+2，关闭tomcat服务 
+./shutdown.sh 
+3，tomcat运行时jvm内存分配 
+⑴开发环境下在myeclipse中配置 
+-Xms256m -Xmx512m -XX:NewSize=64m -XX:MaxNewSize=128m -XX:PermSize=512m -XX:MaxPermSize=512m 
+⑵，线上环境(直接通过catalina或startup命令行的方式启动) 
+①Linux下：catalina.sh 
+# OS specific support. $var _must_ be set to either true or false.在该注释之后加下面一行 
+JAVA_OPTS="-server -Xms256m -Xmx512m -XX:NewSize=64m -XX:MaxNewSize=128m -XX:PermSize=512m -XX:MaxPermSize=512m" 
+②Windows下：cattalina.bat 
+rem Guess CATALINA_HOME if not defined 在该注释之后加下面一行 
+set JAVA_OPTS=--Xms256m -Xmx512m -XX:NewSize=64m -XX:MaxNewSize=128m -XX:PermSize=512m -XX:MaxPermSize=512m 
+4，在开发环境下分别为eclipse和tomcat指定JVM(JRE) 
+Eclipse是一个普通的Java程序，因此必须有一个JRE做为运行环境。所以启动后会看到任务管理器中有一个javaw.exe进程。在Eclipse中可以为每个项目指定不同的JDK版本，比如A项目使用JDK1.5编译，B项目使用JDK1.6编译。这个JDK版本是和Eclipse运行JRE没有直接关系。 
+Tomcat是一个WEB应用服务容器，除了处理HTTP请求，还要运行Java代码，因此也要一个JRE，启动后会看到任务管理器中有一个javaw.exe进程，想要知道自己的MyEclipse启动时使用的jvm版本，可以在任务管理器里面查看。 
+为eclipse指定jvm，可以修改eclipse.ini文件，添加-vm参数，指定要运行的虚拟机的位置，如：-vm D:\Program Files\jdk1.6.0_02\\jre\bin\javaw.exe 
+tomcat运行的jvm环境可在MyEclipse 首选项中设置，指定安装好的jdk 
+
+二：Linux 下的一些常用命令解释： 
+1,pwd-->示当前的工作目录（pwd:print working directory） 
+2,ls-->显示当前目录内容(list) 
+ls|more 分屏显示("|"为管道符，将前一个命令结果传递给后面的命令，more表示分屏) 
+ls /usr>test01/abc.txt 将指定目录的内容追加到test01目录下的abc.txt文本文档中 
+ls -l 显示长格式，简写ll，主要看文件的名，大小，权限等 
+ls -a 显示隐藏文件 
+3,cd-->改变当前工作目录 
+cd /usr-->转到指定目录 
+cd usr-->转到指定目录的子目录 
+cd ..-->返回到上一级目录 
+cd ~ -->返回到主目录 
+4，clear--> 清屏 
+5，cat-->显示文件内容 
+cat file|more分屏显示文件内容(先显示文件内容，再将结果内容传给后一个命令分屏) 
+cat file|grep abc 显示包含字符abc的文件内容(先显示文件内容，再将结果内容传给后一个命令搜索，grep具有搜索功能) 
+6，touch-->创建新文件 
+7，mkdir-->创建新目录 
+8，rm-->删除文件或目录 
+rm file.txt 删除文件 
+rm -rf test01 删除不为空的目录(参数r:递归recursion，f：强制force) 
+9，rmdir-->删除空目录 
+10，cp-->复制文件 
+cp src.txt dest.txt 
+11，mv-->移动文件 
+mv abc.txt def.txt 改名 
+mv test01 test02 改目录名 
+mv test相当于mv t+(按Tab键),tab键有查找补充命令功能。 
+12，chmod-->改变权限模式 
+chmod +x catalina.sh 为catalina.sh加可执行的权限(参数x:执行execute)。linux下的文件是否可执行取决于文件属性，不看扩展名。 
+chmod a+r catalina.out 将文件 catalina.out 设为所有人皆可读取。(参数a:所有人all) 
+chmod ugo+r catalina.out 也是将文件 catalina.out 设为所有人皆可读取。(参数u:档案拥有者user，g:group群组，o:other其他) 
+13，vi-->Linux下的一个简单编辑器 
+vi .bash_profile 打开Linux的用户级初始文件,:wq保存退出，:q!不保存退出 
+14，tail -->显示文件尾部内容 
+tail -f ./catalina.out，#将文件最尾部内容显示在屏幕上，并不断刷新显示，按ctrl+c或delete退出。 
+15，netstat-->查看网络端口与进程号 
+netstat -anp|grep 8080 直接查看指定端口的进程pid 
+#结果为 
+协议 本地地址 外部地址 状态 PID 
+TCP 0.0.0.0:80 0.0.0.0:8080 LISTENING 5144/java 
+则5144为8080这个端口的tomcat进程的pid,然后就可以kill这个进程:kill -9 5144 
+对比Windows下netstat命令：netstat -ano|findstr 8080 
+16，ping -->查看网络是连通 
+ping 127.16.8.66 查看当前机器与目录机器是否能正常通信(主要是看TCP/IP协议是否正常) 
+17，ipconfig 查看ip地址 
+ipconfig -all 可以看到各个网络适配器(本地网卡、无线网卡)的IP地址和MAC地址 
+18，ps -->查看程序活动进程 
+ps -ef |grep tomcat 查看是否已经有tomcat在运行了,如果有则将其进程杀死 
+#结果为: 
+sun 1540 1 0 10:21 pts/1 00:00:06 /java/jdk/bin/java -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava. endorsed.dirs=/java/tomcat/common/endorsed -classpath :/java/tomcat/bin/bootstrap.jar:/java/tomcat/bin/commons-logging-api.jar - Dcatalina.base=/java/tomcat -Dcatalina.home=/java/tomcat -Djava.io.tmpdir=/java/tomcat/temp org.apache.catalina.startup.Bootstr ap start 
+则 1540 就为进程号 pid = 1540，然后就可以kill这个进程:kill -9 1540 
+对比Windows下tasklist命令：tasklist | findstr tomcat 
+19，telnet-->测试远程端口是否连通 
+telnet 10.4.200.114 1433 
+①端口通畅的情况 
+Trying 10.4.200.114... 
+Connected to 10.4.200.114 (10.4.200.114). 
+Escape character is '^]'. 
+②端口不通的情况 
+Trying 10.4.200.114... 
+三:Linux与Windows的几点区别： 
+echo $PATH 回显Linux环境变量PATH的值,Linux下的环境变量必须大写 
+echo %path% 回显Windows环境变量path的值 
+export PATH=/usr/local/tomcat 修改设置Linux环境变量PATH的值(临时),Linux文件系统路径是斜杠 
+set path=D:\Program Files\tomcat 修改Windows环境变量path的值(临时)，Windows文件系统路径是反斜杠 
+Linux:查看、修改Linux下的用户级初始文件(.bash_profile),它是个隐藏文件（永久） 
+Windows:计算机-->属性-->高级-->环境变量,查看、修改环境变量（永久） 
+Linux命令搜索用grep,例如netstat -anp|grep 8080 
+Windows Dos命令搜索用findstr,例如netstat -anp|findstr 8080 
+四：关于远程连接Linux服务器的工具(WinSCP和PuTTy)介绍： 
+两者都支持SSH协议框架(Secure Shell)，通过SSH协议可以把所有传输的数据进行加密并压缩,可以加快传输的速度。用它来取代传统的Telnet、FTP等网络应用程序，通过SSH登录到远程服务器执行命令。在不安全的网路通讯环境中，它提供了很强的验证（authentication）机制与非常安全的通讯环境。实际上，SSH开发者的原意是设计它来取代原UNIX系统上的rcp、rlogin、rsh等指令程序的；但经过适当包装后，发现它在功能上完全可以取代传统的Telnet、FTP等应用程序。 
+WinSCP是一个图形界面客户端类似windows资源管理器，它的主要功能就是在本地机上管理远程计算机文件 
+PuTTy是个典型Secure Shell Client远程登录客户端工具,通过提供类似windows的“dos窗口”，来操作linux，就像telnet工具，输入用户名和密码，就可以在命令行下面输入各种Linux命令进行操作。

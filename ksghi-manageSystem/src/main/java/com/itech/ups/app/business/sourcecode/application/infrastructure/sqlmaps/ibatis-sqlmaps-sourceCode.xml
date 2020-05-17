@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="sourceCode">
+    <typeAlias alias="sourceCode" type="com.itech.ups.app.sourcecode.application.domain.SourceCode"/>
+    <resultMap id="sourceCodeResultMap" class="sourceCode">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="SOURCE_WEBSITE" property="sourceWebsite" jdbcType="VARCHAR"/>
+        <result column="SOURCE_NAME" property="sourceName" jdbcType="VARCHAR"/>
+        <result column="SOURCE_CODE" property="sourceCode" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectSourceCodeById" resultMap="sourceCodeResultMap" parameterClass="string">
+    select ID, SOURCE_WEBSITE, SOURCE_NAME, SOURCE_CODE, CREATE_TIME, CREATOR_ID, CREATOR_NAME,
+      REMARK, STATUS, DATA_STATUS
+    from SOURCE_CODE
+    where DATA_STATUS='valid' AND ID = #id:VARCHAR#
+  </select>
+
+    <select id="findSourceCodeByCode" resultMap="sourceCodeResultMap" parameterClass="string">
+    select ID, SOURCE_WEBSITE, SOURCE_NAME, SOURCE_CODE, CREATE_TIME, CREATOR_ID, CREATOR_NAME,
+      REMARK, STATUS, DATA_STATUS
+    from SOURCE_CODE
+    where DATA_STATUS='valid' AND SOURCE_CODE = #code:VARCHAR#
+    </select>
+
+    <select id="selectSourceCodesCountByParam" resultClass="int" parameterClass="map">
+        SELECT COUNT(1) FROM SOURCE_CODE SC
+        WHERE SC.DATA_STATUS='valid'
+        <isNotEmpty prepend="and" property="sourceName">
+            SC.SOURCE_NAME like '%'|| #sourceName# ||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="sourceCode">
+            SC.SOURCE_CODE like '%'|| #sourceCode# ||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="creatorName">
+            SC.CREATOR_NAME like '%'|| #creatorName# ||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="status">
+            SC.STATUS = #status:VARCHAR#
+        </isNotEmpty>
+    </select>
+
+    <select id="selectSourceCodesByParam" parameterClass="map" resultMap="sourceCodeResultMap">
+        select * from (select rowtemp.*, rownum rownumtemp from (
+        select rownum as rn, ID , SOURCE_WEBSITE, SOURCE_NAME, SOURCE_CODE, CREATE_TIME, CREATOR_ID, CREATOR_NAME,
+        REMARK, STATUS, DATA_STATUS
+        from SOURCE_CODE SC
+        where SC.DATA_STATUS='valid'
+        <isNotEmpty prepend="and" property="sourceName">
+            SC.SOURCE_NAME like '%'|| #sourceName# ||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="sourceCode">
+            SC.SOURCE_CODE like '%'|| #sourceCode# ||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="creatorName">
+            SC.CREATOR_NAME like '%'|| #creatorName# ||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="status">
+            SC.STATUS = #status:VARCHAR#
+        </isNotEmpty>
+        order by SC.CREATE_TIME desc
+        ) rowtemp)
+        where 1=1
+        <isNotEqual compareValue="0" prepend="and" property="rowEnd">
+            rownumtemp <![CDATA[<=]]> #rowEnd#
+            and rownumtemp  <![CDATA[>]]> #rowStart#
+        </isNotEqual>
+
+    </select>
+
+    <insert id="addSourceCode" parameterClass="sourceCode">
+        insert into SOURCE_CODE
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="sourceWebsite">
+                SOURCE_WEBSITE
+            </isNotNull>
+            <isNotNull prepend="," property="sourceName">
+                SOURCE_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="sourceCode">
+                SOURCE_CODE
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sourceWebsite">
+                #sourceWebsite:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sourceName">
+                #sourceName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sourceCode">
+                #sourceCode:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+
+    <update id="updateSourceCode" parameterClass="sourceCode">
+        update SOURCE_CODE
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="sourceWebsite">
+                SOURCE_WEBSITE = #sourceWebsite:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sourceName">
+                SOURCE_NAME = #sourceName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sourceCode">
+                SOURCE_CODE = #sourceCode:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID = #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME = #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK = #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS = #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS = #dataStatus:VARCHAR#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+
+</sqlMap>

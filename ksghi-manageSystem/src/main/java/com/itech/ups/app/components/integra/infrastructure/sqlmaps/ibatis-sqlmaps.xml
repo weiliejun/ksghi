@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="integra">
+    <typeAlias alias="userIntegraRule" type="com.itech.ups.app.user.application.domain.UserIntegraRule"/>
+    <typeAlias alias="userIntegra" type="com.itech.ups.app.user.application.domain.UserIntegra"/>
+
+    <resultMap id="userIntegraRuleResultMap" class="userIntegraRule">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="RULE_EXPRESSION" property="ruleExpression" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="START_DATE" property="startDate" jdbcType="CHAR"/>
+        <result column="END_DATE" property="endDate" jdbcType="CHAR"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR"/>
+        <result column="EDIT_TIME" property="editTime" jdbcType="CHAR"/>
+        <result column="EDITOR_ID" property="editorId" jdbcType="VARCHAR"/>
+        <result column="EDITOR_NAME" property="editorName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="userIntegraResultMap" class="userIntegra">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="USER_INFO_ID" property="userInfoId" jdbcType="VARCHAR"/>
+        <result column="CHANGE_NUM" property="changeNum" jdbcType="DECIMAL"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR"/>
+        <result column="RELATION_ID" property="relationId" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+    </resultMap>
+
+    <select id="selectUserIntegraRuleByBusiType" resultMap="userIntegraRuleResultMap" parameterClass="string">
+    select ID, RULE_EXPRESSION, BUSI_TYPE, CREATE_TIME, REMARK, DATA_STATUS, START_DATE, END_DATE,
+      CREATOR_ID, CREATOR_NAME, EDIT_TIME, EDITOR_ID, EDITOR_NAME
+    from USER_INTEGRA_RULE
+    where BUSI_TYPE = #busiType:VARCHAR#
+    and DATA_STATUS = 'valid'
+  </select>
+
+    <update id="updateUserInfo" parameterClass="map">
+        update USER_INFO
+        <dynamic prepend="set">
+            <isNotNull property="integraType">
+                <isEqual property="integraType" compareValue="incoming">
+                    INTEGRA_AMOUNT = INTEGRA_AMOUNT + (#integraAmount:DECIMAL#)
+                </isEqual>
+                <isEqual property="integraType" compareValue="expend">
+                    INTEGRA_AMOUNT = INTEGRA_AMOUNT - (#integraAmount:DECIMAL#)
+                </isEqual>
+            </isNotNull>
+        </dynamic>
+        where ID = #userInfoId:VARCHAR#
+    </update>
+
+    <insert id="insertUserIntegra" parameterClass="userIntegra">
+        insert into USER_INTEGRA
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="userInfoId">
+                USER_INFO_ID
+            </isNotNull>
+            <isNotNull prepend="," property="changeNum">
+                CHANGE_NUM
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                TYPE
+            </isNotNull>
+            <isNotNull prepend="," property="busiType">
+                BUSI_TYPE
+            </isNotNull>
+            <isNotNull prepend="," property="relationId">
+                RELATION_ID
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                DESCRIPTION
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="userInfoId">
+                #userInfoId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="changeNum">
+                #changeNum:DECIMAL#
+            </isNotNull>
+            <isNotNull prepend="," property="type">
+                #type:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="busiType">
+                #busiType:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="relationId">
+                #relationId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="description">
+                #description:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+</sqlMap>

@@ -1,0 +1,653 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.ksghi</groupId>
+  <artifactId>ksghi-manageSystem</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+	<parent>
+		<groupId>com.ksghi</groupId>
+		<artifactId>ksghi</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../ksghi/pom.xml</relativePath>
+	</parent>
+ 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<log4j.version>1.2.14</log4j.version>
+		<servlet.version>2.5</servlet.version>
+		<commons-logging.version>1.1.1</commons-logging.version>
+		<commons-lang3.version>3.1</commons-lang3.version>
+		<commons-lang.version>2.3</commons-lang.version>
+		<commons-collections.version>3.2</commons-collections.version>
+		<commons-beanutils.version>1.8.0</commons-beanutils.version>
+		<commons-httpclient.version>3.1</commons-httpclient.version>
+		<commons-codec.version>1.7</commons-codec.version>
+		<commons-cli>1.1</commons-cli>
+		<commons-fileupload.version>1.3.1</commons-fileupload.version>
+		<ibatis.version>2.3.0.677</ibatis.version>
+		<json-lib.version>2.4</json-lib.version>
+		<gson.version>2.2.4</gson.version>
+		<httpClient.version>4.5.2</httpClient.version>
+		<dom4j.version>1.6.1</dom4j.version>
+		<javax.mail.version>1.5.0</javax.mail.version>
+		<ojdbc.version>10.2.0.5.0</ojdbc.version>
+		<aspectjweaver.version>1.5.4</aspectjweaver.version>
+		<fastjson.version>1.1.39</fastjson.version>
+		<commons-io.version>2.4</commons-io.version>
+		<cglib.version>2.2</cglib.version>
+		<spring.version>3.2.4.RELEASE</spring.version>
+		<java.home>${env.JAVA_HOME}</java.home>
+<!-- 		<java.home>D:\jdk1.7.0_79</java.home> -->
+	</properties>
+ 	<!-- 配置远程发布到私服，mvn deploy -->
+	<distributionManagement>
+	    <repository>
+	        <id>releases</id>
+	        <name>Nexus Release Repository</name>
+	        <url>http://192.168.1.101:8081/nexus/content/repositories/releases/</url>
+	    </repository>
+	    <snapshotRepository>
+	        <id>snapshots</id>
+	        <name>Nexus Snapshot Repository</name>
+	        <url>http://192.168.1.101:8081/nexus/content/repositories/snapshots/</url>
+	    </snapshotRepository>
+	</distributionManagement>
+ 	<dependencies>
+ 		<dependency>
+			<groupId>com.ksghi</groupId>
+			<artifactId>ksghi-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+ 		<!-- gzip star -->
+	 	<dependency>
+		  <groupId>com.vjinke.thirdparty</groupId>
+		  <artifactId>tk-filters</artifactId>
+		  <version>1.0</version>
+		</dependency>
+		<!-- gzip end -->
+ 		<!-- redis star -->
+ 		<dependency>  
+	        <groupId>org.springframework.data</groupId>  
+	        <artifactId>spring-data-redis</artifactId>  
+	        <version>1.7.1.RELEASE</version>  
+	    </dependency>
+	    <dependency>
+		    <groupId>redis.clients</groupId>
+		    <artifactId>jedis</artifactId>
+		    <version>2.8.1</version>
+		</dependency>
+		<!-- redis end -->
+ 		<!-- CFCA star -->
+		<dependency>
+		  <groupId>com.vjinke.thirdparty</groupId>
+		  <artifactId>cfca-sadk</artifactId>
+		  <version>3.2.3.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.6.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>2.6.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.6.0</version>
+		</dependency>
+		
+		<!-- CFCA end -->
+		<!-- 信鸽推送star -->
+		<dependency>
+		  <groupId>com.vjinke.thirdparty</groupId>
+		  <artifactId>xg-push</artifactId>
+		  <version>1.0</version>
+		</dependency>
+		<!-- 信鸽推送end -->
+		<!-- 小米推送 start-->
+		<dependency>
+		  <groupId>com.vjinke.thirdparty</groupId>
+		  <artifactId>MiPush_SDK_Server</artifactId>
+		  <version>2.2.17</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.vjinke.thirdparty</groupId>
+		  <artifactId>json-simple</artifactId>
+		  <version>1.1.1</version>
+		</dependency>
+		<!-- 小米推送 end-->
+		
+		<!-- web容器内置的servlet-api jar包 -->
+		<dependency>
+		    <groupId>jsptags</groupId>
+		    <artifactId>pager-taglib</artifactId>
+		    <version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- json -->
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>${json-lib.version}</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.googlecode.json-simple</groupId>
+		    <artifactId>json-simple</artifactId>
+		    <version>1.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+		<dependency>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
+		    <version>1.5.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.opensymphony/xwork -->
+		<dependency>
+		    <groupId>com.opensymphony</groupId>
+		    <artifactId>xwork</artifactId>
+		    <version>2.1.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc-portlet -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-webmvc-portlet</artifactId>
+		    <version>3.2.10.RELEASE</version>
+		</dependency>	
+		<dependency>
+		  <groupId>bsf</groupId>
+		  <artifactId>bsf</artifactId>
+		  <version>2.4.0</version>
+		</dependency>	
+	</dependencies>
+ 
+  
+  <!-- <modules>
+		<module>../ksghi-interface</module>
+		<module>../ksghi-customerApp</module>
+		<module>../ksghi-customerMobile</module>
+		<module>../ksghi-customerPC</module>
+		<module>../ksghi-provider</module>
+	</modules> -->
+  <!-- 申明不同环境调用不同数据库连接参数 -->
+  <profiles>
+	 <!-- 开发/测试环境，默认激活 -->
+	 <profile>
+		<id>local</id>
+			<properties>
+				<profiles.active>local</profiles.active>
+				<app.log.filesRootPath>/wjkapp/wjklogs</app.log.filesRootPath>
+				<app.name>Wjk-Manage-System</app.name>
+				<jdbc.url>jdbc:oracle:thin:@192.168.1.88:1521:wjk</jdbc.url>
+				<jdbc.username>ksghi</jdbc.username>
+				<jdbc.password>ksghi</jdbc.password>
+				<mail.smtp.host>smtp.vjinke.com</mail.smtp.host>
+				<mail.username>admin@vjinke.com</mail.username>
+				<mail.password>it123Vjinke</mail.password>
+ 				<!-- <chinapnr.merCustId>6000060000187827</chinapnr.merCustId>
+				<chinapnr.merId>530082</chinapnr.merId>
+				<chinapnr.merPrk>E:\Workspaces\ksghi-manageSystem\src\main\resources\config\environment\local\thirdparty\chinapnr\key\MerPrK530082.key</chinapnr.merPrk>
+				<chinapnr.pgPubk>E:\Workspaces\ksghi-manageSystem\src\main\resources\config\environment\local\thirdparty\chinapnr\key\PgPubk.key</chinapnr.pgPubk> -->
+				<!-- 银行存管使用 调试存管接口时，将上面注释掉，打开下面-->
+				<chinapnr.merCustId>6000060007054261</chinapnr.merCustId>
+				<chinapnr.merId>531301</chinapnr.merId>
+				<chinapnr.merPrk>E:\Workspaces\ksghi-manageSystem\src\main\resources\config\environment\local\thirdparty\chinapnr\key\depoBank\MerPrK531301.key</chinapnr.merPrk>
+				<chinapnr.pgPubk>E:\Workspaces\ksghi-manageSystem\src\main\resources\config\environment\local\thirdparty\chinapnr\key\depoBank\PgPubk.key</chinapnr.pgPubk>
+				<chinapnr.requestPayUrl>http://mertest.chinapnr.com/muser/publicRequests</chinapnr.requestPayUrl>
+				<chinapnr.merContextPath>http://123.126.102.219:81/wms</chinapnr.merContextPath>
+				<chinapnr.logFilePath>/wjkapp/wjklogs/provider</chinapnr.logFilePath>
+				<wjkLoanPortalSystemUrl>http://123.126.102.219:50005/wlps</wjkLoanPortalSystemUrl>
+				<wjkInvestPortalSystemUrl>http://123.126.102.219:50005/wips</wjkInvestPortalSystemUrl>
+				<wjkManageSystemSystemUrl>http://123.126.102.219:50005/wms</wjkManageSystemSystemUrl>
+				<MWjkInvestPortalSystemUrl>http://123.126.102.219:50005/mwips</MWjkInvestPortalSystemUrl>
+				<wjkManageSystemSystemUrl>http://123.126.102.219:50005/wms</wjkManageSystemSystemUrl>
+				<filesync.receiverUrl>http://127.0.0.1:9999/wips/portal/file/receive</filesync.receiverUrl>
+				<product.previewUrl>http://127.0.0.1:9999/wips/product/details/</product.previewUrl>
+				<activity.previewUrl>http://123.126.102.219:50005/wips</activity.previewUrl>
+				<logo.path>http://123.126.102.219:50005/wmps/assets/ui/themes/base/images/new_logo.png</logo.path>
+				<index.url>http://123.126.102.219:50005/wmps/index</index.url>
+				<invest.index.url>http://123.126.102.219:50005/wips/index</invest.index.url>
+				<invest.logo.path>http://123.126.102.219:50005/wips/assets/ui/themes/base/images/new_logo.png</invest.logo.path>
+				<loan.logo.path>http://123.126.102.219:50005/wlps/assets/ui/themes/base/images/new_logo.png</loan.logo.path>
+				<loan.index.url>http://123.126.102.219:50005/wlps/register/index</loan.index.url>
+				<product.pictureServerURL>https://123.126.102.219:40444/resources</product.pictureServerURL>
+				<authAmtTg>10000000.00</authAmtTg>
+				<jgMobile>13910778736</jgMobile>
+				<product.pictureServerReceiverUrl>https://123.126.102.219:40444/resources/portal/file/receive</product.pictureServerReceiverUrl>
+				<product.productAgreementUrl>https://123.126.102.219:40444/resources/product/agreement/</product.productAgreementUrl>
+				<app.version>v1.0</app.version>
+				<chinapnr.merCharset>UTF-8</chinapnr.merCharset>
+				<chinapnr.version>10</chinapnr.version>
+				<chinapnr.version2>20</chinapnr.version2>
+				<chinapnr.version3>30</chinapnr.version3>
+				<chinapnr.version4>40</chinapnr.version4>
+				<filesync.fileReceiverUrl>/portal/file/receive</filesync.fileReceiverUrl>
+				<filesync.receiverContextPath>/wips</filesync.receiverContextPath>
+				<jdbc.driverClassName>oracle.jdbc.driver.OracleDriver</jdbc.driverClassName>
+				<product.isUploadToPictureServer>1</product.isUploadToPictureServer>
+				<sms.key>804333</sms.key>
+				<sms.softwareSerialNo>9SDK-EMY-0229-JDTOO</sms.softwareSerialNo>
+				
+				<androidapiKey>TEcol0benIay3WnrkWO8ZX3H</androidapiKey>
+				<androidsecretKey>CLwbrYi971TnHYLvk4U5bV8rMNBmLEYR</androidsecretKey>
+				<IOSapiKey>aM1iXewqv7dUsGonH2mAIYSE</IOSapiKey>
+				<IOSsecretKey>BrNsWyF9W9ChGoQIxqfvIUOQIhdS0rpm</IOSsecretKey>
+				<pushDepolyStatus>1</pushDepolyStatus>
+				<!-- 信鸽推送参数 -->
+				<xg.appId>2100244708</xg.appId>
+				<xg.appSecret>5cacadf6b8c0d4089ae00e6f4d074f57</xg.appSecret>
+				<!-- 小米推送参数 -->
+				<mi.appSecret>KV46d6i/k5/K90aABWGxEA==</mi.appSecret>
+				<!-- 安心签相关参数 -->
+				<!-- 通讯证书JKS储存路径，最好为绝对地址 -->
+				<trustSign.jskPath>D:\\workspacenow\\ksghi-manageSystem\\src\\main\\resources\\config\\trustsign\\local\\anxinsign.jks</trustSign.jskPath>
+				<!-- JKS文件密码（JKS外壳和私钥的密码应该一致） -->
+				<trustSign.jskPwd>vjk123456</trustSign.jskPwd>
+				<!-- 证书别名 -->
+				<trustSign.alias>anxinsign</trustSign.alias>
+				<!-- CS连接地址 -->
+				<trustSign.csUrl>https://210.74.42.33:9443/FEP/</trustSign.csUrl>
+				<!-- 平台Id -->
+				<trustSign.platId>4A98F0C1CA4D41E2E05312016B0AB014</trustSign.platId>
+				<!-- 认证方式 -->
+				<!-- <trustSign.authenticationMode>攀枝花商业银行</trustSign.authenticationMode> -->
+				
+				<!-- redis相关配置最大连接数：能够同时建立的“最大链接个数”  ，#最大空闲数：空闲链接数大于maxIdle时，将进行回收，#最小空闲数：低于minIdle时，将创建新的链接， #最大等待时间：单位ms  #使用连接时，检测连接是否成功 redis.pool.testOnReturn=true  #返回连接时，检测连接是否成功  -->
+				<redisMaxActive>200</redisMaxActive>
+				<redisMaxIdle>20</redisMaxIdle>
+				<redisMinIdle>5</redisMinIdle>
+				<redisMaxWait>100000</redisMaxWait>
+				<redisTestOnBorrow>true</redisTestOnBorrow>
+				<redisTestOnReturn>true</redisTestOnReturn>
+				<redisHost>192.168.1.89</redisHost>
+				<redisPort>6379</redisPort>
+				<redisName>wjkdubbo</redisName>
+				<!-- 融宝托付攀商银行相关参数start -->
+				<!-- 接口请求地址域名 -->
+				<reapalBaseUrl>http://118.31.228.185:12010</reapalBaseUrl>
+				<!-- MD5加密key-->
+				<reapalMD5Key>7181b7625cc71b6d416969cad20e6bcga96bgc378c6a799eg492c09738703gd6</reapalMD5Key>
+				<!-- 接口版本号-->
+				<reapalVersion>1.0</reapalVersion>
+				<!-- 合作伙伴在融宝的ID-->
+				<reapalPartner>102200000000726</reapalPartner>
+				<!-- 加密方式 MD5：0，RSA：1-->
+				<reapalSignType>0</reapalSignType>
+				<!-- 融宝托付攀商银行相关参数start -->
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<!-- 测试环境 -->
+		<profile>
+			<id>preproduction</id>
+			<properties>
+				<profiles.active>preproduction</profiles.active>
+				<app.log.filesRootPath>/wjkapp/wjklogs</app.log.filesRootPath>
+				<app.name>Wjk-Console-Manage-System</app.name>
+				<jdbc.url>jdbc:oracle:thin:@192.168.1.88:1521:wjk</jdbc.url>
+				<jdbc.username>ksghi</jdbc.username>
+				<jdbc.password>ksghi</jdbc.password>
+				<mail.smtp.host>smtp.vjinke.com</mail.smtp.host>
+				<mail.username>admin@vjinke.com</mail.username>
+				<mail.password>it123Vjinke</mail.password>
+				<!-- <chinapnr.merCustId>6000060000187827</chinapnr.merCustId>
+				<chinapnr.merId>530082</chinapnr.merId>
+				<chinapnr.merPrk>/wjk/tomcat8.5.4console/webapps/ROOT/WEB-INF/classes/config/thirdparty/chinapnr/key/MerPrK530082.key</chinapnr.merPrk>
+				<chinapnr.pgPubk>/wjk/tomcat8.5.4console/webapps/ROOT/WEB-INF/classes/config/thirdparty/chinapnr/key/PgPubk.key</chinapnr.pgPubk> -->
+				
+				<chinapnr.merCustId>6000060007054261</chinapnr.merCustId>
+				<chinapnr.merId>531301</chinapnr.merId>
+				<chinapnr.merPrk>/wjk/tomcat8.5.4console/webapps/ROOT/WEB-INF/classes/config/thirdparty/chinapnr/key/depoBank/MerPrK531301.key</chinapnr.merPrk>
+				<chinapnr.pgPubk>/wjk/tomcat8.5.4console/webapps/ROOT/WEB-INF/classes/config/thirdparty/chinapnr/key/depoBank/PgPubk.key</chinapnr.pgPubk>
+				<chinapnr.requestPayUrl>http://mertest.chinapnr.com/muser/publicRequests</chinapnr.requestPayUrl>
+				<chinapnr.merContextPath>https://123.126.102.219:40446</chinapnr.merContextPath>
+				<chinapnr.logFilePath>/wjkapp/wjklogs/provider</chinapnr.logFilePath>
+				<wjkLoanPortalSystemUrl>https://123.126.102.219:40444</wjkLoanPortalSystemUrl>
+				<wjkInvestPortalSystemUrl>https://123.126.102.219:40443</wjkInvestPortalSystemUrl>
+				<!-- <wjkManageSystemSystemUrl>http://123.126.102.219\:50005/wms</wjkManageSystemSystemUrl> -->
+				<MWjkInvestPortalSystemUrl>http://192.168.1.111</MWjkInvestPortalSystemUrl>
+				<wjkManageSystemSystemUrl>http://123.126.102.219:50005/wms</wjkManageSystemSystemUrl>
+				<filesync.receiverUrl>https://123.126.102.219:40443/portal/file/receive</filesync.receiverUrl>
+				<product.previewUrl>https://123.126.102.219:40443/product/viewProduct/</product.previewUrl>
+				<activity.previewUrl>http://www.vjinketest.com/</activity.previewUrl>
+				<logo.path>https://123.126.102.219:40446/assets/ui/themes/base/images/new_logo.png</logo.path>
+				<index.url>https://123.126.102.219:40446/index</index.url>
+				<invest.index.url>https://123.126.102.219:40443/index</invest.index.url>
+				<invest.logo.path>https://123.126.102.219:40443/assets/ui/themes/base/images/new_logo.png</invest.logo.path>
+				<loan.logo.path>https://123.126.102.219:40444/assets/ui/themes/base/images/new_logo.png</loan.logo.path>
+				<loan.index.url>https://123.126.102.219:40444/register/index</loan.index.url>
+				<product.pictureServerURL>https://123.126.102.219:40444/resources</product.pictureServerURL>
+				<authAmtTg>10000000.00</authAmtTg>
+				<jgMobile>13910778736</jgMobile>
+				<product.pictureServerReceiverUrl>https://123.126.102.219:40444/resources/portal/file/receive</product.pictureServerReceiverUrl>
+				<product.productAgreementUrl>https://123.126.102.219:40444/resources/product/agreement/</product.productAgreementUrl>	
+				<app.version>v1.0</app.version>
+				<chinapnr.merCharset>UTF-8</chinapnr.merCharset>
+				<chinapnr.version>10</chinapnr.version>
+				<chinapnr.version2>20</chinapnr.version2>
+				<chinapnr.version3>30</chinapnr.version3>
+				<chinapnr.version4>40</chinapnr.version4>
+				<filesync.fileReceiverUrl>/portal/file/receive</filesync.fileReceiverUrl>
+				<filesync.receiverContextPath>/wips</filesync.receiverContextPath>
+				<jdbc.driverClassName>oracle.jdbc.driver.OracleDriver</jdbc.driverClassName>
+				<product.isUploadToPictureServer>1</product.isUploadToPictureServer>
+				<sms.key>804333</sms.key>
+				<sms.softwareSerialNo>9SDK-EMY-0229-JDTOO</sms.softwareSerialNo>	
+				
+				<androidapiKey>TEcol0benIay3WnrkWO8ZX3H</androidapiKey>
+				<androidsecretKey>CLwbrYi971TnHYLvk4U5bV8rMNBmLEYR</androidsecretKey>
+				<IOSapiKey>aM1iXewqv7dUsGonH2mAIYSE</IOSapiKey>
+				<IOSsecretKey>BrNsWyF9W9ChGoQIxqfvIUOQIhdS0rpm</IOSsecretKey>
+				<pushDepolyStatus>1</pushDepolyStatus>
+				<!-- 信鸽推送参数 -->
+				<xg.appId>2100244708</xg.appId>
+				<xg.appSecret>5cacadf6b8c0d4089ae00e6f4d074f57</xg.appSecret>
+				<!-- 小米推送参数 -->
+				<mi.appSecret>KV46d6i/k5/K90aABWGxEA==</mi.appSecret>
+				<!-- 安心签相关参数 -->
+				<!-- 通讯证书JKS储存路径，最好为绝对地址 -->
+				<trustSign.jskPath>/wjk/tomcat8.5.4console/webapps/ROOT/WEB-INF/classes/config/trustsign/anxinsign.jks</trustSign.jskPath>
+				<!-- JKS文件密码（JKS外壳和私钥的密码应该一致） -->
+				<trustSign.jskPwd>vjk123456</trustSign.jskPwd>
+				<!-- 证书别名 -->
+				<trustSign.alias>anxinsign</trustSign.alias>
+				<!-- CS连接地址 -->
+				<trustSign.csUrl>https://210.74.42.33:9443/FEP/</trustSign.csUrl>
+				<!-- 平台Id -->
+				<trustSign.platId>4A98F0C1CA4D41E2E05312016B0AB014</trustSign.platId>
+				<!-- 认证方式 -->
+				<!-- <trustSign.authenticationMode>攀枝花商业银行</trustSign.authenticationMode> -->
+				
+				<!-- redis相关配置最大连接数：能够同时建立的“最大链接个数”  ，#最大空闲数：空闲链接数大于maxIdle时，将进行回收，#最小空闲数：低于minIdle时，将创建新的链接， #最大等待时间：单位ms  #使用连接时，检测连接是否成功 redis.pool.testOnReturn=true  #返回连接时，检测连接是否成功  -->
+				<redisMaxActive>200</redisMaxActive>
+				<redisMaxIdle>20</redisMaxIdle>
+				<redisMinIdle>5</redisMinIdle>
+				<redisMaxWait>100000</redisMaxWait>
+				<redisTestOnBorrow>true</redisTestOnBorrow>
+				<redisTestOnReturn>true</redisTestOnReturn>
+				<redisHost>192.168.1.89</redisHost>
+				<redisPort>6379</redisPort>
+				<redisName>wjkdubbo</redisName>
+				<!-- 融宝托付攀商银行相关参数start -->
+				<!-- 接口请求地址域名 -->
+				<reapalBaseUrl>http://119.6.53.62:12010</reapalBaseUrl>
+				<!-- MD5加密key-->
+				<reapalMD5Key>dd4d7aa49dgb172bc68e745d2c69311agf6g6b453g2d2c125982421f9643f4c8</reapalMD5Key>
+				<!-- 接口版本号-->
+				<reapalVersion>1.0</reapalVersion>
+				<!-- 合作伙伴在融宝的ID-->
+				<reapalPartner>102200000002241</reapalPartner>
+				<!-- 加密方式 MD5：0，RSA：1-->
+				<reapalSignType>0</reapalSignType>
+				<!-- 融宝托付攀商银行相关参数start -->
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+		</profile>
+		<!-- 生产环境 -->
+	  <profile>
+			<id>production</id>
+			<properties>
+				<profiles.active>production</profiles.active>
+				<app.log.filesRootPath>/wjkapp/wjklogs</app.log.filesRootPath>
+				<app.name>Wjk-Console-Manage-System</app.name>
+				<jdbc.url>jdbc:oracle:thin:@192.168.1.88:1521:wjk</jdbc.url>
+				<jdbc.username>ksghi</jdbc.username>
+				<jdbc.password>ksghi</jdbc.password>
+				<mail.smtp.host>smtp.vjinke.com</mail.smtp.host>
+				<mail.username>admin@vjinke.com</mail.username>
+				<mail.password>it123Vjinke</mail.password>
+				<product.pictureServerURL>https://f.ksghi.com/resources</product.pictureServerURL>
+				<chinapnr.merCustId>6000060003641983</chinapnr.merCustId>
+				<chinapnr.merId>830152</chinapnr.merId>
+				<chinapnr.merPrk>/wjkapp/tomcat8.5.4console/webapps/ROOT/WEB-INF/classes/config/thirdparty/chinapnr/key/MerPrK830152.key</chinapnr.merPrk>
+				<chinapnr.pgPubk>/wjkapp/tomcat8.5.4console/webapps/ROOT/WEB-INF/classes/config/thirdparty/chinapnr/key/PgPubk.key</chinapnr.pgPubk>
+				<chinapnr.requestPayUrl>https://lab.chinapnr.com/muser/publicRequests</chinapnr.requestPayUrl>
+				<chinapnr.merContextPath>https://console.ksghi.com</chinapnr.merContextPath>
+				<chinapnr.logFilePath>/wjkapp/wjklogs/provider</chinapnr.logFilePath>
+				<wjkLoanPortalSystemUrl>https://f.ksghi.com</wjkLoanPortalSystemUrl>
+				<wjkInvestPortalSystemUrl>https://www.ksghi.com</wjkInvestPortalSystemUrl>
+				<wjkManageSystemSystemUrl>https://console.ksghi.com</wjkManageSystemSystemUrl>
+				<MWjkInvestPortalSystemUrl>https://m.ksghi.com</MWjkInvestPortalSystemUrl>
+				<filesync.receiverUrl>https://www.ksghi.com/portal/file/receive</filesync.receiverUrl>
+				<product.previewUrl>https://www.ksghi.com/product/viewProduct/</product.previewUrl>
+				<activity.previewUrl>https://www.ksghi.com/</activity.previewUrl>
+				<logo.path>https://console.ksghi.com/assets/ui/themes/base/images/logo.png</logo.path>
+				<index.url>https://console.ksghi.com/index</index.url>
+				<invest.logo.path>https://www.ksghi.com/assets/ui/themes/base/images/logo.png</invest.logo.path>
+				<invest.index.url>https://www.ksghi.com/index</invest.index.url>
+				<loan.logo.path>https://f.ksghi.com/assets/ui/themes/base/images/logo.png</loan.logo.path>
+				<loan.index.url>https://f.ksghi.com/register/index</loan.index.url>
+				<product.pictureServerURL>https://f.ksghi.com/resources</product.pictureServerURL>
+				<authAmtTg>10000000.00</authAmtTg>
+				<jgMobile>18511320095</jgMobile>
+				<product.pictureServerReceiverUrl>https://f.ksghi.com/resources/portal/file/receive</product.pictureServerReceiverUrl>
+				<product.productAgreementUrl>https://f.ksghi.com/resources/product/agreement/</product.productAgreementUrl>
+				<app.version>v1.0</app.version>
+				<chinapnr.merCharset>UTF-8</chinapnr.merCharset>
+				<chinapnr.version>10</chinapnr.version>
+				<chinapnr.version2>20</chinapnr.version2>
+				<chinapnr.version3>30</chinapnr.version3>
+				<chinapnr.version4>40</chinapnr.version4>
+				<filesync.fileReceiverUrl>/portal/file/receive</filesync.fileReceiverUrl>
+				<filesync.receiverContextPath></filesync.receiverContextPath>
+				<jdbc.driverClassName>oracle.jdbc.driver.OracleDriver</jdbc.driverClassName>
+				<product.isUploadToPictureServer>1</product.isUploadToPictureServer>
+				<sms.key>804333</sms.key>
+				<sms.softwareSerialNo>9SDK-EMY-0229-JDTOO</sms.softwareSerialNo>
+				<product.investAgreementUrl>https://www.ksghi.com/product/agreement/investagreement/view</product.investAgreementUrl>
+				<product.loanIncomeAssignUrl>https://www.ksghi.com/product/agreement/loanincomeassign/view</product.loanIncomeAssignUrl>
+				<product.creditassignmentAgreementUrl>https://www.ksghi.com/product/agreement/creditassignment/view</product.creditassignmentAgreementUrl>
+				
+				<androidapiKey>nM7eYjMXewXYMtyI3AAS6Zl6</androidapiKey>
+				<androidsecretKey>tYtmERhsySa4F9ORV3g7fpXKWgdD2yom</androidsecretKey>
+				<IOSapiKey>aM1iXewqv7dUsGonH2mAIYSE</IOSapiKey>
+				<IOSsecretKey>BrNsWyF9W9ChGoQIxqfvIUOQIhdS0rpm</IOSsecretKey>
+				<pushDepolyStatus>2</pushDepolyStatus>
+				<!-- 信鸽推送参数 -->
+				<xg.appId>2100244709</xg.appId>
+				<xg.appSecret>fb18c0935bfc7416c8f1a2ab622fa094</xg.appSecret>
+				<!-- 小米推送参数 -->
+				<mi.appSecret>zJACMFTPyXQPdRSNt9UtaA==</mi.appSecret>
+				<!-- 安心签相关参数 -->
+				<!-- 通讯证书JKS储存路径，最好为绝对地址 -->
+				<trustSign.jskPath>/wjkapp/tomcat8.5.4console/webapps/ROOT/WEB-INF/classes/config/trustsign/anxinsign.jks</trustSign.jskPath>
+				<!-- JKS文件密码（JKS外壳和私钥的密码应该一致） -->
+				<trustSign.jskPwd>vjk123456</trustSign.jskPwd>
+				<!-- 证书别名 -->
+				<trustSign.alias>anxinsign</trustSign.alias>
+				<!-- CS连接地址 -->
+				<trustSign.csUrl>https://cs.anxinsign.com/FEP/</trustSign.csUrl>
+				<!-- 平台Id -->
+				<trustSign.platId>4C03BEE17E846A91E0538E02030A4EA5</trustSign.platId>
+				<!-- 认证方式 -->
+				<!-- <trustSign.authenticationMode>攀枝花商业银行</trustSign.authenticationMode> -->
+				
+				<!-- redis相关配置最大连接数：能够同时建立的“最大链接个数”  ，#最大空闲数：空闲链接数大于maxIdle时，将进行回收，#最小空闲数：低于minIdle时，将创建新的链接， #最大等待时间：单位ms  #使用连接时，检测连接是否成功 redis.pool.testOnReturn=true  #返回连接时，检测连接是否成功  -->
+				<redisMaxActive>200</redisMaxActive>
+				<redisMaxIdle>20</redisMaxIdle>
+				<redisMinIdle>5</redisMinIdle>
+				<redisMaxWait>100000</redisMaxWait>
+				<redisTestOnBorrow>true</redisTestOnBorrow>
+				<redisTestOnReturn>true</redisTestOnReturn>
+				<redisHost>10.252.45.171</redisHost>
+				<redisPort>6379</redisPort>
+				<redisName>wjkdubbo</redisName>
+				<!-- 融宝托付攀商银行相关参数start -->
+				<!-- 接口请求地址域名 -->
+				<reapalBaseUrl>https://ebank.pzhccb.com:12010</reapalBaseUrl>
+				<!-- MD5加密key-->
+				<reapalMD5Key>agac0e14fab826gbeeae75fa3aa3fa9966b14505cf5812b3df88edcf9cb7f096</reapalMD5Key>
+				<!-- 接口版本号-->
+				<reapalVersion>1.0</reapalVersion>
+				<!-- 合作伙伴在融宝的ID-->
+				<reapalPartner>102200000062407</reapalPartner>
+				<!-- 加密方式 MD5：0，RSA：1-->
+				<reapalSignType>0</reapalSignType>
+				<!-- 融宝托付攀商银行相关参数start -->
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+	  </profile>  
+  </profiles>
+  <build>  
+  <resources>
+			<!-- 配置需要被替换的资源文件路径, db.properties 应该在 src/main/resource 目录下 
+			<resource>				
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering> 是否使用过滤器 
+			</resource>
+			-->
+			<!-- 指定编译目录 -->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>false</filtering>
+                <!-- 这里注意一定要有不然的话编译的时候只会copy过去,不会编译这个目录，filtering默认是false -->
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes> 
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.tld</include>
+                    <include>**/*.xlsx</include>
+					<include>**/*.xls</include>
+                </includes>
+                <!-- 剔除支付key文件 -->
+                <excludes>
+                	<exclude>**/*.key</exclude>
+                	<exclude>**/message-template.xml</exclude>
+                	<exclude>**/*.jks</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources/config/template</directory>
+                <includes> 
+                    <include>**/*.xml</include>
+                </includes>
+                <targetPath>config/template</targetPath>
+            </resource>
+            <resource>
+            <!-- 根据不同启动参数加载不同支付key文件 默认为local本地环境 -->
+                <directory>src/main/resources/config/trustsign/${profiles.active}</directory>
+                <includes> 
+                    <include>**/*.jks</include>
+                </includes>
+                <targetPath>config/trustsign</targetPath>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+            	<!-- 根据不同启动参数加载不同支付key文件 默认为local本地环境 -->  
+            	<directory>src/main/resources/config/environment/${profiles.active}</directory>
+            	<includes> 
+                    <include>**/*.key</include>
+                </includes>
+                <!-- 将key文件放到config目录下 -->
+                <targetPath>config</targetPath>
+                <filtering>true</filtering>
+        	</resource>
+		</resources>
+  <pluginManagement>
+    <plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<configuration>
+				<nonFilteredFileExtensions>
+					<nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+					<nonFilteredFileExtension>xls</nonFilteredFileExtension>
+					<nonFilteredFileExtension>docx</nonFilteredFileExtension>
+					<nonFilteredFileExtension>doc</nonFilteredFileExtension>
+					<nonFilteredFileExtension>zip</nonFilteredFileExtension>
+					<nonFilteredFileExtension>cer</nonFilteredFileExtension>
+					<nonFilteredFileExtension>pfx</nonFilteredFileExtension>
+					<nonFilteredFileExtension>py</nonFilteredFileExtension>
+					<nonFilteredFileExtension>keystore</nonFilteredFileExtension>
+				</nonFilteredFileExtensions>
+			</configuration>
+		</plugin>
+        <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArguments>
+                        <verbose />
+                        <bootclasspath>${java.home}\jre\lib\rt.jar;${java.home}\jre\lib\jce.jar</bootclasspath>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+            
+            <!-- tomcat启动方式 -->
+		  <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <port>6667</port>
+                    <path>/wms</path>
+                    <uriEncoding>UTF-8</uriEncoding>
+                </configuration>
+            </plugin>
+            
+            <!--              tomcat启动方式  -->
+			<plugin>
+	        <groupId>org.apache.tomcat.maven</groupId>
+	        <artifactId>tomcat6-maven-plugin</artifactId>
+	        <version>2.1</version>
+	         <configuration>
+	         	  <port>9999</port>
+                  <path>/wms</path>
+	              <uriEncoding>UTF-8</uriEncoding>
+	          </configuration>
+      		</plugin>
+    </plugins>  
+    </pluginManagement>
+	<finalName>wms</finalName>
+  </build> 
+</project>

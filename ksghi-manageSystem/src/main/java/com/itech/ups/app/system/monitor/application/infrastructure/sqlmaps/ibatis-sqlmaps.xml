@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="monitor">
+    <typeAlias alias="loginLog" type="com.itech.ups.app.monitor.application.domain.LoginLog"/>
+    <typeAlias alias="businessLog" type="com.itech.ups.app.monitor.application.domain.BusinessLog"/>
+
+    <resultMap id="loginLogResultMap" class="loginLog">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR"/>
+        <result column="MANAGER_CODE" property="managerCode" jdbcType="VARCHAR"/>
+        <result column="MANAGER_NAME" property="managerName" jdbcType="VARCHAR"/>
+        <result column="IP" property="ip" jdbcType="VARCHAR"/>
+        <result column="LOGIN_TIME" property="loginTime" jdbcType="CHAR"/>
+        <result column="LOGOFF_TIME" property="logoffTime" jdbcType="CHAR"/>
+        <result column="SESSION_ID" property="sessionId" jdbcType="VARCHAR"/>
+        <result column="ROLE_TYPE" property="roleType" jdbcType="VARCHAR"/>
+        <result column="TERMINAL" property="terminal" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="businessLogResultMap" class="businessLog">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="IP" property="ip" jdbcType="VARCHAR"/>
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR"/>
+        <result column="MANAGER_CODE" property="managerCode" jdbcType="VARCHAR"/>
+        <result column="MANAGER_NAME" property="managerName" jdbcType="VARCHAR"/>
+        <result column="SESSION_ID" property="sessionId" jdbcType="VARCHAR"/>
+        <result column="OPERATION_TIME" property="operationTime" jdbcType="CHAR"/>
+        <result column="FUNCTION_MODULE" property="functionModule" jdbcType="VARCHAR"/>
+        <result column="FUNCTION_DESCRIPTION" property="functionDescription" jdbcType="VARCHAR"/>
+        <result column="OPERATION_DATA" property="operationData" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="selectWithdrawAudits_fragment">
+        select * from (
+        SELECT
+        w.OPEN_BANK_ID,w.OPEN_ACCT_ID,w.TRANS_AMOUNT,w.CREATE_TIME,w.AUDIT_TIME,w.AUDIT_STATUS,w.RESP_STATUS,w.ISAUDITOR,w.USER_INFO_ID,w.AUDITOR_ROLETYPE,w.DATA_STATUS,
+        CASE w.auditor_roletype
+        WHEN 'borrower'
+        THEN
+        (SELECT
+        CASE b.type
+        WHEN 'person'
+        THEN b.name
+        WHEN 'corp'
+        THEN b.corp_name
+        END corp_name
+        FROM borrower b
+        WHERE b.user_info_id = w.user_info_id
+        AND b.data_status = 'valid'
+        )
+        WHEN 'guarantyCorp'
+        THEN
+        (SELECT g.name
+        FROM guaranty_corp g
+        WHERE g.user_info_id = w.user_info_id
+        AND g.data_status = 'valid'
+        )
+        WHEN 'loanCorp'
+        THEN
+        (SELECT l.name
+        FROM LOAN_CORP l
+        WHERE l.user_info_id = w.user_info_id
+        AND l.data_status = 'valid'
+        )
+        WHEN 'investor'
+        THEN
+        (SELECT u.name
+        FROM user_info u
+        WHERE u.id = w.user_info_id
+        AND u.data_status = 'valid'
+        )
+        WHEN 'merchant'
+        THEN
+        (SELECT m.name
+        FROM merchant m
+        WHERE m.id = w.user_info_id
+        AND m.data_status = 'valid'
+        )
+        END corp_name
+        FROM WITHDRAW_AUDIT w
+        LEFT JOIN USER_INFO ui
+        ON w.USER_INFO_ID = ui.ID ) ww
+        where ww.DATA_STATUS = 'valid'
+        <isNotEmpty prepend="and" property="corpName">
+            ww.corp_name like '%'||#corpName# ||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="startDate">
+            SUBSTRB(ww.create_time,0,10) <![CDATA[>=]]>
+            #startDate:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            SUBSTRB(ww.create_time,0,10) <![CDATA[<=]]>
+            #endDate:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="auditStatus">
+            ww.audit_status= #auditStatus:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="isAuditor">
+            ww.ISAUDITOR= #isAuditor:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="respStatus">
+            ww.RESP_STATUS= #respStatus:VARCHAR#
+        </isNotEmpty>
+        ORDER BY ww.CREATE_TIME DESC
+    </sql>
+
+    <select id="selectWithdrawAudits" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectWithdrawAudits_fragment"/>
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+
+    <select id="selectWithdrawAuditsTotal" resultClass="long" parameterClass="java.util.HashMap">
+        select count(*) from (
+        <include refid="selectWithdrawAudits_fragment"/>
+        )
+    </select>
+
+    <insert id="insertBusinessLog" parameterClass="businessLog">
+        insert into SYS_BUSINESS_LOG
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="ip">
+                IP
+            </isNotNull>
+            <isNotNull prepend="," property="managerId">
+                MANAGER_ID
+            </isNotNull>
+            <isNotNull prepend="," property="managerCode">
+                MANAGER_CODE
+            </isNotNull>
+            <isNotNull prepend="," property="managerName">
+                MANAGER_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="sessionId">
+                SESSION_ID
+            </isNotNull>
+            <isNotNull prepend="," property="operationTime">
+                OPERATION_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="functionModule">
+                FUNCTION_MODULE
+            </isNotNull>
+            <isNotNull prepend="," property="functionDescription">
+                FUNCTION_DESCRIPTION
+            </isNotNull>
+            <isNotNull prepend="," property="operationData">
+                OPERATION_DATA
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="ip">
+                #ip:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="managerId">
+                #managerId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="managerCode">
+                #managerCode:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="managerName">
+                #managerName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sessionId">
+                #sessionId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="operationTime">
+                #operationTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="functionModule">
+                #functionModule:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="functionDescription">
+                #functionDescription:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="operationData">
+                #operationData:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+
+
+    <insert id="insertLoginLog" parameterClass="loginLog">
+        insert into SYS_LOGIN_LOG
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="managerId">
+                MANAGER_ID
+            </isNotNull>
+            <isNotNull prepend="," property="managerCode">
+                MANAGER_CODE
+            </isNotNull>
+            <isNotNull prepend="," property="managerName">
+                MANAGER_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="ip">
+                IP
+            </isNotNull>
+            <isNotNull prepend="," property="loginTime">
+                LOGIN_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="logoffTime">
+                LOGOFF_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="sessionId">
+                SESSION_ID
+            </isNotNull>
+            <isNotNull prepend="," property="roleType">
+                ROLE_TYPE
+            </isNotNull>
+            <isNotNull prepend="," property="terminal">
+                TERMINAL
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="managerId">
+                #managerId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="managerCode">
+                #managerCode:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="managerName">
+                #managerName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="ip">
+                #ip:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="loginTime">
+                #loginTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="logoffTime">
+                #logoffTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="sessionId">
+                #sessionId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="roleType">
+                #roleType:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="terminal">
+                #terminal:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+
+    <update id="updateLoginLog" parameterClass="map">
+		update SYS_LOGIN_LOG set logoff_time = #logoffTime:VARCHAR#
+		where session_id = #sessionId:VARCHAR#
+	</update>
+
+    <select id="selectByOperationData" resultMap="businessLogResultMap" parameterClass="string">
+        select ID, IP, MANAGER_ID, MANAGER_CODE, MANAGER_NAME, SESSION_ID, OPERATION_TIME, FUNCTION_MODULE,
+            FUNCTION_DESCRIPTION, OPERATION_DATA, REMARK
+        from SYS_BUSINESS_LOG
+        where FUNCTION_DESCRIPTION like '%' || #operationData# || '%'
+      </select>
+
+    <sql id="selectBusinessLogs_fragment">
+        select ID, IP, MANAGER_ID, MANAGER_CODE, MANAGER_NAME, SESSION_ID, OPERATION_TIME, FUNCTION_MODULE,
+        FUNCTION_DESCRIPTION, OPERATION_DATA, REMARK
+        from SYS_BUSINESS_LOG where 1=1
+        <isNotEmpty prepend="AND" property="managerCode">
+            MANAGER_CODE like '%' || #managerCode# || '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="managerName">
+            MANAGER_NAME like '%' || #managerName# || '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="functionModule">
+            FUNCTION_MODULE like '%' || #functionModule# || '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="startDate">
+            OPERATION_TIME <![CDATA[>=]]>  #startDate:VARCHAR# || ' 00:00:00'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="endDate">
+            OPERATION_TIME <![CDATA[<=]]> #endDate:VARCHAR# || ' 23:59:59'
+        </isNotEmpty>
+
+    </sql>
+
+    <select id="selectBusinessLogs" resultMap="businessLogResultMap" parameterClass="java.util.HashMap">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectBusinessLogs_fragment"/>
+        order by operation_time desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+
+    <select id="selectBusinessLogsTotalCount" resultClass="long" parameterClass="java.util.HashMap">
+        select count (*) as total from (
+        <include refid="selectBusinessLogs_fragment"/>
+        )
+    </select>
+
+    <sql id="selectLoginLogs_fragment">
+        <!--
+        SELECT
+        SLL.MANAGER_CODE,
+        SLL.MANAGER_NAME,
+        SLL.IP,
+        SLL.LOGIN_TIME AS      LOGIN_TIME,
+        SLL.TERMINAL,
+        SLL.LOGOFF_TIME,
+        SLL.ROLE_TYPE,
+        UI.NICK_NAME,
+        UI.USER_LABEL,
+        UI.PERSON_CODE,
+        UI.ORG_PERSON_CODE,
+        UI.ORG_CODE,
+        URR_UI.USER_LABEL      RECOMMENDER_USER_LABEL,
+        URR_UI.PERSON_CODE     PERSONCODE,
+        URR_UI.ORG_PERSON_CODE ORGPERSONCODE,
+        URR_UI.ORG_CODE        RECOMMENDER_ORG_CODE
+        FROM SYS_LOGIN_LOG SLL
+        LEFT JOIN USER_INFO UI
+        ON SLL.MANAGER_CODE = UI.MOBILE
+        AND UI.DATA_STATUS = 'valid'
+        LEFT JOIN (SELECT
+        UI11.PERSON_CODE,
+        UI11.ORG_PERSON_CODE,
+        UI11.USER_LABEL,
+        UI11.ORG_CODE,
+        UI11.MOBILE,
+        UI11.NAME,
+        URR.USER_INFO_ID,
+        URR.RECOMMEND_LEVEL,
+        URR.PARAENT_RECOMMEND_CODE
+        FROM USER_RECOMMEND_RELATION URR, USER_INFO UI11
+        WHERE URR.DATA_STATUS = 'valid' AND UI11.DATA_STATUS = 'valid'
+        AND (URR.PARAENT_RECOMMEND_CODE = UI11.PERSON_CODE OR
+        URR.PARAENT_RECOMMEND_CODE = UI11.ORG_PERSON_CODE)) URR_UI
+        ON UI.ID = URR_UI.USER_INFO_ID
+        WHERE UI.DATA_STATUS = 'valid'
+        <isNotEmpty prepend="AND" property="managerCode">
+            SLL.MANAGER_CODE LIKE '%'||#managerCode:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="managerName">
+            SLL.MANAGER_NAME LIKE '%'||#managerName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="startDate">
+            SLL.LOGIN_TIME <![CDATA[>=]]>  #startDate:VARCHAR#|| ' 00:00:00'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="endDate">
+            SLL.LOGIN_TIME <![CDATA[<=]]> #endDate:VARCHAR# || ' 23:59:59'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="roleType">
+            SLL.ROLE_TYPE = #roleType:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="terminal">
+            SLL.TERMINAL = #terminal:VARCHAR#
+        </isNotEmpty>
+         <isEqual  prepend="and" property="userClassificationFlag" compareValue="true">
+            ( 1 = 2
+            <isEqual  prepend="or" property="labelRecommendFlag" compareValue="true">
+                (URR_UI.USER_LABEL IN
+                <iterate open="(" close=")" conjunction="," property="labelRecommend" >
+                    #labelRecommend[]#
+                </iterate>)
+            </isEqual>
+            <isEqual  prepend="or" property="labelRegisterFlag" compareValue="true">
+                ( UI.USER_LABEL IN
+                <iterate open="(" close=")" conjunction="," property="labelRegister" >
+                    #labelRegister[]#
+                </iterate>   and urr_ui.recommend_level=0 )
+            </isEqual>
+            <isEqual  prepend="or" property="orgRecommendFlag" compareValue="true">
+                (URR_UI.ORG_CODE IN
+                <iterate open="(" close=")" conjunction="," property="orgRecommend" >
+                    #orgRecommend[]#
+                </iterate> and URR_UI.ORG_PERSON_CODE IS NOT NULL)
+            </isEqual>
+            <isEqual  prepend="or" property="orgRegisterFlag" compareValue="true">
+                (UI.ORG_CODE IN
+                <iterate open="(" close=")" conjunction="," property="orgRegister" >
+                    #orgRegister[]#
+                </iterate> AND UI.ORG_PERSON_CODE IS NOT NULL)
+            </isEqual>
+            )
+        </isEqual> -->
+
+        SELECT
+        SLL.MANAGER_CODE,
+        SLL.MANAGER_NAME,
+        SLL.IP,
+        SLL.LOGIN_TIME AS LOGIN_TIME,
+        SLL.TERMINAL,
+        SLL.LOGOFF_TIME,
+        SLL.ROLE_TYPE SLL_ROLE_TYPE
+        FROM SYS_LOGIN_LOG SLL
+
+        where 1 = 1
+        <isNotEmpty prepend="AND" property="managerCode">
+            SLL.MANAGER_CODE LIKE '%'||#managerCode:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="managerName">
+            SLL.MANAGER_NAME LIKE '%'||#managerName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="startDate">
+            SLL.LOGIN_TIME <![CDATA[>=]]>  #startDate:VARCHAR#|| ' 00:00:00'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="endDate">
+            SLL.LOGIN_TIME <![CDATA[<=]]> #endDate:VARCHAR# || ' 23:59:59'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="roleType">
+            SLL.ROLE_TYPE = #roleType:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="terminal">
+            SLL.TERMINAL = #terminal:VARCHAR#
+        </isNotEmpty>
+        <!-- 引用公共 sql 片段    用户分类：复选框查询 (新版)-->
+        <!--<include refid="baseSql.selectUserClassificationTree_fragment" />-->
+    </sql>
+
+    <select id="selectLoginLogs" resultClass="hashMap" parameterClass="java.util.HashMap">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectLoginLogs_fragment"/>
+        order by LOGIN_TIME desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+
+    <select id="selectLoginLogsTotalCount" resultClass="long" parameterClass="java.util.HashMap">
+        select count (*) as total from (
+        <include refid="selectLoginLogs_fragment"/>
+        )
+    </select>
+</sqlMap>

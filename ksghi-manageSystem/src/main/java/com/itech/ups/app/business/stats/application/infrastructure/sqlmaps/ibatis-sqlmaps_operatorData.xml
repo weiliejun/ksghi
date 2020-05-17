@@ -1,0 +1,915 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="operatorData">
+    <!-- 互联网金融信息披露 -->
+    <sql id="financialDisclosure_fragment">
+	with taball as
+	 (select ta."指标编码" "indexCode",
+	         ta."指标名称" "indexName",
+	         round(ta."填报内容", 2) "content",
+	         ta."填报说明" "desc"
+	    from ((select 'H41001' "指标编码",
+	                  '累计借贷金额(万元)' "指标名称",
+	                  sum(t.amount) / 10000 "填报内容",
+	                  '自从业机构成立起，经从业机构撮合完成的借款项目的本金总合' "填报说明"
+	             from PRODUCT t
+	            where t.data_status = 'valid'
+	              and t.status not in ('init', 'fail')
+	              and t.repay_start_date <![CDATA[<=]]> #monthEndDate#) union
+	          (select 'H41002' "指标编码",
+	                  '累计借贷笔数(笔)' "指标名称",
+	                  count(*) "填报内容",
+	                  '自从业机构成立起，经从业机构撮合完成的借款交易笔数总合' "填报说明"
+	             from PRODUCT t
+	            where t.data_status = 'valid'
+	              and t.status not in ('init', 'fail')
+	              and t.repay_start_date <![CDATA[<=]]> #monthEndDate#) union
+	          (select 'H41007' "指标编码",
+	                  '累计借款人数量(人)' "指标名称",
+	                  count(distinct t.borrower_user_info_id) "填报内容",
+	                  '借款人通过从业机构成功借款的借款人总数。同一借款人多次借款的，按实际借款人计算。（例如：张三借款3次，累计借款人数量为1）' "填报说明"
+	             from PRODUCT t
+	            where t.data_status = 'valid'
+	              and t.status not in ('init', 'fail')
+	              and t.repay_start_date <![CDATA[<=]]> #monthEndDate#) union
+	          (select 'H41006' "指标编码",
+	                  '累计出借人数量(人)' "指标名称",
+	                  count(distinct t.user_info_id) "填报内容",
+	                  '出借人通过从业机构成功出借资金的出借人总数。同一出借人多次出借的，按实际出借人计算。（例如：张三出借3次，累计出借人数量为1）' "填报说明"
+	             from tender_loan t
+	            where t.resp_status = 'success'
+	              and t.data_status = 'valid'
+	              and t.create_time <![CDATA[<=]]> #monthEndDate#) union
+	              (select 'H41008' "指标编码",
+	                  '当前出借人数量(人)' "指标名称",
+	                  count(distinct t.user_info_id) "填报内容",
+	                  '截至统计时点仍存在待收借款的出借人总数。同一出借人多次出借的，按实际出借人计算' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	              and t.data_status = 'valid'
+	              and t.status = 'unRepay') union
+	              (select 'H41009' "指标编码",
+	                  '当前借款人数量(人)' "指标名称",
+	                  count(distinct t.borrower_user_info_id) "填报内容",
+	                  '截至统计时点仍存在待还借款的借款人总数。同一借款人多次借款的，按实际借款人计算' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	              and t.data_status = 'valid'
+	              and t.status = 'unRepay') union
+	          (select 'H41003' "指标编码",
+	                  '借贷余额(万元)' "指标名称",
+	                  nvl(sum(t.repay_principal_amount) / 10000,0) "填报内容",
+	                  '指截至统计时点，平台所有融资人尚未偿还的本金总金额(不包括利息部分)' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	              and t.data_status = 'valid'
+	              and t.status = 'unRepay') union
+	              (select 'H41004' "指标编码",
+	                  '借贷余额笔数(笔)' "指标名称",
+	                  count(distinct t.product_id) "填报内容",
+	                  '截至统计时点，平台所有借款人尚未偿还的总笔数' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	              and t.data_status = 'valid'
+	              and t.status = 'unRepay') union
+	              (select 'H41005' "指标编码",
+	                  '利息余额(万元)' "指标名称",
+	                  nvl(sum(t.repay_interest_amount) / 10000,0) "填报内容",
+	                  '指截至统计时点，经从业机构撮合完成且尚未偿还的借款利息总金额（不包括本金部分）' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	              and t.data_status = 'valid'
+	              and t.status = 'unRepay') union
+	          (select 'H41014' "指标编码",
+	                  '逾期金额(万元)' "指标名称",
+	                  nvl(sum(t.repay_amount) / 10000, 0) "填报内容",
+	                  '按合同规定，出借人到期未收到本金和利息的金额总合。收到，是指资金实际划付至出借人银行账户' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.data_status = 'valid'
+	              and t.user_info_id != '14082511240267427903'
+	              and to_date(substr(#monthEndDate#, 1, 10), 'yyyy-mm-dd')-to_date(t.repay_plan_date, 'yyyy-mm-dd')>5
+	              and t.status = 'unRepay') union
+	          (select 'H41020' "指标编码",
+	                  '项目逾期率(%)' "指标名称",
+	                  count(distinct
+	                        decode(sign(to_date(t.repay_plan_date, 'yyyy-mm-dd') -
+	                                    to_date(#monthEndDate#, 'yyyy-mm-dd')+5),
+	                               -1,
+	                               t.product_id,
+	                               null)) * 100 / count(distinct t.product_id) "填报内容",
+	                  '截至统计时点，当前所有处于逾期状态的项目数与尚未偿还交易总笔数之比' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.data_status = 'valid'
+	              and t.user_info_id != '14082511240267427903'
+	              and t.status = 'unRepay') union
+	          (select 'H41021' "指标编码",
+	                  '金额逾期率(%)' "指标名称",
+	                  sum(decode(sign(to_date(t.repay_plan_date, 'yyyy-mm-dd') -
+	                                  to_date(#monthEndDate#, 'yyyy-mm-dd')+5),
+	                             -1,
+	                             t.repay_principal_amount,
+	                             0)) * 100 / sum(t.repay_principal_amount) "填报内容",
+	                  '截至统计时点，逾期金额与待偿金额之比' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.data_status = 'valid'
+	              and t.user_info_id != '14082511240267427903'
+	              and t.status = 'unRepay') union
+	          (select 'H41015' "指标编码",
+	                  '逾期笔数(笔)' "指标名称",
+	                  count(distinct
+	                        decode(sign(to_date(t.repay_plan_date, 'yyyy-mm-dd') -
+	                                    to_date(#monthEndDate#, 'yyyy-mm-dd')+5),
+	                               -1,
+	                               t.product_id,
+	                               null)) "填报内容",
+	                  '按合同约定，出借人到期未收到本金和利息的借款的笔数。收到，是指资金实际划付至出借人银行账户' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.data_status = 'valid'
+	              and t.user_info_id != '14082511240267427903'
+	              and t.status = 'unRepay') union
+	              (select 'H41016' "指标编码",
+	         '逾期90天(不含)以上金额(万元)' "指标名称",
+	         sum(CASE
+	               WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                    to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 92 and 9999 then
+	                t.repay_principal_amount
+	               else
+	                0
+	             end)/ 10000  "填报内容",
+	         '逾期90天（不含）以上的借款本金余额' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union
+	              (select 'H41017' "指标编码",
+	         '逾期90天(不含)以上笔数(笔)' "指标名称",
+	         count(distinct CASE
+	                 WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                      to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 92 and 9999 then
+	                  t.product_id
+	                 else
+	                  null
+	               end) "填报内容",
+	         '逾期90天（不含）以上的借款的笔数' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union
+	          (select 'H41022' "指标编码",
+	                  '人均累计借款金额(万元)' "指标名称",
+	                  nvl(sum(t.repay_principal_amount) / 10000 /
+	                  count(distinct t.borrower_user_info_id),0) "填报内容",
+	                  '自平台上线运营之日起，累计交易总额与累计借款人数量之比' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	              and t.data_status = 'valid'
+	              and t.status not in ('cancel', 'fail')) union
+	          (select 'H41023' "指标编码",
+	                  '人均累计出借金额(万元)' "指标名称",
+	                  nvl(sum(t.repay_principal_amount) /
+	                  count(distinct t.user_info_id) / 10000,0) "填报内容",
+	                  '自平台上线运营之日起，累计交易总额与累计出借人数量之比' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	              and t.data_status = 'valid'
+	              and t.status not in ('cancel', 'fail')) union
+	          (select 'H41012' "指标编码",
+	                  '关联关系借款余额(万元)' "指标名称",
+	                  0 "填报内容",
+	                  '截至统计时点，与平台具有关联关系的借款人通过平台撮合完成的借款总余额。关联关系指网络借贷信息中介机构主要股东、实际控制人、董事、监事、高级管理人员与其直接或间接控制、有重大影响的企业、自然人之间的关系，以及可能导致网络借贷信息中介机构利益转移的其他关系（主要股东，指持有或控制网络信息借贷中介机构5%以上股份或表决权的自然人、法人或其他组织；直接或间接控制企业，指直接或间接持有企业5%以上股份或表决权）' "填报说明"
+	             from dual) union
+	             (select 'H41013' "指标编码",
+	                  '关联关系借款余额(笔数)' "指标名称",
+	                  0 "填报内容",
+	                  '截至统计时点，与平台具有关联关系的借款人通过平台撮合完成的借款余额总笔数' "填报说明"
+	             from dual) union
+	          (select 'H41011' "指标编码",
+	                  '最大单一借款人待还金额占比(%)' "指标名称",
+	                   round(sum(case
+                   when rownum <![CDATA[<=]]> 1 then
+                    最大单户借款余额
+                   else
+                    0
+                 end) * 100 / sum(最大单户借款余额),
+             2) "填报内容",
+	                  '在平台撮合的项目中，借款最多一户借款人的借款余额占总借款余额的比例' "填报说明" from (
+	                   select t.borrower_user_info_id,
+	                          nvl(sum(t.repay_amount + t.fee) ,0) 最大单户借款余额
+	                     from TENDER_REPAYMENT t
+	                    where ((t.repay_plan_date > #monthEndDate# and
+               t.status not in ('cancel', 'fail')) or t.status = 'unRepay')
+	                      and t.data_status = 'valid'
+	                    group by t.borrower_user_info_id
+	                    order by sum(t.repay_amount + t.fee) desc
+	           )) 
+	  union (select 'H41010' "指标编码",
+	               '前十大借款人待还金额占比(%)' "指标名称",
+	               round(sum(case
+                   when rownum <![CDATA[<=]]> 10 then
+                    最大十户借款余额
+                   else
+                    0
+                 end) * 100 / sum(最大十户借款余额),
+             2) "填报内容",
+	               '在平台撮合的项目中，借款最多的前十户借款人的借款余额占总借款余额的比例' "填报说明" from (
+	                select t.borrower_user_info_id,
+	                       sum(t.repay_amount + t.fee) 最大十户借款余额
+	                  from TENDER_REPAYMENT t
+	                 where ((t.repay_plan_date > #monthEndDate# and
+               t.status not in ('cancel', 'fail')) or t.status = 'unRepay')
+	                   and t.data_status = 'valid'
+	                 group by t.borrower_user_info_id
+	                 order by sum(t.repay_amount + t.fee) desc)
+	        ) union
+	 (select 'H41024' "指标编码",
+	         '最大单户出借余额占比(%)' "指标名称",
+	          round(sum(case
+                   when rownum <![CDATA[<=]]> 1 then
+                    最大单户出借余额
+                   else
+                    0
+                 end) * 100 / sum(最大单户出借余额),
+             2) "填报内容",
+	         '截至统计时点，出借金额最大的出借人的出借金额总和与平台总出借金额之比' "填报说明" from (
+	          select t.user_info_id,
+	                 sum(t.trans_amount) 最大单户出借余额
+	            from TENDER t
+	           where t.status not in ('fail', 'cancel')
+	             and t.data_status = 'valid'
+	             and t.create_time <![CDATA[<=]]> #monthEndDate#
+	           group by t.user_info_id
+	           order by sum(t.trans_amount) desc)
+	  )  union
+	 (select 'H41025' "指标编码",
+	         '最大十户出借余额占比(%)' "指标名称",
+	         round(sum(case
+                   when rownum <![CDATA[<=]]> 10 then
+                    最大10户出借余额
+                   else
+                    0
+                 end) * 100 / sum(最大10户出借余额),
+             2) "填报内容",
+	         '截至统计时点，出借金额最大的前十名出借人的出借金额总和与平台总出借金额之比' "填报说明" from (
+	          select t.user_info_id,
+	                 sum(t.trans_amount)  最大10户出借余额
+	            from TENDER t
+	           where t.status not in ('fail', 'cancel')
+	             and t.data_status = 'valid'
+	             and t.create_time <![CDATA[<=]]> #monthEndDate#
+	           group by t.user_info_id
+	           order by sum(t.trans_amount) desc)
+	  )  union
+	 (select 'H41026' "指标编码",
+	         '项目分级逾期率(90天)(%)' "指标名称",
+	         count(distinct CASE
+	                 WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                      to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 1 and 90 then
+	                  t.product_id
+	                 else
+	                  null
+	               end) * 100 / count(distinct t.product_id) "填报内容",
+	         '截至统计时点，逾期90天(含)，披露项目逾期率' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union
+	 (select 'H41027' "指标编码",
+	         '项目分级逾期率(91-180天)(%)' "指标名称",
+	         count(distinct CASE
+	                 WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                      to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 92 and 180 then
+	                  t.product_id
+	                 else
+	                  null
+	               end) * 100 / count(distinct t.product_id) "填报内容",
+	         '截至统计时点，逾期90-180天(含)，披露项目逾期率' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union
+	 (select 'H41028' "指标编码",
+	         '项目分级逾期率(181天以上)(%)' "指标名称",
+	         count(distinct CASE
+	                 WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                      to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 182 and 999 then
+	                  t.product_id
+	                 else
+	                  null
+	               end) * 100 / count(distinct t.product_id) "填报内容",
+	         '截至统计时点，逾期180天以上，披露项目逾期率' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union
+	 (select 'H41029' "指标编码",
+	         '金额分级逾期率(90天)(%)' "指标名称",
+	         sum(CASE
+	               WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                    to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 1 and 90 then
+	                t.repay_principal_amount
+	               else
+	                0
+	             end) * 100 / sum(t.repay_principal_amount) "填报内容",
+	         '截至统计时点，逾期90天(含)，披露金额逾期率' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union
+	 (select 'H41030' "指标编码",
+	         '金额分级逾期率(91-180天)(%)' "指标名称",
+	         sum(CASE
+	               WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                    to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 92 and 180 then
+	                t.repay_principal_amount
+	               else
+	                0
+	             end) * 100 / sum(t.repay_principal_amount) "填报内容",
+	         '截至统计时点，逾期90-180天(含)，披露金额逾期率' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union
+	 (select 'H41031' "指标编码",
+	         '金额分级逾期率(181天以上)(%)' "指标名称",
+	         sum(CASE
+	               WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                    to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 182 and 999 then
+	                t.repay_principal_amount
+	               else
+	                0
+	             end) * 100 / sum(t.repay_principal_amount) "填报内容",
+	         '截至统计时点，逾期180天以上，披露金额逾期率' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union
+	 (select 'H41018' "指标编码",
+	         '累计代偿金额(万元)' "指标名称",
+	         nvl(sum(t.repay_amount + t.fee) / 10000,0) "填报内容",
+	         '自从业机构成立起，因借款方违约等原因第三方（非借款人、非从业机构）代为偿还的总金额' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.borrower_user_info_id != t.repay_user_id
+	     and t.data_status = 'valid'
+	     and t.status not in ('cancel', 'fail')
+	     and NEXT_DAY(to_date(t.repay_plan_date, 'yyyy-mm-dd'), 5) <![CDATA[<]]>
+	         to_date(substr(t.repay_time, 1, 10), 'yyyy-mm-dd')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#) union
+	 (select 'H41019' "指标编码",
+	         '累计代偿笔数(笔)' "指标名称",
+	         count(distinct t.product_id) "填报内容",
+	         '自从业机构成立起，因借款方违约等原因第三方（非借款人、非从业机构）代为偿还的笔数' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.borrower_user_info_id != t.repay_user_id
+	     and t.data_status = 'valid'
+	     and t.status not in ('cancel', 'fail')
+	     and NEXT_DAY(to_date(t.repay_plan_date, 'yyyy-mm-dd'), 5) <![CDATA[<]]>
+	         to_date(substr(t.repay_time, 1, 10), 'yyyy-mm-dd')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#)) ta)
+	
+	select taball."indexCode",
+	       taball."indexName",
+	       taball."content",
+	       taball."desc"
+	  from taball
+  </sql>
+
+    <select id="selectFinancialDisclosure" resultClass="hashMap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="financialDisclosure_fragment"/>
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+
+    <select id="selectFinancialDisclosureTotalCount" resultClass="int" parameterClass="map">
+        select count (*) as total from (
+        <include refid="financialDisclosure_fragment"/>
+        )
+    </select>
+
+
+    <!-- 企业数据报送-->
+    <sql id="enterpriseDataSubmit_fragment">
+	with taball as
+	 (select ta."指标编码" "indexCode",
+	         ta."指标名称" "indexName",
+	         ta."频度" "frequency",
+	         round(ta."金额(数量)", 2) "amount",
+	         ta."填报说明" "desc"
+	    from ((select 'H5033' "指标编码",
+	                  '当期个体直接借贷借款金额(万元)' "指标名称",
+	                  '月度' "频度",
+	                  nvl(sum(t.amount), 0) / 10000 "金额(数量)",
+	                  '指借款人通过个体直接借贷成功借款的金额' "填报说明"
+	             from PRODUCT t
+	            where t.repay_start_date <![CDATA[>=]]> #monthStartDate#
+	              and t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	              and t.data_status = 'valid') union all
+	          (select 'H5034' "指标编码",
+	                  '当期个体直接借贷借款笔数(笔)' "指标名称",
+	                  '月度' "频度",
+	                  count(*) "金额(数量)",
+	                  '指借款人通过个体直接借贷成功借款的借款笔数' "填报说明"
+	             from PRODUCT t
+	            where t.repay_start_date <![CDATA[>=]]> #monthStartDate#
+	              and t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	              and t.data_status = 'valid') union all
+	          (select 'H5035' "指标编码",
+	                  '当期个体直接借贷出借人数量(人)' "指标名称",
+	                  '月度' "频度",
+	                  count(distinct t.user_info_id) "金额(数量)",
+	                  '指通过个体直接借贷成功出借资金出借人数量' "填报说明"
+	             from tender_loan t
+	            where t.create_time <![CDATA[>=]]> #monthStartDate#
+	              and t.create_time <![CDATA[<=]]> #monthEndDate#
+	              and t.resp_status = 'success'
+	              and t.data_status = 'valid') union all
+	          (select 'H5036' "指标编码",
+	                  '当期个体直接借贷发生额的加权平均利率(%)' "指标名称",
+	                  '月度' "频度",
+	                  nvl(avg(a.rate), 0) "金额(数量)",
+	                  '指用当期个体直接借贷业务发生金额为权重加权计算的平均利率' "填报说明"
+	             from (select t.borrower_user_info_id,
+	                          (t.annual_rate * t.amount / sum(t.amount)) rate
+	                     from PRODUCT t
+	                    where t.repay_start_date <![CDATA[>=]]> #monthStartDate#
+	                      and t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	                      and t.data_status = 'valid'
+	                    group by t.borrower_user_info_id, t.annual_rate * t.amount) a)
+	          union all
+	          (select 'H5037' "指标编码",
+	                  '当期个体直接借贷发生额的加权平均期限(月)' "指标名称",
+	                  '月度' "频度",
+	                  nvl(avg(a.time_limit), 0) "金额(数量)",
+	                  '指用当期个体直接借贷业务发生金额为权重加权计算的平均借款期限' "填报说明"
+	             from (select t.borrower_user_info_id,
+	                          (t.time_limit * t.amount / sum(t.amount)) time_limit
+	                     from PRODUCT t
+	                    where t.repay_start_date <![CDATA[>=]]> #monthStartDate#
+	                      and t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	                      and t.data_status = 'valid'
+	                    group by t.borrower_user_info_id, t.time_limit * t.amount) a)
+	          union all (select 'H5038' "指标编码",
+	                        '当年个体直接借贷累计借款金额(万元)' "指标名称",
+	                        '月度' "频度",
+	                        nvl(sum(t.amount), 0) / 10000 "金额(数量)",
+	                        '指当年个体直接借贷累计借款金额' "填报说明"
+	                   from PRODUCT t
+	                  where t.repay_start_date <![CDATA[>=]]> #yearStartDate#
+	                    and t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	                    and t.data_status = 'valid') union all
+	          (select 'H5039' "指标编码",
+	                  '当年个体直接借贷累计借款笔数(笔)' "指标名称",
+	                  '月度' "频度",
+	                  count(*) "金额(数量)",
+	                  '指当年个体直接借贷累计借款笔数' "填报说明"
+	             from PRODUCT t
+	            where t.repay_start_date <![CDATA[>=]]> #yearStartDate#
+	              and t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	              and t.status not in ('init', 'fail')
+	              and t.data_status = 'valid') union all
+	          (select 'H5040' "指标编码",
+	                  '当年个体直接借贷出借人数量(人)' "指标名称",
+	                  '月度' "频度",
+	                  count(distinct t.user_info_id) "金额(数量)",
+	                  '指当年个体直接借贷出借人数量' "填报说明"
+	             from tender_loan t
+	            where t.create_time <![CDATA[>=]]> #yearStartDate#
+	              and t.create_time <![CDATA[<=]]> #monthEndDate#
+	              and t.resp_status = 'success'
+	              and t.data_status = 'valid') union all
+	          (select 'H5041' "指标编码",
+	                  '当年个体直接借贷发生额的加权平均利率(%)' "指标名称",
+	                  '月度' "频度",
+	                  nvl(avg(a.rate), 0) "金额(数量)",
+	                  '指用当年个体直接借贷业务发生金额为权重加权计算的平均利率' "填报说明"
+	             from (select t.borrower_user_info_id,
+	                          (t.annual_rate * t.amount / sum(t.amount)) rate
+	                     from PRODUCT t
+	                    where t.repay_start_date <![CDATA[>=]]> #yearStartDate#
+	                      and t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	                      and t.data_status = 'valid'
+	                    group by t.borrower_user_info_id, t.annual_rate * t.amount) a)
+	          union all
+	          (select 'H5042' "指标编码",
+	                  '当年个体直接借贷发生额的加权平均期限(月)' "指标名称",
+	                  '月度' "频度",
+	                  nvl(avg(a.time_limit), 0) "金额(数量)",
+	                  '指用当年个体直接借贷业务发生金额为权重加权计算的平均借款期限' "填报说明"
+	             from (select t.borrower_user_info_id,
+	                          (t.time_limit * t.amount / sum(t.amount)) time_limit
+	                     from PRODUCT t
+	                    where t.repay_start_date <![CDATA[>=]]> #yearStartDate#
+	                      and t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	                      and t.data_status = 'valid'
+	                    group by t.borrower_user_info_id, t.time_limit * t.amount) a)
+	          union all (select 'H5043' "指标编码",
+	                        '个体直接借贷累计借款金额(首次报数用)(万元)' "指标名称",
+	                        '月度' "频度",
+	                        nvl(sum(t.amount), 0) / 10000 "金额(数量)",
+	                        '指平台上线至首次报数期期末，借款人在平台上以个体直接借贷方式累计成功借款的金额。该指标首次报数时填报数据，以后各期无需填报数据' "填报说明"
+	                   from PRODUCT t
+	                  where t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	                    and t.status not in ('init', 'fail')
+	                    and t.data_status = 'valid') union all
+	          (select 'H5044' "指标编码",
+	                  '个体直接借贷累计借款笔数(首次报数用)(笔)' "指标名称",
+	                  '月度' "频度",
+	                  count(*) "金额(数量)",
+	                  '指平台上线至首次报数期期末，借款人在平台上以个体直接借贷方式累计成功借款的借款笔数。该指标首次报数时填报数据，以后各期无需填报数据' "填报说明"
+	             from PRODUCT t
+	            where t.repay_start_date <![CDATA[<=]]> #monthEndDate#
+	              and t.status not in ('init', 'fail')
+	              and t.data_status = 'valid') union all
+	          (select 'H5045' "指标编码",
+	                  '期末个体直接借贷借款余额(万元)' "指标名称",
+	                  '月度' "频度",
+	                  nvl(sum(t.repay_principal_amount), 0) / 10000 "金额(数量)",
+	                  '指截至报数期期末，平台上个体直接借贷的借款余额' "填报说明"
+	             from TENDER_REPAYMENT t
+	            where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	              and t.status = 'unRepay'
+	              and t.data_status = 'valid') union all
+	          (select 'H5046' "指标编码",
+	                  '其中：最大单户借款余额(万元)' "指标名称",
+	                  '月度' "频度",
+	                  最大单户借款余额 "金额(数量)",
+	                  '指个体直接借贷中，最大单个借款人的借款余额' "填报说明" from(
+	                   select t.borrower_user_info_id,
+	                          sum(t.repay_principal_amount) / 10000 最大单户借款余额
+	                     from TENDER_REPAYMENT t
+	                    where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	                      and t.status = 'unRepay'
+	                      and t.data_status = 'valid'
+	                    group by t.borrower_user_info_id
+	                    order by sum(t.repay_principal_amount) desc
+	           ) where rownum <![CDATA[<=]]> 1)
+	  union all (select 'H5047' "指标编码",
+	               '其中：最大十户借款余额(万元)' "指标名称",
+	               '月度' "频度",
+	               nvl(sum(最大十户借款余额), 0) "金额(数量)",
+	               '指个体直接借贷中，借款最多的前十户借款人的借款余额' "填报说明" from(
+	                select t.borrower_user_info_id,
+	                       sum(t.repay_principal_amount) / 10000 最大十户借款余额
+	                  from TENDER_REPAYMENT t
+	                 where t.create_time <![CDATA[<=]]> #monthEndDate# || ' 23:59:59'
+	                   and t.status = 'unRepay'
+	                   and t.data_status = 'valid'
+	                 group by t.borrower_user_info_id
+	                 order by sum(t.repay_principal_amount) desc)
+	   where rownum <![CDATA[<=]]> 10) union all
+	 (select 'H6002' "指标编码",
+	         '逾期债权类融资余额(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_principal_amount), 0) / 10000 "金额(数量)",
+	         '指合同约定到期(含展期后到期)未归还本金或利息的债权类融资本金余额' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and (NEXT_DAY(to_date(t.repay_plan_date, 'yyyy-mm-dd'), 5) <![CDATA[<]]> to_date(substr(#monthEndDate#, 1, 10), 'yyyy-mm-dd'))
+	     and t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union all
+	 (select 'H6003' "指标编码",
+	         '其中：个体直接借贷(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_principal_amount), 0) / 10000 "金额(数量)",
+	         '指其中：个体直接借贷逾期债权类融资余额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and (NEXT_DAY(to_date(t.repay_plan_date, 'yyyy-mm-dd'), 5) <![CDATA[<]]> to_date(substr(#monthEndDate#, 1, 10), 'yyyy-mm-dd'))
+	     and t.status = 'unRepay') union all
+	 (select 'H6004' "指标编码",
+	         '小额贷款公司网络小额贷款(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_principal_amount), 0) / 10000 "金额(数量)",
+	         '指其中：小额贷款公司网络小额贷款逾期债权类融资余额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('corp')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and (NEXT_DAY(to_date(t.repay_plan_date, 'yyyy-mm-dd'), 5) <![CDATA[<]]> to_date(substr(#monthEndDate#, 1, 10), 'yyyy-mm-dd'))
+	     and t.status = 'unRepay') union all
+	 (select 'H6005' "指标编码",
+	         '90天以上逾期债权类融资余额(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(CASE
+	                   WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                        to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 91 and 999 then
+	                    t.repay_principal_amount
+	                   else
+	                    null
+	                 end),
+	             0) / 10000 "金额(数量)",
+	         '指逾期 90 天(含)以上的债权类融资本金余额' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	   and (NEXT_DAY(to_date(t.repay_plan_date, 'yyyy-mm-dd'), 5) <![CDATA[<]]> to_date(substr(#monthEndDate#, 1, 10), 'yyyy-mm-dd'))
+	     and t.status = 'unRepay') union all
+	 (select 'H6006' "指标编码",
+	         '其中：个体直接借贷(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(CASE
+	                   WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                        to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 91 and 999 then
+	                    t.repay_principal_amount
+	                   else
+	                    null
+	                 end),
+	             0) / 10000 "金额(数量)",
+	         '指其中：个体直接借贷逾期 90 天(含)以上的债权类融资本金余额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.status = 'unRepay') union all
+	 (select 'H6007' "指标编码",
+	         '小额贷款公司网络小额贷款(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(CASE
+	                   WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                        to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 91 and 999 then
+	                    t.repay_principal_amount
+	                   else
+	                    null
+	                 end),
+	             0) / 10000 "金额(数量)",
+	         '指其中：小额贷款公司网络小额贷款逾期 90 天(含)以上的债权类融资本金余额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('corp')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.status = 'unRepay')
+	
+	union all
+	 (select 'H6008' "指标编码",
+	         '逾期债权类融资笔数(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct t.product_id) "金额(数量)",
+	         '指合同约定到期(含展期后到期)未归还本金或利息的债权类融资的笔数' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union all
+	 (select 'H6009' "指标编码",
+	         '其中：个体直接借贷(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct t.product_id) "金额(数量)",
+	         '指其中：个体直接借贷逾期债权的笔数' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.user_info_id != '14082511240267427903'
+	     and t.status = 'unRepay') union all
+	 (select 'H6010' "指标编码",
+	         '小额贷款公司网络小额贷款(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct t.product_id) "金额(数量)",
+	         '指其中：小额贷款公司网络小额贷款逾期债权的笔数' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('corp')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.status = 'unRepay') union all
+	 (select 'H6011' "指标编码",
+	         '90天以上逾期债权类融资笔数(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct CASE
+	                 WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                      to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 91 and 999 then
+	                  t.product_id
+	                 else
+	                  null
+	               end) "金额(数量)",
+	         '指逾期 90 天(含)以上的债权类融资笔数' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.data_status = 'valid'
+	     and t.status = 'unRepay') union all
+	 (select 'H6012' "指标编码",
+	         '其中：个体直接借贷(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct CASE
+	                 WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                      to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 91 and 999 then
+	                  t.product_id
+	                 else
+	                  null
+	               end) "金额(数量)",
+	         '指其中：个体直接借贷逾期 90 天(含)以上的债权类融资笔数' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.status = 'unRepay') union all
+	 (select 'H6013' "指标编码",
+	         '小额贷款公司网络小额贷款(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct CASE
+	                 WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                      to_date(t.repay_plan_date, 'yyyy-mm-dd')-5) BETWEEN 91 and 999 then
+	                  t.product_id
+	                 else
+	                  null
+	               end) "金额(数量)",
+	         '指其中：小额贷款公司网络小额贷款逾期 90 天(含)以上的债权类融资笔数' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('corp')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.status = 'unRepay') union all
+	 (select 'H6014' "指标编码",
+	         '提前还款金额(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_amount + t.fee), 0) / 10000 "金额(数量)",
+	         '指报告期内融资方因提前还款，终止合同的债权类融资金额' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.repay_plan_date <![CDATA[>=]]> #monthStartDate#
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.status = 'repayed'
+	     and t.repay_type = 'prepay'
+	     and t.data_status = 'valid') union all
+	 (select 'H6015' "指标编码",
+	         '其中：个体直接借贷(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_amount + t.fee), 0) / 10000 "金额(数量)",
+	         '指其中：个体直接借贷提前还款金额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[>=]]> #monthStartDate#
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.status = 'repayed'
+	     and t.repay_type = 'prepay'
+	     and t.data_status = 'valid') union all
+	 (select 'H6016' "指标编码",
+	         '小额贷款公司网络小额贷款(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_amount + t.fee), 0) / 10000 "金额(数量)",
+	         '指其中：小额贷款公司网络小额贷款提前还款金额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('corp')
+	     and t.repay_plan_date <![CDATA[>=]]> #monthStartDate#
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.status = 'repayed'
+	     and t.repay_type = 'prepay'
+	     and t.data_status = 'valid') union all
+	 (select 'H6017' "指标编码",
+	         '提前还款笔数(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct t.product_id) "金额(数量)",
+	         '指报告期内融资方因提前还款，终止合同的债权类融资笔数' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.repay_plan_date <![CDATA[>=]]> #monthStartDate#
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.status = 'repayed'
+	     and t.repay_type = 'prepay'
+	     and t.data_status = 'valid') union all
+	 (select 'H6018' "指标编码",
+	         '其中：个体直接借贷(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct t.product_id) "金额(数量)",
+	         '指其中：个体直接借贷提前还款笔数' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[>=]]> #monthStartDate#
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.status = 'repayed'
+	     and t.repay_type = 'prepay'
+	     and t.data_status = 'valid') union all
+	 (select 'H6019' "指标编码",
+	         '小额贷款公司网络小额贷款(笔)' "指标名称",
+	         '月度' "频度",
+	         count(distinct t.product_id) "金额(数量)",
+	         '指其中：小额贷款公司网络小额贷款提前还款笔数' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('corp')
+	     and t.repay_plan_date <![CDATA[>=]]> #monthStartDate#
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.status = 'repayed'
+	     and t.repay_type = 'prepay'
+	     and t.data_status = 'valid') union all
+	 (select 'H6020' "指标编码",
+	         '当期代偿金额(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_amount + t.fee), 0) / 10000 "金额(数量)",
+	         '指报告期时段内因融资方违约等原因代为偿还的资金金额' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.repay_plan_date <![CDATA[>=]]> #monthStartDate#
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.status = 'repayed'
+	     and t.repay_user_type != 'borrower'
+	     and t.data_status = 'valid') union all
+	 (select 'H6021' "指标编码",
+	         '其中：个体直接借贷(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_amount + t.fee), 0) / 10000 "金额(数量)",
+	         '指其中：个体直接借贷当期代偿金额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[>=]]> #monthStartDate#
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.status = 'repayed'
+	     and t.repay_user_type != 'borrower'
+	     and t.data_status = 'valid') union all
+	 (select 'H6022' "指标编码",
+	         '当年累计代偿金额(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_amount + t.fee), 0) / 10000 "金额(数量)",
+	         '指年初至报告期时段因融资方违约等原因代为偿还的资金金额' "填报说明"
+	    from TENDER_REPAYMENT t
+	   where t.repay_time <![CDATA[>=]]> #yearStartDate#||' 00:00:00'
+	     and t.repay_time <![CDATA[<=]]> #monthEndDate#||' 23:59:59'
+	     and t.status = 'repayed'
+	     and t.repay_user_type != 'borrower'
+	     and t.data_status = 'valid') union all
+	 (select 'H6023' "指标编码",
+	         '其中：个体直接借贷(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(t.repay_amount + t.fee), 0) / 10000 "金额(数量)",
+	         '指其中：个体直接借贷当年累计代偿金额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_time <![CDATA[>=]]> #yearStartDate#||' 00:00:00'
+	     and t.repay_time <![CDATA[<=]]> #monthEndDate#||' 23:59:59'
+	     and t.status = 'repayed'
+	     and t.repay_user_type != 'borrower'
+	     and t.data_status = 'valid') union all
+	 (select 'H6024' "指标编码",
+	         '个体直接借贷出借人当期损失本金金额(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(CASE
+	                   WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                        to_date(t.repay_plan_date, 'yyyy-mm-dd')) BETWEEN 999 and 9999 then
+	                    t.repay_principal_amount
+	                   else
+	                    null
+	                 end),
+	             0) / 10000 "金额(数量)",
+	         '指出借人在报告期时段内确认因出借资金损失的本金金额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.status = 'unRepay') union all
+	 (select 'H6025' "指标编码",
+	         '个体直接借贷出借人当年累计损失本金金额(万元)' "指标名称",
+	         '月度' "频度",
+	         nvl(sum(CASE
+	                   WHEN (to_date(#monthEndDate#, 'yyyy-mm-dd') -
+	                        to_date(t.repay_plan_date, 'yyyy-mm-dd')) BETWEEN 999 and 9999 then
+	                    t.repay_principal_amount
+	                   else
+	                    null
+	                 end),
+	             0) / 10000 "金额(数量)",
+	         '指出借人在年初至报告期时段内确认因出借资金损失的本金金额' "填报说明"
+	    from TENDER_REPAYMENT t, borrower b
+	   where t.borrower_user_info_id = b.user_info_id
+	     and b.type in ('person', 'consultant')
+	     and t.repay_plan_date <![CDATA[<=]]> #monthEndDate#
+	     and t.data_status = 'valid'
+	     and t.status = 'unRepay')) ta)
+	         
+	select taball."indexCode",
+	       taball."indexName",
+	       taball."frequency",
+	       taball."amount",
+	       taball."desc"
+	  from taball
+	  
+  </sql>
+
+    <select id="selectenterpriseData" resultClass="hashMap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="enterpriseDataSubmit_fragment"/>
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+
+    <select id="selectenterpriseDataTotalCount" resultClass="int" parameterClass="map">
+        select count (*) as total from (
+        <include refid="enterpriseDataSubmit_fragment"/>
+        )
+    </select>
+</sqlMap>

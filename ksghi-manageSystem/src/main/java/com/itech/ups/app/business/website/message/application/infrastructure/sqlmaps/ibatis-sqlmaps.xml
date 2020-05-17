@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="website">
+
+    <sql id="selectUserMessages_fragment">
+        select um.id, um.user_info_id, um.topic, um.content, um.type, um.busi_type, um.status, um.create_time,
+        um.remark,
+        um.data_status, um.receive_address, ta.name, ta.nick_name, ta.mobile, ta.user_type
+        from user_message um
+        left join (select ui.id, ui.name,ui.mobile,ui.nick_name, 'user' user_type from user_info ui
+        union all
+        select sm.id, sm.name, sm.mobile,'' nick_name, 'manager' user_type from sys_manager sm) ta
+        on um.user_info_id = ta.id
+        where um.data_status = 'valid'
+        <isNotNull prepend="AND" property="userName">
+            ta.NAME like '%'||#userName:VARCHAR#||'%'
+        </isNotNull>
+        <isNotNull prepend="AND" property="busiType">
+            um.BUSI_TYPE = #busiType:VARCHAR#
+        </isNotNull>
+        <isNotNull prepend="AND" property="nickName">
+            ta.NICK_NAME like '%'||#nickName#||'%'
+        </isNotNull>
+        <isNotNull prepend="AND" property="mobile">
+            um.RECEIVE_ADDRESS like '%'||#mobile:VARCHAR#||'%'
+        </isNotNull>
+    </sql>
+
+    <select id="selectUserMessages" resultClass="java.util.HashMap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectUserMessages_fragment"/>
+        order by CREATE_TIME desc
+        )rowtemp where rownum <![CDATA[<=]]> #rowEnd# )
+        where rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+
+    <select id="selectUserMessagesTotalCount" resultClass="long" parameterClass="map">
+        select count (*) as total from (
+        <include refid="selectUserMessages_fragment"/>
+        )
+    </select>
+</sqlMap>

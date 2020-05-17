@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="versionmanage">
+    <typeAlias alias="versionManage" type="com.itech.ups.app.manager.application.domain.VersionManage"/>
+
+    <resultMap id="versionmanageMap" class="versionManage">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="VERSION" property="version" jdbcType="VARCHAR"/>
+        <result column="ONLINE_TIME" property="onlineTime" jdbcType="CHAR"/>
+        <result column="OFFLINE_TIME" property="offlineTime" jdbcType="CHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="PATH" property="path" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="FORCED_UPGRADE" property="forcedUpgrade" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="selectVersionManage_fragment">
+ 	select ID,NAME,TYPE,VERSION,ONLINE_TIME,OFFLINE_TIME,REMARK,STATUS,PATH,CREATE_TIME,FORCED_UPGRADE
+	from VERSION_MANAGE
+ </sql>
+
+    <select id="selectVersionCount" resultClass="int" parameterClass="hashmap">
+        select count(*)
+        from VERSION_MANAGE
+        where 1=1
+        <isNotEmpty prepend="AND" property="type">
+            TYPE = #type:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="status">
+            STATUS = #status:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="startDate">
+            <![CDATA[
+    	ONLINE_TIME >= #startDate:VARCHAR#
+    	]]>
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="endDate">
+            <![CDATA[
+    	ONLINE_TIME <= #endDate:VARCHAR#
+    	]]>
+        </isNotEmpty>
+    </select>
+
+    <select id="selectVersionManageById" resultMap="versionmanageMap" parameterClass="string">
+        <include refid="selectVersionManage_fragment"/>
+        where ID = #id:VARCHAR#
+    </select>
+
+    <select id="selectVersionManages" resultMap="versionmanageMap" parameterClass="hashmap">
+        select * from (select rowtemp.*, rownum rownumtemp from
+        (
+        <include refid="selectVersionManage_fragment"/>
+        where 1=1
+        <isNotEmpty prepend="AND" property="type">
+            TYPE = #type:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="status">
+            STATUS = #status:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="startDate">
+            <![CDATA[
+    	ONLINE_TIME >= #startDate:VARCHAR#
+    	]]>
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="endDate">
+            <![CDATA[
+    	ONLINE_TIME <= #endDate:VARCHAR#
+    	]]>
+        </isNotEmpty>
+        ) rowtemp)
+        where rownumtemp <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+        order by create_time desc
+    </select>
+
+    <select id="selectMaxVersionManage" resultMap="versionmanageMap" parameterClass="string">
+        <include refid="selectVersionManage_fragment"/>
+        where TYPE = #type:VARCHAR#
+        and VERSION = (select MAX(VERSION) from VERSION_MANAGE where TYPE = #type:VARCHAR#)
+        and STATUS = 'runing'
+    </select>
+
+    <insert id="insertVersionManage" parameterClass="versionManage">
+        insert into VERSION_MANAGE
+        <dynamic prepend="(">
+            <isNotEmpty prepend="," property="id">
+                ID
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="name">
+                NAME
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="type">
+                TYPE
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="version">
+                VERSION
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="onlineTime">
+                ONLINE_TIME
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="offlineTime">
+                OFFLINE_TIME
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="remark">
+                REMARK
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="status">
+                STATUS
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="path">
+                PATH
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="createTime">
+                CREATE_TIME
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="forcedUpgrade">
+                FORCED_UPGRADE
+            </isNotEmpty>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotEmpty prepend="," property="id">
+                #id:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="name">
+                #name:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="type">
+                #type:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="version">
+                #version:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="onlineTime">
+                #onlineTime:CHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="offlineTime">
+                #offlineTime:CHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="status">
+                #status:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="path">
+                #path:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="forcedUpgrade">
+                #forcedUpgrade:CHAR#
+            </isNotEmpty>
+            )
+        </dynamic>
+    </insert>
+
+    <delete id="deleteVersionManage" parameterClass="string">
+    delete from VERSION_MANAGE
+    where ID = #id:VARCHAR#
+  </delete>
+
+    <update id="updateVersionStatus" parameterClass="string">
+  		update VERSION_MANAGE set STATUS='stop',OFFLINE_TIME=to_char(sysdate, 'yyyy-mm-dd hh24:mi:ss') where ID = #id:VARCHAR#
+  </update>
+
+    <update id="updateVersionManage" parameterClass="versionManage">
+        update VERSION_MANAGE
+        <dynamic prepend="set">
+            <isNotEmpty prepend="," property="name">
+                NAME = #name:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="type">
+                TYPE = #type:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="version">
+                VERSION = #version:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="onlineTime">
+                ONLINE_TIME = #onlineTime:CHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="offlineTime">
+                OFFLINE_TIME = #offlineTime:CHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="remark">
+                REMARK = #remark:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="status">
+                STATUS = #status:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="path">
+                PATH = #path:VARCHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="createTime">
+                CREATE_TIME = #createTime:CHAR#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="forcedUpgrade">
+                FORCED_UPGRADE = #forcedUpgrade:CHAR#
+            </isNotEmpty>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+
+</sqlMap>

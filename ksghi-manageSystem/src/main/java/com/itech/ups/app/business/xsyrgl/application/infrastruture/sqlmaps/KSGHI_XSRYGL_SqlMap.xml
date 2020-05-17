@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="KSGHI_XSRYGL">
+    <typeAlias alias="KSGHI_XSRYGL" type="com.itech.ups.app.xsrygl.application.domain.Xsrygl"/>
+    <resultMap id="KSGHI_XSRYGL_BaseResultMap" class="KSGHI_XSRYGL">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="ID_NO" property="idNo" jdbcType="VARCHAR"/>
+        <result column="CODE" property="code" jdbcType="VARCHAR"/>
+        <result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+        <result column="RANK" property="rank" jdbcType="VARCHAR"/>
+        <result column="DEPT" property="dept" jdbcType="VARCHAR"/>
+        <result column="TJR" property="tjr" jdbcType="VARCHAR"/>
+        <result column="TJRGH" property="tjrgh" jdbcType="VARCHAR"/>
+        <result column="ZJSJ" property="zjsj" jdbcType="VARCHAR"/>
+        <result column="ZJSJGH" property="zjsjgh" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="RSSJ" property="rssj" jdbcType="VARCHAR"/>
+        <result column="CODE_OLD" property="codeOld" jdbcType="VARCHAR"/>
+        <result column="YHMC" property="yhmc" jdbcType="VARCHAR"/>
+        <result column="YHKH" property="yhkh" jdbcType="VARCHAR"/>
+        <result column="ZZMM" property="zzmm" jdbcType="VARCHAR"/>
+        <result column="XB" property="xb" jdbcType="VARCHAR"/>
+        <result column="MZ" property="mz" jdbcType="VARCHAR"/>
+        <result column="XL" property="xl" jdbcType="VARCHAR"/>
+        <result column="RSNL" property="rsnl" jdbcType="VARCHAR"/>
+        <result column="LXDH" property="lxdh" jdbcType="VARCHAR"/>
+        <result column="LXDZ" property="lxdz" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="SSGS" property="ssgs" jdbcType="VARCHAR"/>
+        <result column="JBF" property="jbf" jdbcType="VARCHAR"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR"/>
+        <result column="EDIT_TIME" property="editTime" jdbcType="CHAR"/>
+        <result column="EDITOR_ID" property="editorId" jdbcType="VARCHAR"/>
+        <result column="EDITOR_NAME" property="editorName" jdbcType="VARCHAR"/>
+        <result column="ZYZ" property="zyz" jdbcType="VARCHAR"/>
+        <result column="ZYQQ" property="zyqq" jdbcType="VARCHAR"/>
+        <result column="ZYZQ" property="zyzq" jdbcType="VARCHAR"/>
+        <result column="ZZSJ" property="zzsj" jdbcType="VARCHAR"/>
+        <result column="LZSJ" property="lzsj" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectByPrimaryKey" resultMap="KSGHI_XSRYGL_BaseResultMap" parameterClass="string">
+    select ID, NAME, ID_NO, CODE, MOBILE, RANK, DEPT, TJR, TJRGH, ZJSJ, ZJSJGH, STATUS, RSSJ,
+      CODE_OLD, YHMC, YHKH, ZZMM, XB, MZ, XL, RSNL, LXDH, LXDZ, EMAIL, REMARK, DATA_STATUS,
+      CREATE_TIME, SSGS, JBF, CREATOR_ID, CREATOR_NAME, EDIT_TIME, EDITOR_ID, EDITOR_NAME, ZYZ,
+      ZYQQ, ZYZQ, ZZSJ, LZSJ
+    from XSRYGL
+    where ID = #id:VARCHAR#
+  </select>
+    <select id="findXsryglByName" resultMap="KSGHI_XSRYGL_BaseResultMap" parameterClass="string">
+    select ID, NAME, ID_NO, CODE, MOBILE, RANK, DEPT, TJR, TJRGH, ZJSJ, ZJSJGH, STATUS, RSSJ,
+      CODE_OLD, YHMC, YHKH, ZZMM, XB, MZ, XL, RSNL, LXDH, LXDZ, EMAIL, REMARK, DATA_STATUS,
+      CREATE_TIME, SSGS, JBF, CREATOR_ID, CREATOR_NAME, EDIT_TIME, EDITOR_ID, EDITOR_NAME, ZYZ,
+      ZYQQ, ZYZQ, ZZSJ, LZSJ
+    from XSRYGL
+    where NAME = #name:VARCHAR#
+  </select>
+    <sql id="selectXsrygl_fragment">
+        select ID, NAME, ID_NO, CODE, MOBILE, RANK, DEPT, TJR, TJRGH, ZJSJ, ZJSJGH, STATUS, RSSJ,
+        CODE_OLD, YHMC, YHKH, ZZMM, XB, MZ, XL, RSNL, LXDH, LXDZ, EMAIL, REMARK, DATA_STATUS,
+        CREATE_TIME, SSGS, JBF, CREATOR_ID, CREATOR_NAME, EDIT_TIME, EDITOR_ID, EDITOR_NAME, ZYZ,
+        ZYQQ, ZYZQ, ZZSJ, LZSJ
+        from XSRYGL
+        where DATA_STATUS = 'valid'
+        <isNotEmpty prepend="and" property="tjr">
+            tjr like '%'||#tjr:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="name">
+            name like '%'||#name:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="dlgs">
+            ssgs = #dlgs:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="ssgs">
+            ssgs = #ssgs:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="dept">
+            dept = #dept:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="rank">
+            rank = #rank:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="status">
+            status = #status:VARCHAR#
+        </isNotEmpty>
+        <isEqual prepend="and" property="bhnq" compareValue="是">
+            rank != '内勤'
+        </isEqual>
+        <isEqual prepend="and" property="cxmk" compareValue="bgcx">
+            EDITOR_ID is not null
+        </isEqual>
+        order by RSSJ desc
+    </sql>
+    <select id="selectXsrygl" resultMap="KSGHI_XSRYGL_BaseResultMap" parameterClass="map">
+        select * from (select rowtemp.*,rownum rownumtemp from (
+        <include refid="selectXsrygl_fragment"/>
+
+        ) rowtemp )
+        where rownumtemp  <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+    <select id="selectXsryglTotalCount" resultClass="int" parameterClass="map">
+        select count (*) as total from (
+        <include refid="selectXsrygl_fragment"/>
+        )
+    </select>
+    <delete id="deleteByPrimaryKey" parameterClass="KSGHI_XSRYGL">
+    delete from XSRYGL
+    where ID = #id:VARCHAR#
+  </delete>
+    <insert id="insert" parameterClass="KSGHI_XSRYGL">
+    insert into XSRYGL (ID, NAME, ID_NO, CODE, MOBILE, RANK, DEPT, TJR, TJRGH, ZJSJ, ZJSJGH,
+      STATUS, RSSJ, CODE_OLD, YHMC, YHKH, ZZMM, XB, MZ, XL, RSNL, LXDH, LXDZ, EMAIL, REMARK,
+      DATA_STATUS, CREATE_TIME, SSGS, JBF, CREATOR_ID, CREATOR_NAME, EDIT_TIME, EDITOR_ID,
+      EDITOR_NAME, ZYZ, ZYQQ, ZYZQ, ZZSJ, LZSJ)
+    values (#id:VARCHAR#, #name:VARCHAR#, #idNo:VARCHAR#, #code:VARCHAR#, #mobile:VARCHAR#,
+      #rank:VARCHAR#, #dept:VARCHAR#, #tjr:VARCHAR#, #tjrgh:VARCHAR#, #zjsj:VARCHAR#,
+      #zjsjgh:VARCHAR#, #status:VARCHAR#, #rssj:VARCHAR#, #codeOld:VARCHAR#, #yhmc:VARCHAR#,
+      #yhkh:VARCHAR#, #zzmm:VARCHAR#, #xb:VARCHAR#, #mz:VARCHAR#, #xl:VARCHAR#, #rsnl:VARCHAR#,
+      #lxdh:VARCHAR#, #lxdz:VARCHAR#, #email:VARCHAR#, #remark:VARCHAR#, #dataStatus:VARCHAR#,
+      #createTime:CHAR#, #ssgs:VARCHAR#, #jbf:VARCHAR#, #creatorId:VARCHAR#, #creatorName:VARCHAR#,
+      #editTime:CHAR#, #editorId:VARCHAR#, #editorName:VARCHAR#, #zyz:VARCHAR#, #zyqq:VARCHAR#,
+      #zyzq:VARCHAR#, #zzsj:VARCHAR#, #lzsj:VARCHAR#)
+  </insert>
+    <insert id="insertSelective" parameterClass="KSGHI_XSRYGL">
+        insert into XSRYGL
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                ID
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                NAME
+            </isNotNull>
+            <isNotNull prepend="," property="idNo">
+                ID_NO
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                CODE
+            </isNotNull>
+            <isNotNull prepend="," property="mobile">
+                MOBILE
+            </isNotNull>
+            <isNotNull prepend="," property="rank">
+                RANK
+            </isNotNull>
+            <isNotNull prepend="," property="dept">
+                DEPT
+            </isNotNull>
+            <isNotNull prepend="," property="tjr">
+                TJR
+            </isNotNull>
+            <isNotNull prepend="," property="tjrgh">
+                TJRGH
+            </isNotNull>
+            <isNotNull prepend="," property="zjsj">
+                ZJSJ
+            </isNotNull>
+            <isNotNull prepend="," property="zjsjgh">
+                ZJSJGH
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="rssj">
+                RSSJ
+            </isNotNull>
+            <isNotNull prepend="," property="codeOld">
+                CODE_OLD
+            </isNotNull>
+            <isNotNull prepend="," property="yhmc">
+                YHMC
+            </isNotNull>
+            <isNotNull prepend="," property="yhkh">
+                YHKH
+            </isNotNull>
+            <isNotNull prepend="," property="zzmm">
+                ZZMM
+            </isNotNull>
+            <isNotNull prepend="," property="xb">
+                XB
+            </isNotNull>
+            <isNotNull prepend="," property="mz">
+                MZ
+            </isNotNull>
+            <isNotNull prepend="," property="xl">
+                XL
+            </isNotNull>
+            <isNotNull prepend="," property="rsnl">
+                RSNL
+            </isNotNull>
+            <isNotNull prepend="," property="lxdh">
+                LXDH
+            </isNotNull>
+            <isNotNull prepend="," property="lxdz">
+                LXDZ
+            </isNotNull>
+            <isNotNull prepend="," property="email">
+                EMAIL
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="ssgs">
+                SSGS
+            </isNotNull>
+            <isNotNull prepend="," property="jbf">
+                JBF
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME
+            </isNotNull>
+            <isNotNull prepend="," property="zyz">
+                ZYZ
+            </isNotNull>
+            <isNotNull prepend="," property="zyqq">
+                ZYQQ
+            </isNotNull>
+            <isNotNull prepend="," property="zyzq">
+                ZYZQ
+            </isNotNull>
+            <isNotNull prepend="," property="zzsj">
+                ZZSJ
+            </isNotNull>
+            <isNotNull prepend="," property="lzsj">
+                LZSJ
+            </isNotNull>
+            )
+        </dynamic>
+        values
+        <dynamic prepend="(">
+            <isNotNull prepend="," property="id">
+                #id:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="name">
+                #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="idNo">
+                #idNo:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="mobile">
+                #mobile:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="rank">
+                #rank:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dept">
+                #dept:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="tjr">
+                #tjr:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="tjrgh">
+                #tjrgh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zjsj">
+                #zjsj:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zjsjgh">
+                #zjsjgh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="rssj">
+                #rssj:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="codeOld">
+                #codeOld:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="yhmc">
+                #yhmc:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="yhkh">
+                #yhkh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zzmm">
+                #zzmm:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xb">
+                #xb:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="mz">
+                #mz:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xl">
+                #xl:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="rsnl">
+                #rsnl:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="lxdh">
+                #lxdh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="lxdz">
+                #lxdz:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="email">
+                #email:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="ssgs">
+                #ssgs:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="jbf">
+                #jbf:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                #editorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zyz">
+                #zyz:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zyqq">
+                #zyqq:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zyzq">
+                #zyzq:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zzsj">
+                #zzsj:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="lzsj">
+                #lzsj:VARCHAR#
+            </isNotNull>
+            )
+        </dynamic>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterClass="KSGHI_XSRYGL">
+        update XSRYGL
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="name">
+                NAME = #name:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="idNo">
+                ID_NO = #idNo:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="code">
+                CODE = #code:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="mobile">
+                MOBILE = #mobile:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="rank">
+                RANK = #rank:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dept">
+                DEPT = #dept:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="tjr">
+                TJR = #tjr:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="tjrgh">
+                TJRGH = #tjrgh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zjsj">
+                ZJSJ = #zjsj:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zjsjgh">
+                ZJSJGH = #zjsjgh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                STATUS = #status:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="rssj">
+                RSSJ = #rssj:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="codeOld">
+                CODE_OLD = #codeOld:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="yhmc">
+                YHMC = #yhmc:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="yhkh">
+                YHKH = #yhkh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zzmm">
+                ZZMM = #zzmm:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xb">
+                XB = #xb:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="mz">
+                MZ = #mz:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="xl">
+                XL = #xl:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="rsnl">
+                RSNL = #rsnl:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="lxdh">
+                LXDH = #lxdh:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="lxdz">
+                LXDZ = #lxdz:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="email">
+                EMAIL = #email:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="remark">
+                REMARK = #remark:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="dataStatus">
+                DATA_STATUS = #dataStatus:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="createTime">
+                CREATE_TIME = #createTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="ssgs">
+                SSGS = #ssgs:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="jbf">
+                JBF = #jbf:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorId">
+                CREATOR_ID = #creatorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="creatorName">
+                CREATOR_NAME = #creatorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editTime">
+                EDIT_TIME = #editTime:CHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorId">
+                EDITOR_ID = #editorId:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="editorName">
+                EDITOR_NAME = #editorName:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zyz">
+                ZYZ = #zyz:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zyqq">
+                ZYQQ = #zyqq:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zyzq">
+                ZYZQ = #zyzq:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="zzsj">
+                ZZSJ = #zzsj:VARCHAR#
+            </isNotNull>
+            <isNotNull prepend="," property="lzsj">
+                LZSJ = #lzsj:VARCHAR#
+            </isNotNull>
+        </dynamic>
+        where ID = #id:VARCHAR#
+    </update>
+    <update id="updateByPrimaryKey" parameterClass="KSGHI_XSRYGL">
+    update XSRYGL
+    set NAME = #name:VARCHAR#,
+      ID_NO = #idNo:VARCHAR#,
+      CODE = #code:VARCHAR#,
+      MOBILE = #mobile:VARCHAR#,
+      RANK = #rank:VARCHAR#,
+      DEPT = #dept:VARCHAR#,
+      TJR = #tjr:VARCHAR#,
+      TJRGH = #tjrgh:VARCHAR#,
+      ZJSJ = #zjsj:VARCHAR#,
+      ZJSJGH = #zjsjgh:VARCHAR#,
+      STATUS = #status:VARCHAR#,
+      RSSJ = #rssj:VARCHAR#,
+      CODE_OLD = #codeOld:VARCHAR#,
+      YHMC = #yhmc:VARCHAR#,
+      YHKH = #yhkh:VARCHAR#,
+      ZZMM = #zzmm:VARCHAR#,
+      XB = #xb:VARCHAR#,
+      MZ = #mz:VARCHAR#,
+      XL = #xl:VARCHAR#,
+      RSNL = #rsnl:VARCHAR#,
+      LXDH = #lxdh:VARCHAR#,
+      LXDZ = #lxdz:VARCHAR#,
+      EMAIL = #email:VARCHAR#,
+      REMARK = #remark:VARCHAR#,
+      DATA_STATUS = #dataStatus:VARCHAR#,
+      CREATE_TIME = #createTime:CHAR#,
+      SSGS = #ssgs:VARCHAR#,
+      JBF = #jbf:VARCHAR#,
+      CREATOR_ID = #creatorId:VARCHAR#,
+      CREATOR_NAME = #creatorName:VARCHAR#,
+      EDIT_TIME = #editTime:CHAR#,
+      EDITOR_ID = #editorId:VARCHAR#,
+      EDITOR_NAME = #editorName:VARCHAR#,
+      ZYZ = #zyz:VARCHAR#,
+      ZYQQ = #zyqq:VARCHAR#,
+      ZYZQ = #zyzq:VARCHAR#,
+      ZZSJ = #zzsj:VARCHAR#,
+      LZSJ = #lzsj:VARCHAR#
+    where ID = #id:VARCHAR#
+  </update>
+</sqlMap>

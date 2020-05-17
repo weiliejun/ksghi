@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.vjinke.thirdparty:ibatis:cg:2.3.0.677">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/vjinke/thirdparty/ibatis/2.3.0.677/ibatis-2.3.0.677-cg.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/com/vjinke/thirdparty/ibatis/2.3.0.677/ibatis-2.3.0.677-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/vjinke/thirdparty/ibatis/2.3.0.677/ibatis-2.3.0.677-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

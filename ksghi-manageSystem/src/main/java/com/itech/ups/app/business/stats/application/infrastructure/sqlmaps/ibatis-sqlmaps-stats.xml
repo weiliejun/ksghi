@@ -1,0 +1,1864 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="stats">
+    <typeAlias alias="recharge"
+               type="com.itech.ups.app.user.application.domain.Recharge"/>
+    <typeAlias alias="withdraw"
+               type="com.itech.ups.app.user.application.domain.Withdraw"/>
+    <resultMap id="rechargeResultMap" class="recharge">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="USER_TYPE" property="userType" jdbcType="VARCHAR"/>
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+        <result column="USR_CUST_ID" property="usrCustId" jdbcType="VARCHAR"/>
+        <result column="OPEN_BANK_ID" property="openBankId" jdbcType="VARCHAR"/>
+        <result column="TRANS_AMOUNT" property="transAmount" jdbcType="DECIMAL"/>
+        <result column="RESP_CONTENT" property="respContent" jdbcType="VARCHAR"/>
+        <result column="RESP_STATUS" property="respStatus" jdbcType="VARCHAR"/>
+        <result column="RESP_DESC" property="respDesc" jdbcType="VARCHAR"/>
+        <result column="TRX_ID" property="trxId" jdbcType="VARCHAR"/>
+        <result column="FEE_AMOUNT" property="feeAmount" jdbcType="DECIMAL"/>
+        <result column="FEE_CUST_ID" property="feeCustId" jdbcType="VARCHAR"/>
+        <result column="FEE_ACCT_ID" property="feeAcctId" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+        <result column="PAY_METHOD" property="payMethod" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="withdrawResultMap" class="withdraw">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="USER_TYPE" property="userType" jdbcType="VARCHAR"/>
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+        <result column="USR_CUST_ID" property="usrCustId" jdbcType="VARCHAR"/>
+        <result column="OPEN_ACCT_ID" property="openAcctId" jdbcType="VARCHAR"/>
+        <result column="TRANS_AMOUNT" property="transAmount" jdbcType="DECIMAL"/>
+        <result column="SERVICE_FEE" property="serviceFee" jdbcType="DECIMAL"/>
+        <result column="SERVICE_FEE_ACCT_ID" property="serviceFeeAcctId"
+                jdbcType="VARCHAR"/>
+        <result column="RESP_CONTENT" property="respContent" jdbcType="VARCHAR"/>
+        <result column="RESP_STATUS" property="respStatus" jdbcType="VARCHAR"/>
+        <result column="RESP_DESC" property="respDesc" jdbcType="VARCHAR"/>
+        <result column="FEE_AMOUNT" property="feeAmount" jdbcType="DECIMAL"/>
+        <result column="FEE_CUST_ID" property="feeCustId" jdbcType="VARCHAR"/>
+        <result column="FEE_ACCT_ID" property="feeAcctId" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="CHAR"/>
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="selectRecharges_fragment">
+        select * from (
+        select r.ID, r.USER_ID,u.ROLE_TYPE,r.resp_status,r.data_status,r.user_type,r.pay_method,
+        case u.ROLE_TYPE
+        when 'investor' then u.NAME
+        when 'borrower' then decode(b.TYPE,'person', b.NAME, 'corp', b.CORP_NAME)
+        when 'loanCorp' then l.NAME
+        when 'guarantyCorp' then g.NAME
+        end as NAME ,
+        r.CREATE_TIME, r.TRANS_AMOUNT,r.open_bank_id
+        from RECHARGE r left join USER_INFO u on u.id=r.user_id
+        left join LOAN_CORP l on l.user_info_id = r.user_id
+        left join GUARANTY_CORP g on g.user_info_id = r.user_id
+        left join BORROWER b on b.user_info_id = r.user_id
+        where u.id = r.user_id )
+        where 1=1 and
+        resp_status='success'and data_status='valid' and user_type='user'
+        <isNotEmpty prepend="and" property="roleType">
+            role_type = #roleType:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="payMethod">
+            PAY_METHOD = #payMethod:VARCHAR#
+        </isNotEmpty>
+        <isNotNull prepend="and" property="name">
+            name like '%'||#name#||'%'
+        </isNotNull>
+        <isNotEmpty prepend="and" property="startDate">
+            CREATE_TIME <![CDATA[>=]]>
+            #startDate:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            SUBSTRB(CREATE_TIME,0,10) <![CDATA[<=]]>
+            #endDate:CHAR#
+        </isNotEmpty>
+    </sql>
+
+    <select id="selectPageRecharges" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectRecharges_fragment"/>
+        order by CREATE_TIME desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+
+    </select>
+    <select id="selectRechargesTotalCount" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count (*) as TOTAL,count(distinct USER_ID) DIST_USER_TOTAL,
+        sum(TRANS_AMOUNT) SUM_TRANS_AMOUNT from (
+        <include refid="selectRecharges_fragment"/>
+        order by CREATE_TIME desc
+        )
+    </select>
+
+    <sql id="selectWithdraw_fragment">
+        select * from (
+        select w.ID, w.USER_ID,u.ROLE_TYPE,w.resp_status,w.data_status,w.user_type,
+        case u.ROLE_TYPE
+        when 'investor' then u.NAME
+        when 'borrower' then decode(b.TYPE,'person', b.NAME, 'corp', b.CORP_NAME)
+        when 'loanCorp' then l.NAME
+        when 'guarantyCorp' then g.NAME
+        end as NAME ,
+        w.CREATE_TIME, w.TRANS_AMOUNT, bc.open_bank_id
+        from WITHDRAW w left join USER_INFO u on u.id=w.user_id
+        left join LOAN_CORP l on l.user_info_id = w.user_id
+        left join GUARANTY_CORP g on g.user_info_id = w.user_id
+        left join BORROWER b on b.user_info_id = w.user_id
+        left join user_bank_card bc on w.open_acct_id=bc.open_acct_id and bc.resp_status = 'success'
+        where u.id = w.user_id )
+        where 1=1 and
+        resp_status='success'and data_status='valid' and user_type='user'
+        <isNotEmpty prepend="and" property="roleType">
+            role_type =
+            #roleType:VARCHAR#
+        </isNotEmpty>
+        <isNotNull prepend="and" property="name">
+            name like '%'||#name#||'%'
+        </isNotNull>
+        <isNotEmpty prepend="and" property="startDate">
+            CREATE_TIME <![CDATA[>=]]>
+            #startDate:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            SUBSTRB(CREATE_TIME,0,10) <![CDATA[<=]]>
+            #endDate:CHAR#
+        </isNotEmpty>
+    </sql>
+    <select id="selectPageWithdraws" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectWithdraw_fragment"/>
+        order by CREATE_TIME desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectWithdrawsTotalCount" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count (*) as TOTAL,count(distinct USER_ID) DIST_USER_TOTAL,
+        sum(TRANS_AMOUNT) SUM_TRANS_AMOUNT from (
+        <include refid="selectWithdraw_fragment"/>
+        order by CREATE_TIME desc
+        )
+    </select>
+
+    <sql id="selectUserIntegras_fragment">
+        select UI.ID, UI.USER_INFO_ID, UI.CHANGE_NUM, UI.TYPE, UI.BUSI_TYPE,
+        UI.RELATION_ID, UI.DESCRIPTION, UI.REMARK,
+        UI.DATA_STATUS, UI.CREATE_TIME, U.NAME ,
+        case UI.BUSI_TYPE
+        when 'initInvest' then ('新用户首投金额：'||(select t.trans_amount from TENDER t
+        where ui.relation_id=t.id))
+        when 'invest' then ('出借金额：'||(select t.trans_amount from TENDER t where
+        ui.relation_id=t.id))
+        when 'invitedRegister'then ('邀请人：'||(select us.NAME from USER_INFO us
+        where ui.RELATION_ID=us.id))
+        when 'invitedRegisterToRecommend'then ('好友：'||（select us.NAME from
+        USER_INFO us where ui.RELATION_ID=us.id))
+        when 'invitedInitInvest'then ('邀请人：'||(select us.NAME from USER_INFO us
+        where ui.RELATION_ID=us.id))
+        when 'invitedInitInvestToRecommend'then ('好友：'||(select us.NAME from
+        USER_INFO us where ui.RELATION_ID=us.id))
+        END as SOURCE_REMARK
+        from USER_INTEGRA UI
+        left join USER_INFO U
+        on UI.USER_INFO_ID = U.ID
+        where 1=1
+        <isNotNull prepend="AND" property="name">
+            U.NAME like '%'||#name:VARCHAR#||'%'
+        </isNotNull>
+        <isNotEmpty prepend="AND" property="busiType">
+            UI.BUSI_TYPE = #busiType:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="startDate">
+            UI.CREATE_TIME <![CDATA[>=]]>
+            #startDate:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            SUBSTRB(UI.CREATE_TIME,0,10) <![CDATA[<=]]>
+            #endDate:CHAR#
+        </isNotEmpty>
+
+        and UI.DATA_STATUS = 'valid'
+        and UI.TYPE='incoming'
+    </sql>
+
+    <select id="selectUserIntegras" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectUserIntegras_fragment"/>
+        order by UI.CREATE_TIME desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+
+    <select id="selectUserIntegrasTotalCount" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count (*) as total,count(distinct USER_INFO_ID) dist_user,
+        sum(CHANGE_NUM) SUM_CHANGE_NUM from (
+        <include refid="selectUserIntegras_fragment"/>
+        order by UI.CREATE_TIME desc
+        )
+    </select>
+    <sql id="selectProductSales_fragment">
+        select p.category,
+        p.id,
+        p.name,
+        p.borrow_contract_no,
+        p.amount,
+        p.annual_rate,
+        p.time_limit || decode(p.time_limit_unit,'month', '个月','天') as dendline,
+        p.repay_type,
+        p.tender_amount,
+        t.transt,
+        t.transb,
+        p.tender_users,
+        p.REPAY_START_DATE,
+        p.REPAY_END_DATE,
+        p.status,
+        decode(p.status,
+        'repayed',
+        tp.max_repay_plan_date || '已还清',
+        'prepayed',
+        tp.repay_time || '已还清',
+        'repaying',
+        '代偿' || nvl(tp.dccs,0) || '次') as p_remark
+        from product p
+        left join (select product_id,max(trans_amount) as transt,min(trans_amount) as transb
+        from tender
+        group by product_id
+        ) t
+        on t.product_id = p.id
+        left join (select rep.product_id,
+        max(case when rep.status in ('repayed') and rep.repay_type = 'normal' then rep.repay_plan_date else '' end)
+        max_repay_plan_date,
+        max(case when rep.status in ('repayed') and rep.repay_type = 'prepay' then rep.repay_time else '' end)
+        repay_time,
+        count(distinct case when rep.status in ('repayed') and rep.repay_user_type in ('loanCorp', 'guarantyCorp',
+        'merchant') then rep.period else null end) dccs
+
+        from tender_repayment rep
+        where rep.data_status = 'valid'
+        group by rep.product_id) tp
+        on tp.product_id = p.id
+        where 1=1
+        <isNotEmpty prepend="and" property="status">
+            p.STATUS = #status:VARCHAR#
+        </isNotEmpty>
+        <isNotNull prepend="and" property="name">
+            p.NAME like '%'||#name:VARCHAR#||'%'
+        </isNotNull>
+        <isNotEmpty prepend="and" property="startDate">
+            p.REPAY_START_DATE <![CDATA[>=]]>
+            #startDate:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            p.REPAY_START_DATE <![CDATA[<=]]>
+            #endDate:CHAR#
+        </isNotEmpty>
+        and p.data_status='valid'
+        and p.status in('tender','success','running','repaying','repayed','prepayed')
+    </sql>
+    <select id="selectPageProductSales" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectProductSales_fragment"/>
+        order by CREATE_TIME desc
+        ) rowtemp
+        where rownum <![CDATA[<=]]>
+        #rowEnd# )
+        where rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectProductSalesTotalCount" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count(*) TOTAL_COUNT,sum(tender_amount)
+        SUM_TENDER_AMOUNT,sum(tender_users) SUM_TENDER_USERS from (
+        <include refid="selectProductSales_fragment"/>
+        order by CREATE_TIME desc
+        )
+    </select>
+
+    <sql id="selectProductPayments_fragment">
+        select p.category,
+        p.id,
+        p.name,
+        p.borrow_contract_no,
+        p.borrower_user_info_id,
+        p.borrower_name,
+        p.time_limit,
+        p.time_limit_unit,
+        p.repay_start_date,
+        p.repay_end_date,
+        p.repay_type,
+        p.tender_amount amount,
+        p.annual_rate,
+        nvl(tp.lixi,0) as lixi,
+        nvl(tp.wfqs, 0) + nvl(tp.yfqs, 0) as zqs,
+        nvl(tp.yfqs,0) as yfqs,               <!-- 已付期数   -->
+        nvl(tp.wfqs,0) as wfqs,               <!-- 未付期数   -->
+        nvl(tp.yfbxhj,0) as yfbxhj,           <!-- 已付本息   -->
+        nvl(tp.yfbjhj,0) as yfbjhj,           <!-- 已付本金   -->
+        nvl(tp.wfbxhj,0) as wfbxhj,           <!-- 未付本息   -->
+        p.status,
+        decode(p.status,
+        'repayed',
+        tp.max_repay_plan_date || '已还清',
+        'prepayed',
+        tp.repay_time || '已还清',
+        '代偿' || nvl(tp.dccs,0) || '次') as bz
+        from product p
+        left join borrower b
+        on p.borrower_user_info_id = b.user_info_id
+        left join (select rep.product_id,
+        sum(rep.repay_interest_amount) as lixi,   <!-- 应付利息  -->
+        count(distinct (case when rep.status in ('unRepay', 'freeze', 'unFreeze') then rep.period else null
+        end))wfqs,              <!-- 未付期数  -->
+        sum(case when rep.status in ('unRepay', 'freeze', 'unFreeze') then rep.repay_amount else 0 end)
+        wfbxhj,                      <!-- 未付本息  -->
+        sum(case when rep.status in ('unRepay', 'freeze', 'unFreeze') then rep.repay_interest_amount else 0 end)
+        wslx,              <!-- 未付利息  -->
+        sum(case when rep.status in ('unRepay', 'freeze', 'unFreeze') then rep.repay_principal_amount else 0 end) as
+        wfbjhj,        <!-- 未付本金  -->
+        count(distinct case when rep.status in ('repayed') then rep.period else null end)
+        yfqs,                             <!-- 已付期数  -->
+        sum(case when rep.status in ('repayed') then rep.repay_amount else 0 end)
+        yfbxhj,                                    <!-- 已付本息  -->
+        sum(case when rep.status in ('repayed') then rep.repay_interest_amount else 0 end)
+        yslx,                             <!-- 已付利息  -->
+        sum(case when rep.status in ('repayed') then rep.repay_principal_amount else 0 end) as
+        yfbjhj,                       <!-- 已付本金  -->
+        max(case when rep.status in ('repayed') then rep.repay_plan_date else '' end) max_repay_plan_date,
+        max(case when rep.status in ('repayed') and rep.repay_type = 'prepay' then rep.repay_time else '' end)
+        repay_time,
+        count(distinct case when rep.status in ('repayed') and rep.repay_user_type in ('loanCorp', 'guarantyCorp',
+        'merchant') then rep.period else '0' end) dccs
+
+        from tender_repayment rep
+        where rep.data_status = 'valid'
+        and rep.status in ('repayed','unRepay', 'freeze', 'unFreeze')
+        group by rep.product_id) tp
+        on tp.product_id = p.id
+        where p.status in ('running', 'repaying', 'repayed', 'prepayed')
+        and p.data_status = 'valid'
+        and b.data_status = 'valid'
+        <isNotEmpty prepend="and" property="productName">
+            p.name like '%'||#productName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="status">
+            p.status = #status:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayStart">
+            p.REPAY_START_DATE <![CDATA[>=]]>
+            #repayStart:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayEnd">
+            p.REPAY_START_DATE <![CDATA[<=]]>
+            #repayEnd:CHAR#
+        </isNotEmpty>
+    </sql>
+    <select id="selectProductPaymentsTotalInfo" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count(amount) as total,sum(amount) as amountT ,sum(lixi) as
+        lixiT ,sum(yfbxhj) as yfbxhjT,sum(yfbjhj) as yfbjhjT,sum(wfbxhj) as wfbxhjT from (
+        <include refid="selectProductPayments_fragment"/>
+        <!--		select p.amount,-->
+        <!--		(select sum(rep.repay_interest_amount) from tender_repayment rep where-->
+        <!--		rep.product_id=p.id and rep.data_status='valid') as lixi,-->
+        <!--		(select sum(rep.repay_amount) from tender_repayment rep where-->
+        <!--		rep.product_id=p.id and rep.data_status='valid' and rep.status =-->
+        <!--		'repayed') as yfbxhj,-->
+        <!--		(select sum(rep.repay_amount) from tender_repayment rep where-->
+        <!--		rep.product_id=p.id and rep.data_status='valid' and rep.status in-->
+        <!--		('unRepay','freeze','unFreeze')) as wfbxhj-->
+        <!--		from product p-->
+        <!--		where p.status in ('repaying','repayed','prepayed') and-->
+        <!--		p.data_status='valid'-->
+        <!-- select p.category,
+               p.id,
+               p.name,
+               p.borrow_contract_no,
+               p.borrower_user_info_id,
+               p.borrower_name,
+               p.time_limit,
+               p.time_limit_unit,
+               p.repay_start_date,
+               p.repay_end_date,
+               p.repay_type,
+               p.tender_amount amount,
+               p.annual_rate,
+               (select sum(rep.repay_interest_amount)
+                  from tender_repayment rep
+                 where rep.product_id = p.id
+                   and rep.data_status = 'valid') as lixi,
+               (select count(rep.period)
+                  from tender_repayment rep
+                 where rep.product_id = p.id
+                   and rep.data_status = 'valid'
+                   and rep.status in
+                       ('unRepay',
+                        'freeze',
+                        'unFreeze',
+                        'repayed')) as zqs,
+               (select count(rep.period)
+                  from tender_repayment rep
+                 where rep.product_id = p.id
+                   and rep.data_status = 'valid'
+                   and rep.status = 'repayed') as yfqs,
+               (select count( rep.period)
+                  from tender_repayment rep
+                 where rep.product_id = p.id
+                   and rep.data_status = 'valid'
+                   and rep.status in
+                       ('unRepay', 'freeze', 'unFreeze')) as wfqs,
+               (select sum(rep.repay_amount)
+                  from tender_repayment rep
+                 where rep.product_id = p.id
+                   and rep.data_status = 'valid'
+                   and rep.status = 'repayed') as yfbxhj,
+                   (select sum(rep.repay_principal_amount)
+                  from tender_repayment rep
+                 where rep.product_id = p.id
+                   and rep.data_status = 'valid'
+                   and rep.status = 'repayed') as yfbjhj,
+               (select sum(rep.repay_amount)
+                  from tender_repayment rep
+                 where rep.product_id = p.id
+                   and rep.data_status = 'valid'
+                   and rep.status in
+                       ('unRepay', 'freeze', 'unFreeze')) as wfbxhj,
+               p.status,
+               decode(p.status,
+                      'repayed',
+                      (select max(rep.repay_time)
+                         from tender_repayment rep
+                        where rep.product_id = p.id
+                          and rep.status = 'repayed'
+                          and rep.data_status = 'valid') ||
+                      '已还清',
+                      'prepayed',
+                      (select max(rep.repay_time)
+                         from tender_repayment rep
+                        where rep.product_id = p.id
+                          and rep.status = 'repayed'
+                          and rep.repay_type = 'prepay'
+                          and rep.data_status = 'valid') ||
+                      '已还清',
+                      '代偿' ||
+                      (select count(distinct rep.period)
+                         from tender_repayment rep
+                        where rep.product_id = p.id
+                          and rep.status = 'repayed'
+                          and rep.repay_user_type in
+                              ('loanCorp',
+                               'guarantyCorp',
+                               'merchant')
+                          and rep.data_status = 'valid') || '次') as bz
+          from product p
+          left join borrower b
+            on p.borrower_user_info_id =
+               b.user_info_id
+         where p.status in ('running',
+                            'repaying',
+                            'repayed',
+                            'prepayed')
+           and p.data_status = 'valid'
+           and b.data_status = 'valid'
+<isNotEmpty prepend="and" property="productName">
+p.name like '%'||#productName:VARCHAR#||'%'
+</isNotEmpty>
+<isNotEmpty prepend="and" property="status">
+p.status = #status:VARCHAR#
+</isNotEmpty>
+<isNotEmpty prepend="and" property="repayStart">
+p.REPAY_START_DATE <![CDATA[>=]]>
+#repayStart:CHAR#
+</isNotEmpty>
+<isNotEmpty prepend="and" property="repayEnd">
+p.REPAY_START_DATE <![CDATA[<=]]>
+#repayEnd:CHAR#
+</isNotEmpty> -->
+        )
+    </select>
+    <select id="selectProductPayments" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectProductPayments_fragment"/>
+        order by p.repay_start_date,p.name
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd# and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectRepayments" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from (
+        <isNotNull prepend=" " property="productId">
+            select rep.period, rep.repay_plan_date,sum(rep.repay_amount) as
+            repay_amount,0 as repay_amounty,
+            max(rep.repay_time) as repay_time, rep.repay_user_type, rep.repay_user_name,'normal' as
+            repay_type,rep.status
+            from tender_repayment rep
+            where rep.data_status='valid' and rep.repay_type = 'normal' and
+            rep.product_id = #productId:VARCHAR#
+            group by rep.period,
+            rep.repay_plan_date,
+            rep.repay_user_type,
+            rep.repay_user_name,
+            rep.status
+            order by rep.repay_plan_date desc
+        </isNotNull>
+        <isNotNull prepend=" " property="tenderId">
+            select rep.period, rep.repay_plan_date,rep.repay_amount ,0 as
+            repay_amounty, rep.repay_time, rep.repay_user_type,
+            rep.repay_user_name,'normal' as repay_type,rep.status
+            from tender_repayment rep
+            where rep.data_status='valid' and rep.repay_type = 'normal' and
+            rep.tender_id = #tenderId:VARCHAR#
+            order by rep.repay_plan_date desc
+        </isNotNull>
+        )
+        union all
+        select * from (
+        <isNotNull prepend=" " property="productId">
+            select rep.period,rep.repay_plan_date,sum(rep.repay_amount) as
+            repay_amount, 0 repay_amounty,
+            max(rep.repay_time) as repay_time, rep.repay_user_type, rep.repay_user_name,'prepay' as
+            repay_type,rep.status
+            from tender_repayment rep
+            where rep.data_status='valid' and rep.repay_type = 'prepay' and
+            rep.product_id = #productId:VARCHAR#
+            group by rep.period,
+            rep.repay_plan_date,
+            rep.repay_user_type,
+            rep.repay_user_name,
+            rep.status
+            order by rep.repay_plan_date desc
+        </isNotNull>
+        <isNotNull prepend=" " property="tenderId">
+            select rep.period,rep.repay_plan_date,rep.repay_amount, 0
+            repay_amounty,rep.repay_time, rep.repay_user_type,
+            rep.repay_user_name,'prepay' as repay_type,rep.status
+            from tender_repayment rep
+            where rep.data_status='valid' and rep.repay_type = 'prepay' and
+            rep.tender_id = #tenderId:VARCHAR#
+            order by rep.repay_plan_date desc
+        </isNotNull>
+        )
+    </select>
+    <sql id="selectInsteadRepayments_fragment">
+
+        select v1.*,v2.zqs from (select p.category,p.id,
+        p.name,
+        p.borrow_contract_no,
+        p.borrower_user_info_id,
+        p.borrower_name,
+        p.time_limit,
+        p.time_limit_unit,
+        p.repay_type,
+        p.amount,
+        p.status,
+        rep.period,
+        rep.repay_user_name,
+        rep.repay_plan_date,
+        rep.repay_amount_type,
+        max(rep.repay_time) as repay_time,
+        sum(rep.repay_amount) as dcje
+        from tender_repayment rep
+        left join product p
+        on p.id = rep.product_id
+        and p.data_status = 'valid'
+        where rep.status = 'repayed'
+        and substr(rep.repay_time, 0, 10) > substr(rep.repay_plan_date, 0, 10)
+        and p.status in ('repaying', 'repayed', 'prepayed')
+        and rep.data_status = 'valid'
+        <!-- 如果查询代偿记录 -->
+        <isNotEmpty prepend="and" property="daichanghuankuan">
+            rep.repay_user_type in ('loanCorp', 'guarantyCorp', 'merchant')
+        </isNotEmpty>
+        <!-- 如果查询小贷公司延期自主还款记录 -->
+        <isNotEmpty prepend="and" property="zizhuhuankuan">
+            rep.REPAY_USER_TYPE = 'borrower'
+        </isNotEmpty>
+
+        <isNotEmpty prepend="and" property="repayStart">
+            substr(rep.repay_time,0,10) <![CDATA[>=]]>
+            #repayStart:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayEnd">
+            substr(rep.repay_time,0,10) <![CDATA[<=]]>
+            #repayEnd:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="productName">
+            p.name like '%'||#productName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="status">
+            p.status = #status:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayAmountType">
+            rep.repay_amount_type = #repayAmountType:varchar#
+        </isNotEmpty>
+        group by rep.product_id,
+        rep.period,
+        rep.repay_user_name,
+        rep.repay_plan_date,
+        rep.repay_amount_type,
+        p.id,
+        p.name,
+        p.borrow_contract_no,
+        p.borrower_user_info_id,
+        p.borrower_name,
+        p.time_limit,
+        p.time_limit_unit,
+        p.repay_type,
+        p.amount,
+        p.status,
+        p.category) v1
+        left join ( select product_id,
+        count(distinct case when status in ('unRepay', 'freeze', 'unFreeze', 'repayed') then period else null end) as
+        zqs
+        from tender_repayment
+        group by product_id) v2
+        on v1.id = v2.product_id
+
+
+        <!-- select p.category,
+        p.id,
+        p.name,
+        p.borrow_contract_no,
+        p.borrower_user_info_id,
+        p.borrower_name,
+        p.time_limit,
+        p.time_limit_unit,
+        p.repay_type,
+        p.amount,
+        (select count(distinct(rep.period)) from tender_repayment rep where
+        rep.product_id=p.id and rep.data_status='valid' and rep.status in
+        ('unRepay','freeze','unFreeze','repayed')) as zqs,
+        repay.period,
+        repay.repay_user_name,
+        repay.repay_time,
+        repay.dcje,
+        repay.repay_plan_date,
+        repay.repay_amount_type,
+        p.status
+        from (select rep.product_id,
+               rep.period,
+               rep.repay_user_name,
+               rep.repay_plan_date,
+               rep.repay_amount_type,
+               max(rep.repay_time) as repay_time,
+               sum(rep.repay_amount) as dcje
+          from tender_repayment rep
+          left join product p on p.id=rep.product_id and
+        p.data_status='valid'
+         where
+            rep.status = 'repayed'
+           如果查询代偿记录
+           <isNotEmpty prepend="and" property="daichanghuankuan">
+            rep.repay_user_type in ('loanCorp', 'guarantyCorp', 'merchant')
+            </isNotEmpty>
+
+           如果查询小贷公司延期自主还款记录
+           <isNotEmpty prepend="and" property="zizhuhuankuan">
+            rep.REPAY_USER_TYPE = 'borrower'
+           </isNotEmpty>
+           and SUBSTR(rep.repay_time,0,10)>SUBSTR(rep.REPAY_PLAN_DATE,0,10)
+           and p.status in ('repaying','repayed','prepayed')
+           and rep.data_status = 'valid'
+         group by rep.product_id, rep.period, rep.repay_user_name, rep.repay_plan_date,
+               rep.repay_amount_type) repay
+        left join product p on p.id = repay.product_id and p.data_status = 'valid'
+        left join borrower b on b.user_info_id = p.borrower_user_info_id and
+        b.data_status='valid'
+        where p.status in ('running','repaying','repayed','prepayed') -->
+
+    </sql>
+    <select id="selectInsteadRepayments" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectInsteadRepayments_fragment"/>
+        order by repay_time,name
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd# and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectInsteadRepaymentsTotalInfo" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count(name) total,sum(dcje) dcjeT, repay_amount_type as REPAYTYPE
+        from (
+        select rep.product_id,
+        rep.period,
+        rep.repay_user_name,
+        rep.repay_plan_date,
+        rep.repay_amount_type,
+        max(rep.repay_time) as repay_time,
+        sum(rep.repay_amount) as dcje,
+        p.name
+        from tender_repayment rep
+        left join product p
+        on p.id = rep.product_id
+        and p.data_status = 'valid'
+        where
+        rep.status='repayed'
+        <!-- 如果查询代偿记录 -->
+        <isNotEmpty prepend="and" property="daichanghuankuan">
+            rep.repay_user_type in ('loanCorp', 'guarantyCorp', 'merchant')
+        </isNotEmpty>
+
+        <!-- 如果查询小贷公司延期自主还款记录 -->
+        <isNotEmpty prepend="and" property="zizhuhuankuan">
+            rep.REPAY_USER_TYPE = 'borrower'
+        </isNotEmpty>
+        and SUBSTR(rep.repay_time,0,10)>SUBSTR(rep.REPAY_PLAN_DATE,0,10)
+        <!--		rep.repay_user_type in ('loanCorp', 'guarantyCorp', 'merchant')-->
+
+        and rep.data_status = 'valid'
+        and p.status in ('repaying','repayed','prepayed')
+        <isNotEmpty prepend="and" property="repayStart">
+            substr(repay_time,0,10) <![CDATA[>=]]>
+            #repayStart:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayEnd">
+            substr(repay_time,0,10) <![CDATA[<=]]>
+            #repayEnd:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="productName">
+            p.name like '%'||#productName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="status">
+            p.status = #status:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayAmountType">
+            repay_amount_type = #repayAmountType:varchar#
+        </isNotEmpty>
+        group by rep.product_id,
+        rep.period,
+        rep.repay_user_name,
+        rep.repay_plan_date,
+        rep.repay_amount_type,
+        p.name
+        ) where 1=1
+
+        group by repay_amount_type
+    </select>
+    <sql id="selectUserincomes_fragment">
+        select ten.userid,
+        u.name,
+        u.create_time,
+        ten.tzcs,
+        ten.tzze,
+        ten.dbzgtze,
+        ten.dbzdtze,
+        repay.tzsyhj,
+        to_char(round(repay.tzsyhj/ten.tzze,4)*100,'9990.99' )|| '%' as ztzsyl,
+        '' as bz
+        from (select t.user_info_id as userid,
+        count(t.id) as tzcs,
+        sum(t.trans_amount) as tzze,
+        max(t.trans_amount) as dbzgtze,
+        min(t.trans_amount) as dbzdtze
+        from tender t where t.status in('repaying', 'repayed', 'prepayed ') and
+        t.data_status='valid' group by t.user_info_id) ten
+        left join (select rep.user_info_id, sum(rep.repay_interest_amount) as
+        tzsyhj from tender_repayment rep where rep.data_status='valid' and
+        rep.status !='cancel' group by rep.user_info_id) repay on
+        repay.user_info_id = ten.userid
+        left join user_info u on u.id=ten.userid
+        where u.data_status='valid'
+        <isNotEmpty prepend="and" property="userName">
+            u.name like '%'||#userName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createTimeStart">
+            substr(u.create_time,0,10) <![CDATA[>=]]>
+            #createTimeStart:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createTimeEnd">
+            substr(u.create_time,0,10) <![CDATA[<=]]>
+            #createTimeEnd:CHAR#
+        </isNotEmpty>
+    </sql>
+    <select id="selectUserincomes" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectUserincomes_fragment"/>
+        order by create_time,name
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd# and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectUserincomesTotalInfo" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count(ten.userid) as total,
+        sum(ten.tzze) tzzehj,
+        sum(repay.tzsyhj) tzsyhj,
+        to_char(round(sum(repay.tzsyhj)/ sum(ten.tzze),4)*100,'9990.99') || '%' as ztzsyl
+        from (select t.user_info_id as userid,
+        sum(t.trans_amount) as tzze
+        from tender t where t.status in('repaying', 'repayed', 'prepayed ') and
+        t.data_status='valid' group by t.user_info_id) ten
+        left join (select rep.user_info_id, sum(rep.repay_interest_amount) as
+        tzsyhj from tender_repayment rep where rep.data_status='valid' and
+        rep.status !='cancel' group by rep.user_info_id) repay on
+        repay.user_info_id = ten.userid
+        left join user_info u on u.id=ten.userid
+        where u.data_status='valid'
+        <isNotEmpty prepend="and" property="userName">
+            u.name like '%'||#userName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createTimeStart">
+            substr(u.create_time,0,10) <![CDATA[>=]]>
+            #createTimeStart:CHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createTimeEnd">
+            substr(u.create_time,0,10) <![CDATA[<=]]>
+            #createTimeEnd:CHAR#
+        </isNotEmpty>
+    </select>
+    <sql id="selectUserReceivedPayments_fragment">
+        select p.category,
+        p.name as pname,
+        p.borrow_contract_no,
+        t.user_info_id,
+        u.name as uname,
+        t.trans_amount,
+        p.annual_rate,
+        p.repay_start_date,
+        p.repay_end_date,
+        p.repay_type,
+        nvl(tp.wslx,0) + nvl(tp.yslx,0) as yslx,
+        nvl(tp.yhqs,0) + nvl(tp.whqs,0) as zqs,
+        tp.yhqs,
+        tp.whqs,
+        tp.yhbxhj,
+        tp.whbxhj,
+        p.status,
+        decode(t.status,
+        'repayed',
+        tp.max_repay_plan_date || '已还清',
+        'prepayed',
+        tp.repay_time || '已还清',
+        '代偿' || nvl(tp.dccs,0) || '次') as bz,
+        t.id as tenderid
+        from tender t
+        left join product p
+        on p.id = t.product_id
+        left join user_info u
+        on u.id=t.user_info_id
+
+        left join (
+        select rep.tender_id,
+        <!-- 未还期数 -->
+        count(distinct (case when rep.status in ('unRepay', 'freeze', 'unFreeze') then rep.period else null end)) whqs,
+        <!-- 未还本息 -->
+        sum(case when rep.status in ('unRepay', 'freeze', 'unFreeze') then rep.repay_amount else 0 end) whbxhj,
+        <!-- 未还利息 -->
+        sum(case when rep.status in ('unRepay', 'freeze', 'unFreeze') then rep.repay_interest_amount else 0 end) wslx,
+        <!-- 已还期数 -->
+        count(distinct case when rep.status in ('repayed') then rep.period else null end) yhqs,
+        <!-- 已还本息 -->
+        sum(case when rep.status in ('repayed') then rep.repay_amount else 0 end) yhbxhj,
+        <!-- 已还利息 -->
+        sum( case when rep.status in ('repayed') then rep.repay_interest_amount else 0 end) yslx,
+        <!-- 已还 最大还款日期 -->
+        max(case when rep.status in ('repayed') then rep.repay_plan_date else '' end) max_repay_plan_date,
+        <!-- 已还 还款时间-->
+        max(case when rep.status in ('repayed') and rep.repay_type = 'prepay' then rep.repay_time else '' end)
+        repay_time,
+        <!-- 代偿 次数 -->
+        count(distinct case when rep.status in ('repayed') and rep.repay_user_type in ('loanCorp', 'guarantyCorp',
+        'merchant') then rep.period else null end) dccs
+        from tender_repayment rep
+        where rep.data_status = 'valid'
+        group by rep.tender_id) tp
+        on tp.tender_id = t.id
+        where t.data_status = 'valid'
+        and p.data_status = 'valid'
+        and u.data_status = 'valid'
+        <isNotEmpty prepend="and" property="repayStartDate">
+            p.repay_start_date <![CDATA[>=]]>
+            #repayStartDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayEndDate">
+            p.repay_start_date <![CDATA[<=]]>
+            #repayEndDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="productName">
+            p.name like '%'||#productName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="userName">
+            u.name like '%'||#userName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isEmpty prepend="and" property="status">
+            p.status in ('running','repaying', 'repayed', 'prepayed')
+        </isEmpty>
+        <isNotEmpty prepend="and" property="status">
+            p.status = #status:VARCHAR#
+        </isNotEmpty>
+    </sql>
+    <select id="selectUserReceivedPayments" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectUserReceivedPayments_fragment"/>
+        order by repay_start_date,uname
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd# and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectUserReceivedPaymentsTotalInfo" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count(tenderid) total,sum(trans_amount) as tzze,sum(yslx)
+        yslxze,sum(yhbxhj) ysbxhj,sum(whbxhj) dfbxhj from(
+        <include refid="selectUserReceivedPayments_fragment"/>
+        )
+    </select>
+
+    <select id="selectRepayByRepayPlanDate" resultClass="java.util.HashMap"
+            parameterClass="map">
+		select u.id USER_INFO_ID, u.nick_name, repment.repay_plan_date,
+    	repment.t_amountfrom T_AMOUNT
+		from (select rep.borrower_user_info_id,
+		rep.repay_plan_date,
+		sum(rep.repay_amount) as t_amountfrom
+		from tender_repayment rep
+		where rep.data_status = 'valid'
+		and rep.status in ('unRepay', 'freeze', 'unFreeze')
+		and rep.repay_plan_date in $planDate$
+		group by rep.borrower_user_info_id, rep.repay_plan_date) repment
+		left join user_info u
+		on u.id = repment.borrower_user_info_id and u.data_status='valid'
+		left join user_account ua
+		on ua.usr_info_id=u.id and ua.data_status='valid'
+		where ua.available_balance <![CDATA[<]]>
+		repment.t_amountfrom
+	</select>
+    <select id="selectPromptsByRepayPlanDate" resultClass="java.util.HashMap"
+            parameterClass="map">
+		select repay.*,u.nick_name from (
+		select count(repa.borrower_user_info_id) as
+		bidcount,repa.repay_plan_date,sum(repa.t_amountfrom) as
+		amountT,repa.loan_corp_user_info_id as user_info_id from(
+		select repment.borrower_user_info_id, repment.repay_plan_date,
+		repment.t_amountfrom, p.guaranty_corp_type,p.loan_corp_user_info_id
+		from (select rep.borrower_user_info_id,
+		rep.repay_plan_date,
+		sum(rep.repay_amount) as t_amountfrom
+		from tender_repayment rep
+		where rep.data_status = 'valid'
+		and rep.status in ('unRepay', 'freeze', 'unFreeze')
+		and rep.repay_plan_date in $planDate$
+		group by rep.borrower_user_info_id, rep.repay_plan_date) repment
+		left join user_account ua on ua.usr_info_id=repment.borrower_user_info_id
+		and ua.data_status='valid'
+		left join product p on p.borrower_user_info_id =
+		repment.borrower_user_info_id and p.data_status='valid'
+		where ua.available_balance <![CDATA[<]]>
+		repment.t_amountfrom
+		and (p.guaranty_corp_type='loanCorp' or
+		p.guaranty_corp_type='loanCorpAndGuarantyCorp')
+		) repa group by repa.loan_corp_user_info_id, repa.repay_plan_date )
+		repay left join user_info u on u.id=repay.user_info_id and
+		u.data_status='valid'
+		union all
+		select repay.*,u.nick_name from (
+		select count(repa.borrower_user_info_id) as
+		bidcount,repa.repay_plan_date,sum(repa.t_amountfrom) as
+		amountT,repa.guaranty_corp_user_info_id as user_info_id from(
+		select repment.borrower_user_info_id, repment.repay_plan_date,
+		repment.t_amountfrom,
+		p.guaranty_corp_type,p.guaranty_corp_user_info_id
+		from (select rep.borrower_user_info_id,
+		rep.repay_plan_date,
+		sum(rep.repay_amount) as t_amountfrom
+		from tender_repayment rep
+		where rep.data_status = 'valid'
+		and rep.status in ('unRepay', 'freeze', 'unFreeze')
+		and rep.repay_plan_date in $planDate$
+		group by rep.borrower_user_info_id, rep.repay_plan_date) repment
+		left join user_account ua on ua.usr_info_id=repment.borrower_user_info_id
+		and ua.data_status='valid'
+		left join product p on p.borrower_user_info_id =
+		repment.borrower_user_info_id and p.data_status='valid'
+		where ua.available_balance <![CDATA[<]]>
+		repment.t_amountfrom
+		and (p.guaranty_corp_type='guarantyCorp' or
+		p.guaranty_corp_type='loanCorpAndGuarantyCorp')
+		) repa group by repa.guaranty_corp_user_info_id, repa.repay_plan_date )
+		repay left join user_info u on u.id=repay.user_info_id and
+		u.data_status='valid'
+	</select>
+
+
+    <sql id="finaPlannerCustomerInvest_fragment">
+        select f.*,f.fname par_name,
+        SUBSTR(f.pat, 0, 20) as grandfather,
+        ui_f.name grandfather_name,
+        ui_f.nick_name grandfather_nick_name,oi.org_name
+        from (select uf.id u_id,
+        up.id tid,
+        up.trans_amount amount,
+        up.create_time,
+        up.status,
+        up.type,
+        up.id pid,
+        up.name pname,
+
+        up.amount samount,
+        up.annual_rate,
+        up.time_limit,
+        up.time_limit_unit,
+        up.BORROW_CONTRACT_NO,
+        up.category,
+        up.repay_type,
+        up.repay_start_date,
+        up.repay_end_date,
+        up.REPAY_Time,
+        up.PRINCIPAL_AMOUNT,
+        up.interest_amount,
+
+        uf.name uname,
+        uf.nick_name,
+        uf.mobile,
+        uf.id_no,
+        uf.lev,
+        uf.paraent_recommend_code,
+        uf.fid,
+        uf.fname,
+        uf.fnick_name,
+        uf.fid_no,
+        uf.cod,
+        uf.fmobile,
+
+        case up.status
+        when 'success' then
+        floor((To_date(to_char(sysdate, 'yyyy-mm-dd'), 'yyyy-mm-dd') -
+        To_date(REPAY_START_DATE, 'yyyy-mm-dd')))
+        when 'repaying' then
+        floor((To_date(to_char(sysdate, 'yyyy-mm-dd'), 'yyyy-mm-dd') -
+        To_date(REPAY_START_DATE, 'yyyy-mm-dd')))
+        when 'repayed' then
+        floor((To_date(REPAY_END_DATE, 'yyyy-mm-dd') -
+        To_date(REPAY_START_DATE, 'yyyy-mm-dd')))
+        when 'prepayed' then
+        floor((To_date(REPAY_Time, 'yyyy-mm-dd hh24:mi:ss') -
+        To_date(REPAY_START_DATE, 'yyyy-mm-dd')))
+        end as holddays,
+        case up.status
+        when 'prepayed' then
+        REPAY_Time || '已提前还清'
+        end as rem,
+        uf.pat
+        from (select t.user_info_id,
+        t.id,
+        t.trans_amount,
+        t.create_time,
+        p.status,
+        t.type,
+        p.id pid,
+        p.name,
+        p.amount,
+        p.annual_rate,
+        p.time_limit,
+        p.time_limit_unit,
+        p.BORROW_CONTRACT_NO,
+        p.category,
+        p.repay_type,
+        p.repay_start_date,
+        tr.repay_end_date,
+        tr.REPAY_Time,
+        tr.PRINCIPAL_AMOUNT,
+        tr.interest_amount
+
+        from tender t
+        left join product p
+        on t.product_id = p.id
+        and p.data_status = 'valid'
+        left join (select tr.tender_id,
+        tr.product_id,
+        max(tr.repay_plan_date) repay_end_date,
+        max(tr.REPAY_TIME) REPAY_Time,
+        sum(tr.REPAY_PRINCIPAL_AMOUNT) PRINCIPAL_AMOUNT,
+        sum(tr.repay_interest_amount) interest_amount
+        from tender_repayment tr
+        where tr.data_status = 'valid'
+        group by tr.tender_id, tr.product_id) tr
+        on t.id = tr.tender_id
+        where t.data_status = 'valid'
+        and t.status in ('tender', 'repaying', 'repayed', 'prepayed')
+        and t.type in ('initiativeTender', 'buyCredit')
+        )up
+        left join (
+        select us.*,
+        level lev,
+        SUBSTR(SYS_CONNECT_BY_PATH(us.id, '->'), 3) pat
+        from (select u.id,
+        u.name,
+        u.nick_name,
+        u.mobile,
+        u.id_no,
+        ur.paraent_recommend_code,
+        rf.id fid,
+        rf.name fname,
+        rf.nick_name fnick_name,
+        rf.id_no fid_no,
+        rf.cod,
+        rf.mobile fmobile
+        from user_info u
+        left join user_recommend_relation ur
+        on u.id = ur.user_info_id
+        and ur.data_status = 'valid'
+        left join (select cd.*
+        from ((select u.id,
+        u.name,
+        u.nick_name,
+        u.id_no,
+        u.mobile,
+        u.org_person_code cod
+        from user_info u
+        where u.org_person_code is not null
+        and u.data_status =
+        'valid') union all
+        (select u.id,
+        u.name,
+        u.nick_name,
+        u.id_no,
+        u.mobile,
+        u.person_code cod
+        from user_info u
+        where u.data_status = 'valid')) cd
+        where (cd.cod in
+        (select ur.paraent_recommend_code
+        from user_info u
+        left join user_recommend_relation ur
+        on u.id = ur.user_info_id
+        and ur.data_status =
+        'valid'
+        where u.data_status =
+        'valid'))) rf
+        on rf.cod = ur.paraent_recommend_code) us
+
+        start with us.fid is null
+        connect by prior us.id = us.fid
+        ) uf
+        on up.user_info_id = uf.id) f
+        left join user_info ui_fo
+        on f.fid = ui_fo.id
+        left join user_info ui_f
+        on SUBSTR(f.pat, 0, 20) = ui_f.id
+        left join org_user ou on f.cod=ou.org_person_code and ou.data_status='valid'
+        left join org_info oi on ou.org_id=oi.id and oi.data_status='valid'
+        where 1 = 1
+        <isNotEmpty prepend="and" property="createStartDate">
+            f.create_time <![CDATA[>=]]>
+            #createStartDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createEndDate">
+            SUBSTR(f.create_time,0,10) <![CDATA[<=]]>
+            #createEndDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="pname">
+            f.pname like '%'||#pname:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="status">
+            f.status = #status:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="borrowContractNo">
+            f.BORROW_CONTRACT_NO like '%'||#borrowContractNo:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="startDate">
+            f.repay_start_date <![CDATA[>=]]>
+            #startDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            f.repay_start_date <![CDATA[<=]]>
+            #endDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="pat">
+            pat like '%'||#pat:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="lev">
+            f.lev in ($lev$)
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="type">
+            f.type = #type:VARCHAR#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="name">
+            ui_f.name like '%'||#name:VARCHAR#||'%'
+        </isNotEmpty>
+        order by grandfather,pid
+    </sql>
+    <select id="finaPlannerCustomerInvestByPage" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="finaPlannerCustomerInvest_fragment"/>
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="finaPlannerCustomerInvestTotal" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count (*) as TOTAL,count(distinct u_id)
+        user_count,count(distinct pid) pro_count,sum(amount) sum_amount from (
+        <include refid="finaPlannerCustomerInvest_fragment"/>
+        )
+    </select>
+    <select id="findUsersByName" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select t.id,t.name,t.nick_name,t.id_no,t.mobile from USER_INFO t where 1=1 and t.data_status='valid'
+        <isNotEmpty prepend="and" property="name">
+            t.name like '%'||#name:VARCHAR#||'%'
+        </isNotEmpty>
+
+        order by t.name
+    </select>
+
+
+    <sql id="selectMerchantPayments_fragment">
+        select *
+        from (select mp.id,
+        mp.tender_id,
+        mp.product_id,
+        p.name as pname,
+        mp.user_info_id,
+        u.name as uname,
+        mp.repay_amount,
+        mp.repay_amount_type,
+        mp.repay_plan_date,
+        mp.repay_time,
+        mp.remark,
+        mp.create_time,
+        t.trans_amount,
+        t.category
+        from merchant_payment mp
+        left join product p
+        on p.id = mp.product_id
+        and p.data_status = 'valid'
+        left join user_info u
+        on u.id = mp.user_info_id
+        and u.data_status = 'valid'
+        left join tender t
+        on mp.tender_id = t.id
+        and t.data_status = 'valid'
+        where mp.data_status = 'valid'
+        and mp.status = 'repayed'
+        ) s
+        where 1=1
+        <isNotEmpty prepend="and" property="pname">
+            s.pname like '%'||#pname:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="uname">
+            s.uname like '%'||#uname:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="category">
+            s.category =#category:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayAmountType">
+            <isEqual property="repayAmountType" compareValue="allOpex">
+                s.repay_amount_type not in ('interiorInvestBrokerage','interiorChannelBrokerage')
+            </isEqual>
+            <isNotEqual property="repayAmountType" compareValue="allOpex">
+                s.repay_amount_type = #repayAmountType:varchar#
+            </isNotEqual>
+        </isNotEmpty>
+
+        <isNotEmpty prepend="and" property="startDate">
+            s.repay_time <![CDATA[>=]]>
+            #startDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            SUBSTRB(s.repay_time ,0,10) <![CDATA[<=]]>
+            #endDate:char#
+        </isNotEmpty>
+    </sql>
+    <select id="selectMerchantPayments" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectMerchantPayments_fragment"/>
+        order by repay_time desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectMerchantPaymentsTotalCount" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count (*) total,count(distinct USER_INFO_ID) DIST_USER_TOTAL,
+        sum(REPAY_AMOUNT) total_amount from(
+        <include refid="selectMerchantPayments_fragment"/>
+        )
+    </select>
+    <sql id="selectInterestReport_fragment">
+        select substr(mp.repay_time, 0, 10) as repay_time,
+        mp.status,
+        p.name pname,
+        u.name uname,
+        substr(t.create_time, 0, 10) tzrq,
+        decode(p.status, 'fail', substr(p.tender_audit_time, 1, 10), p.repay_start_date) as
+        tzfkrq,
+        to_date(decode(p.status, 'fail', substr(p.tender_audit_time, 1, 10),
+        p.repay_start_date),'yyyy-MM-dd') - to_date(substr(t.create_time, 0,
+        10),'yyyy-MM-dd')-1 as jxts,
+        t.trans_amount,
+        p.annual_rate || '%' as annual_rate,
+        mp.repay_amount,
+        decode(p.status, 'fail', '流标', '满标') as bz,
+        mp.create_time
+        from merchant_payment mp
+        left join product p
+        on p.id = mp.product_id and p.data_status = 'valid'
+        left join user_info u
+        on u.id = mp.user_info_id
+        left join tender t
+        on t.id = mp.tender_id
+        where mp.data_status = 'valid'
+        and mp.repay_amount_type = 'interest'
+        <isNotEmpty prepend="and" property="repayStartTime">
+            substr(mp.repay_time, 0, 10) <![CDATA[>=]]>
+            #repayStartTime:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="repayEndTime">
+            substr(mp.repay_time, 0, 10) <![CDATA[<=]]>
+            #repayEndTime:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="productName">
+            p.name like '%'||#productName:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="userName">
+            u.name like '%'||#userName:varchar#||'%'
+        </isNotEmpty>
+        <isEqual prepend="and" property="status" compareValue="fail">
+            p.status = 'fail'
+        </isEqual>
+        <isEqual prepend="and" property="status" compareValue="success">
+            p.status in ('success','repaying','repayed','prepayed')
+        </isEqual>
+        <isNotEmpty prepend="and" property="repayStatus">
+            mp.status = #repayStatus:varchar#
+        </isNotEmpty>
+    </sql>
+    <select id="selectInterestReport" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectInterestReport_fragment"/>
+        order by pname,uname,create_time
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectInterestReportTotalCount" resultClass="java.util.HashMap"
+            parameterClass="map">
+        select count (*) total, sum(trans_amount) total_amount,
+        sum(repay_amount) total_ramount,sum(jxts) as jxtsT from(
+        <include refid="selectInterestReport_fragment"/>
+        )
+    </select>
+    <sql id="selectFinaPlannerCredit_fragment">
+        select fp.*,
+        ui.name gfname,ui.mobile gfmobile,
+        ui.nick_name gfnickname,
+        tt.name bgfname,
+        tt.nick_name bgfnick_NAME,
+        tt.mobile bgfmobile
+        from (select f.*,
+        SUBSTR(f.pat, 0, 20) as grandfather,
+        SUBSTR(f.bpat, 0, 20) as bgrandfather
+        from (select cp.*,
+        ur.*,
+        uu.name bname,
+        uu.mobile bmobile,
+        uu.id_no bid_no,
+        uu.nick_name bnick_name,
+        uu.pat bpat,
+        uu.lev blev
+        from (select c.id cid,
+        p.id pid,
+        p.name pname,
+        p.type,
+        c.SELLER_USER_INFO_ID,
+        c.SELLER_NAME,
+        c.BUYER_USER_INFO_ID,
+        c.buyer_name,
+        p.amount,
+        p.time_limit,
+        p.time_limit_unit,
+        p.annual_rate,
+        p.REPAY_START_DATE,
+        p.repay_end_date,
+        p.REPAY_TYPE,
+        p.status pstatus,
+        p.BORROW_CONTRACT_NO,
+        c.CREDIT_REMAIN_DAYS,
+        c.CREDIT_HOLD_DAYS,
+        c.CREDIT_INTEREST_DAYS,
+        c.SELLER_INTEREST,
+        c.TRANSFER_TIME,
+        c.status castatus,
+        c.tcreate_time,
+        c.trans_amount,
+        c.credit_amount
+        from (select ca.*,
+        t.create_time tcreate_time,
+        case when t.VOCHER_AMT is not null then t.trans_amount + t.VOCHER_AMT else t.trans_amount end trans_amount
+        from credit_assignment ca
+        left join tender t
+        on ca.seller_tender_id = t.id
+        where (ca.status = 'soldUnRepay' or
+        ca.status = 'soldRepayed')
+        and ca.data_status = 'valid') c
+        join product p
+        on c.product_id = p.id and p.data_status = 'valid') cp
+        join (select us.*,
+        level lev,
+        SUBSTR(SYS_CONNECT_BY_PATH(us.id, '->'), 3) pat
+        from (select u.id,
+        u.name,
+        u.nick_name,
+        u.mobile,
+        u.id_no,
+        ur.paraent_recommend_code,
+        rf.id fid,
+        rf.name fname,
+        rf.nick_name fnick_name,
+        rf.id_no fid_no,
+        rf.cod,
+        rf.mobile fmobile
+        from user_info u
+        left join user_recommend_relation ur
+        on u.id = ur.user_info_id
+        and ur.data_status = 'valid'
+        left join (select cd.*
+        from ((select u.id,
+        u.name,
+        u.nick_name,
+        u.id_no,
+        u.mobile,
+        u.org_person_code cod
+        from user_info u
+        where u.org_person_code is not null
+        and u.data_status =
+        'valid') union all
+        (select u.id,
+        u.name,
+        u.nick_name,
+        u.id_no,
+        u.mobile,
+        u.person_code cod
+        from user_info u
+        where u.data_status =
+        'valid')) cd
+        where (cd.cod in
+        (select ur.paraent_recommend_code
+        from user_info u
+        left join user_recommend_relation ur
+        on u.id =
+        ur.user_info_id
+        and ur.data_status =
+        'valid'
+        where u.data_status =
+        'valid'))) rf
+        on rf.cod = ur.paraent_recommend_code) us
+
+        start with us.fid is null
+        connect by prior us.id = us.fid) ur
+        on cp.SELLER_USER_INFO_ID = ur.id
+        join (select us.*,
+        level lev,
+        SUBSTR(SYS_CONNECT_BY_PATH(us.id, '->'), 3) pat
+        from (select u.id,
+        u.name,
+        u.nick_name,
+        u.mobile,
+        u.id_no,
+        ur.paraent_recommend_code,
+        rf.id fid,
+        rf.name fname,
+        rf.nick_name fnick_name,
+        rf.id_no fid_no,
+        rf.cod,
+        rf.mobile fmobile
+        from user_info u
+        left join user_recommend_relation ur
+        on u.id = ur.user_info_id
+        and ur.data_status = 'valid'
+        left join (select cd.*
+        from ((select u.id,
+        u.name,
+        u.nick_name,
+        u.id_no,
+        u.mobile,
+        u.org_person_code cod
+        from user_info u
+        where u.org_person_code is not null
+        and u.data_status =
+        'valid') union all
+        (select u.id,
+        u.name,
+        u.nick_name,
+        u.id_no,
+        u.mobile,
+        u.person_code cod
+        from user_info u
+        where u.data_status =
+        'valid')) cd
+        where (cd.cod in
+        (select ur.paraent_recommend_code
+        from user_info u
+        left join user_recommend_relation ur
+        on u.id =
+        ur.user_info_id
+        and ur.data_status =
+        'valid'
+        where u.data_status =
+        'valid'))) rf
+        on rf.cod = ur.paraent_recommend_code) us
+
+        start with us.fid is null
+        connect by prior us.id = us.fid) uu
+        on cp.BUYER_USER_INFO_ID = uu.id)
+
+        f) fp
+        left join user_info ui
+        on fp.grandfather = ui.id
+        and ui.data_status = 'valid'
+        left join user_info tt
+        on fp.bgrandfather = tt.id
+        and tt.data_status = 'valid'
+        where 1 = 1
+        <isNotEmpty prepend="and" property="transferStartDate">
+            fp.TRANSFER_TIME  <![CDATA[>=]]>  #transferStartDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="transferEndDate">
+            SUBSTR(fp.TRANSFER_TIME,0,10)<![CDATA[<=]]>  #transferEndDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="tcreateStartDate">
+            fp.TCREATE_TIME  <![CDATA[>=]]>  #tcreateStartDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="tcreateEndDate">
+            SUBSTR(fp.TCREATE_TIME,0,10)<![CDATA[<=]]>  #tcreateEndDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="pname">
+            fp.pname like '%'||#pname:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="sellName">
+            fp.SELLER_NAME like '%'||#sellName:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="pstatus">
+            fp.pstatus = #pstatus:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="borrowContractNo">
+            fp.BORROW_CONTRACT_NO like '%'||#borrowContractNo:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="startDate">
+            fp.REPAY_START_DATE <![CDATA[>=]]> #startDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            SUBSTR(fp.REPAY_START_DATE,0,10)<![CDATA[<=]]>  #endDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="lev">
+            fp.lev in ($lev$)
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="name">
+            ui.name like '%'||#name:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="bgfname">
+            tt.name like '%'||#bgfname:VARCHAR#||'%'
+        </isNotEmpty>
+        order by fp.grandfather,fp.pid,fp.TCREATE_TIME desc,fp.TRANSFER_TIME desc
+    </sql>
+    <select id="selectFinaPlannerCredits" resultClass="java.util.HashMap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectFinaPlannerCredit_fragment"/>
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+    <select id="selectFinaPlannerCreditsTotalCount" resultClass="java.util.HashMap" parameterClass="map">
+        select count(*) total, sum(TRANS_AMOUNT) SUM_AMOUNT,count(distinct id) USER_COUNT,count(distinct pid) PRO_COUNT
+        from(
+        <include refid="selectFinaPlannerCredit_fragment"/>
+        )
+    </select>
+
+    <sql id="selectPromotionPlan_fragment">
+        select * from (
+        select a.*,ui.NAME username,ui.MOBILE usermobile,ui.USER_LABEL labelName,COALESCE(b.recommendedRepayAmount,0)
+        recommendedRepayAmount,COALESCE(c.recommendRepayAmount,0) recommendRepayAmount,COALESCE(e.sumRepay,0)
+        sumRepay,COALESCE(f.sumRepayed,0) sumRepayed,COALESCE(d.interiorInvestAmount,0) interiorInvestAmount from(
+        select DISTINCT mp.USER_INFO_ID id1 from MERCHANT_PAYMENT mp where mp.REPAY_AMOUNT_TYPE in
+        ('recommendedInvestBrokerage','interiorInvestBrokerage','recommendInvestBrokerage')) a left join
+        USER_INFO ui on a.id1=ui.ID left join(
+        select mp1.USER_INFO_ID id2,sum(mp1.REPAY_AMOUNT) recommendedRepayAmount from MERCHANT_PAYMENT mp1 where
+        mp1.REPAY_AMOUNT_TYPE ='recommendedInvestBrokerage' group by mp1.USER_INFO_ID) b
+        on a.id1 = b.id2 left join(
+        select mp2.USER_INFO_ID id3,sum(mp2.REPAY_AMOUNT) recommendRepayAmount from MERCHANT_PAYMENT mp2 where
+        mp2.REPAY_AMOUNT_TYPE ='recommendInvestBrokerage' group by mp2.USER_INFO_ID) c
+        on a.id1=c.id3 left join (
+        select mp6.USER_INFO_ID id12,sum(mp6.REPAY_AMOUNT) sumRepay from MERCHANT_PAYMENT mp6 where
+        mp6.REPAY_AMOUNT_TYPE in ('recommendedInvestBrokerage','interiorInvestBrokerage','recommendInvestBrokerage') and
+        mp6.STATUS in ('unRepay','repayed') group by mp6.USER_INFO_ID) e
+        on a.id1 = e.id12 left join (
+        select mp7.USER_INFO_ID id13,sum(mp7.REPAY_AMOUNT) sumRepayed from MERCHANT_PAYMENT mp7 where
+        mp7.REPAY_AMOUNT_TYPE in ('recommendedInvestBrokerage','interiorInvestBrokerage','recommendInvestBrokerage') and
+        mp7.STATUS = 'repayed' group by mp7.USER_INFO_ID) f
+        on a.id1 = f.id13 left join (
+        select mp3.USER_INFO_ID id4,sum(mp3.REPAY_AMOUNT) interiorInvestAmount from MERCHANT_PAYMENT mp3 where
+        mp3.REPAY_AMOUNT_TYPE ='interiorInvestBrokerage' group by mp3.USER_INFO_ID) d
+        on a.id1 = d.id4)
+        where 1 = 1
+        <isNotEmpty prepend="and" property="labelName">
+            labelName=#labelName:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="userName">
+            username like '%'||#userName:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="mobile">
+            usermobile like '%'||#mobile:varchar#||'%'
+        </isNotEmpty>
+    </sql>
+    <select id="selectPromotionPlans" resultClass="java.util.HashMap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectPromotionPlan_fragment"/>
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+
+    <select id="selectPromotionPlansTotalCount" resultClass="long" parameterClass="map">
+        select count(*) totalCount from (
+        <include refid="selectPromotionPlan_fragment"/>
+        )
+    </select>
+
+    <select id="selectPromotionPlansTotalMap" resultClass="java.util.HashMap" parameterClass="map">
+        select count(id1) totalCount,sum(sumRepay) userTotal,sum(sumRepayed) sumRebateAmount from (
+        <include refid="selectPromotionPlan_fragment"/>
+        )
+    </select>
+
+    <sql id="selectOughtPayment_fragment">
+        select * from (
+        select a.id1,a.time1 time11,ui.NAME username,ui.MOBILE usermobile,ui.USER_LABEL
+        labelName,COALESCE(b.recommendedRepayAmount,0) recommendedRepayAmount,COALESCE(c.interiorInvestAmount,0)
+        interiorInvestAmount,COALESCE(d.sumRepay,0) sumRepay,COALESCE(e.recommendRepayAmount,0) recommendRepayAmount
+        from(
+        select DISTINCT mp.USER_INFO_ID id1,SUBSTR(mp.REPAY_PLAN_DATE,0,7) time1 from MERCHANT_PAYMENT mp where
+        mp.REPAY_AMOUNT_TYPE in ('recommendedInvestBrokerage','interiorInvestBrokerage','recommendInvestBrokerage')) a
+        left join
+        USER_INFO ui
+        on a.id1= ui.ID left join (
+        select mp1.USER_INFO_ID id2,sum(mp1.REPAY_AMOUNT) recommendedRepayAmount,SUBSTR(mp1.REPAY_PLAN_DATE,0,7) time2
+        from MERCHANT_PAYMENT mp1 where mp1.REPAY_AMOUNT_TYPE ='recommendedInvestBrokerage' group by
+        mp1.USER_INFO_ID,SUBSTR(mp1.REPAY_PLAN_DATE,0,7)) b
+        on a.id1=b.id2 and a.time1= b.time2 left join (
+        select mp3.USER_INFO_ID id4,sum(mp3.REPAY_AMOUNT) interiorInvestAmount,SUBSTR(mp3.REPAY_PLAN_DATE,0,7) time3
+        from MERCHANT_PAYMENT mp3 where mp3.REPAY_AMOUNT_TYPE ='interiorInvestBrokerage' group by
+        mp3.USER_INFO_ID,SUBSTR(mp3.REPAY_PLAN_DATE,0,7)) c
+        on a.id1= c.id4 and a.time1 = c.time3 left join (
+        select mp6.USER_INFO_ID id12,sum(mp6.REPAY_AMOUNT) sumRepay,SUBSTR(mp6.REPAY_PLAN_DATE,0,7) time4 from
+        MERCHANT_PAYMENT mp6 where mp6.REPAY_AMOUNT_TYPE in
+        ('recommendedInvestBrokerage','interiorInvestBrokerage','recommendInvestBrokerage') and mp6.STATUS in
+        ('unRepay','repayed') group by mp6.USER_INFO_ID,SUBSTR(mp6.REPAY_PLAN_DATE,0,7)) d
+        on a.id1= d.id12 and a.time1= d.time4 left join (
+        select mp2.USER_INFO_ID id3,sum(mp2.REPAY_AMOUNT) recommendRepayAmount,SUBSTR(mp2.REPAY_PLAN_DATE,0,7) time5
+        from MERCHANT_PAYMENT mp2 where mp2.REPAY_AMOUNT_TYPE ='recommendInvestBrokerage' group by
+        mp2.USER_INFO_ID,SUBSTR(mp2.REPAY_PLAN_DATE,0,7)) e
+        on a.id1= e.id3 and a.time1 = e.time5
+        )
+        where 1=1
+        <isNotEmpty prepend="and" property="labelName">
+            labelName=#labelName:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="month">
+            time11=#month:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="userName">
+            username like '%'||#userName:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="mobile">
+            usermobile like '%'||#mobile:varchar#||'%'
+        </isNotEmpty>
+        order by time11
+    </sql>
+
+    <select id="selectOughtPayments" resultClass="java.util.HashMap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectOughtPayment_fragment"/>
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+
+    <select id="selectOughtPaymentTotalCount" resultClass="long" parameterClass="map">
+        select count(*) from (
+        <include refid="selectOughtPayment_fragment"/>
+        )
+
+    </select>
+
+    <select id="selectOughtPaymentTotalMap" resultClass="java.util.HashMap">
+        select count(id1) totalCount,sum(sumRepay) userTotal from (
+        <include refid="selectOughtPayment_fragment"/>
+        )
+    </select>
+
+    <sql id="selectAlreadyPayment_fragment">
+        select ui.NAME username,ui.MOBILE usermobile,ui.USER_LABEL labelname,mp.REPAY_TIME
+        repayTime,mp.REPAY_AMOUNT_TYPE amountType,COALESCE(mp.REPAY_AMOUNT,0) money
+        from MERCHANT_PAYMENT mp
+        left join USER_INFO ui
+        on mp.USER_INFO_ID = ui.ID
+        where mp.REPAY_AMOUNT_TYPE in
+        ('recommendInvestBrokerage','recommendedInvestBrokerage','interiorInvestBrokerage')
+        and mp.STATUS = 'repayed'
+        <isNotEmpty prepend="and" property="labelName">
+            ui.USER_LABEL=#labelName:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="userName">
+            ui.NAME like '%'||#userName:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="mobile">
+            ui.MOBILE like '%'||#mobile:varchar#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="amountType">
+            mp.REPAY_AMOUNT_TYPE =#amountType:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="startDate">
+            mp.REPAY_TIME <![CDATA[>=]]> #startDate:char#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            SUBSTRB(mp.REPAY_TIME,0,10) <![CDATA[<=]]>  #endDate:char#
+        </isNotEmpty>
+        order by repayTime desc
+    </sql>
+
+    <select id="selectAlreadyPayments" resultClass="java.util.HashMap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectAlreadyPayment_fragment"/>
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]>
+        #rowEnd#
+        and rownumtemp  <![CDATA[>]]>
+        #rowStart#
+    </select>
+
+    <select id="selectAlreadyPaymentTotalCount" resultClass="long" parameterClass="map">
+        select count(*) from (
+        <include refid="selectAlreadyPayment_fragment"/>
+        )
+
+    </select>
+
+    <select id="selectAlreadyPaymentTotalMap" resultClass="java.util.HashMap">
+        select count(*) totalCount,sum(money) userTotal from (
+        <include refid="selectAlreadyPayment_fragment"/>
+        )
+    </select>
+
+    <sql id="selectActivityLotterys_fragment">
+        select <!-- distinct --> ui.nick_name,
+        ui.name,
+        ui.mobile,
+        ai.name as activateName,
+        ai.code as activateCode,
+        ul.id,
+        ul.code as activityLotteryCode,
+        ul.name as activityLotteryName,
+        ul.type,
+        ul.is_donation,
+        ul.lottery_value,
+        ul.give_time,
+        ul.lottery_end_time,
+        ul.give_condition,
+        ul.give_condition_content,
+        ul.use_condition,
+        ul.use_condition_content,
+        ual.status,
+        <!-- ul.remark,
+        ul.CREATE_TIME, -->
+        ual.remark,
+        ual.CREATE_TIME,
+        ual.user_info_id,
+        ual.EXPIRED_TIME
+        from user_activity_lottery ual
+        inner join user_info ui on ual.user_info_id = ui.id and ui.data_status='valid' and
+        ual.data_status='valid'<!-- left join user_info ui  on ual.user_info_id = ui.id and ui.data_status='valid' -->
+        left join activity_lottery ul on ul.id = ual.activity_lottery_id and ul.data_status='valid'
+        left join activity_info ai on ual.activity_id = ai.id and ai.data_status='valid'
+        where 1=1
+        <isNotEmpty prepend="and" property="activateName">
+            ai.name like '%'||#activateName#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="activateCode">
+            ai.code like '%'||#activateCode#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="activityLotteryCode">
+            ul.code like '%'||#activityLotteryCode#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="type">
+            ul.type =#type:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="name">
+            ui.name like '%'||#name#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="mobile">
+            ui.mobile like '%'||#mobile#||'%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="status">
+            ual.status =#status:varchar#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="startDate">
+            ual.CREATE_TIME <![CDATA[>=]]>  #startDate:VARCHAR# || ' 00:00:00'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endDate">
+            ual.CREATE_TIME <![CDATA[<=]]>  #endDate:VARCHAR# || ' 23:59:59'
+        </isNotEmpty>
+    </sql>
+    <!-- 	奖券统计                           苏冰雪                2015-03-26        -->
+    <select id="selectActivityLotterys" resultClass="hashmap" parameterClass="map">
+        select * from ( select rowtemp.*, rownum rownumtemp from (
+        <include refid="selectActivityLotterys_fragment"/>
+        order by ual.CREATE_TIME desc
+        ) rowtemp )
+        where rownumtemp <![CDATA[<=]]> #rowEnd#
+        and rownumtemp  <![CDATA[>]]> #rowStart#
+    </select>
+    <!-- 	  查询总数                         苏冰雪                2015-03-26       -->
+    <select id="selectActivityLotterysTotalCount" resultClass="long" parameterClass="map">
+        select count (*) as total from (
+        <include refid="selectActivityLotterys_fragment"/>
+        )
+    </select>
+
+
+</sqlMap>

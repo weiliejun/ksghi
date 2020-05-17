@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.vjinke.thirdparty:jep-java:trial:3.4-trial">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/vjinke/thirdparty/jep-java/3.4-trial/jep-java-3.4-trial-trial.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/vjinke/thirdparty/jep-java/3.4-trial/jep-java-3.4-trial-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/vjinke/thirdparty/jep-java/3.4-trial/jep-java-3.4-trial-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
