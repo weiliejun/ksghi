@@ -21,7 +21,7 @@
 		<ibatis.version>2.3.0.677</ibatis.version>
 		<json-lib.version>2.4</json-lib.version>
 		<gson.version>2.2.4</gson.version>
-		<httpClient.version>4.5.2</httpClient.version>
+		<httpClient.version>4.5.13</httpClient.version>
 		<dom4j.version>1.6.1</dom4j.version>
 		<javax.mail.version>1.5.0</javax.mail.version>
 		<ojdbc.version>10.2.0.5.0</ojdbc.version>
